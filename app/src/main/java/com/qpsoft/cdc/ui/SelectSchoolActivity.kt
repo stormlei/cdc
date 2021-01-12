@@ -21,9 +21,13 @@ class SelectSchoolActivity : BaseActivity() {
 
     private lateinit var mAdapter: BaseQuickAdapter<School, BaseViewHolder>
 
+    private var fromMain: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_school)
+
+        fromMain = intent.getBooleanExtra("fromMain", false)
 
         setBackBtn()
         setTitle("选择学校")
@@ -41,7 +45,11 @@ class SelectSchoolActivity : BaseActivity() {
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val school = mAdapter.getItem(position)
-            App.instance.selectSchool[school.id] = school
+            App.instance.selectSchool = school
+            if (fromMain) {
+                finish()
+                return@setOnItemClickListener
+            }
             startActivity(Intent(this@SelectSchoolActivity, MainActivity::class.java))
         }
     }

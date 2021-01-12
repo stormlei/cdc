@@ -12,6 +12,7 @@ import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.Keys
+import com.qpsoft.cdc.utils.LevelConvert
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
@@ -27,12 +28,31 @@ class MainActivity : BaseActivity() {
 
         getCurrentPlan()
 
-        tv.setOnClickListener {
-            startActivity(Intent(this@MainActivity, PickCheckItemActivity::class.java))
+        llRePickCheckItem.setOnClickListener {
+            startActivity(Intent(this@MainActivity, PickCheckItemActivity::class.java)
+                    .putExtra("fromMain", true))
         }
+
+        llReSelSchool.setOnClickListener {
+            startActivity(Intent(this@MainActivity, SelectSchoolActivity::class.java)
+                    .putExtra("fromMain", true))
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         LogUtils.e("------"+ App.instance.checkItemList)
         LogUtils.e("------"+ App.instance.selectSchool)
+
+        val checkItemList = App.instance.checkItemList
+        val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
+        tvCheckItem.text = ciStr
+
+        val selSchool = App.instance.selectSchool
+        tvSchool.text = selSchool?.name ?: "请选择"
     }
 
     private fun getCurrentPlan() {
@@ -42,9 +62,18 @@ class MainActivity : BaseActivity() {
                         val currentPlan = response.body()?.data
 
                         val planName = currentPlan?.name
+                        val level = LevelConvert.toCh(currentPlan?.level)
+                        tvPlanName.text = planName
+                        tvLevel.text = level
                     }
                 })
     }
+
+
+
+
+
+
 
 
     private fun checkLogin(): Boolean {

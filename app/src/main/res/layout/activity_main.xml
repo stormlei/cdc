@@ -4,16 +4,194 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="12dp"
     tools:context=".ui.MainActivity">
 
+    <RelativeLayout
+        android:id="@+id/rlTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tvPlanName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/color_330"
+            android:text="" />
+        <TextView
+            android:layout_toRightOf="@+id/tvPlanName"
+            android:id="@+id/tvLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:background="#E9F1F7"
+            android:textSize="16sp"
+            android:textColor="@color/color_cb7"
+            android:text="" />
+        <TextView
+            android:id="@+id/tvManage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="15sp"
+            android:textColor="@color/color_26"
+            android:text="管理" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llMid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="28dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rlTop">
+        <LinearLayout
+            android:id="@+id/llRePickCheckItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/color_66"
+                android:text="我负责的项目：" />
+            <TextView
+                android:id="@+id/tvCheckItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="@color/color_26"
+                android:text="" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textSize="13sp"
+                android:textColor="@color/color_cb7"
+                android:text="重选" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llReSelSchool"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/student_list" />
+            <TextView
+                android:id="@+id/tvSchool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textSize="17sp"
+                android:textColor="@color/color_26"
+                android:text="" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="46dp"
+            android:layout_gravity="center"
+            android:src="@drawable/scan" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+            <TextView
+                android:id="@+id/tvStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_1f7"
+                android:paddingTop="13dp"
+                android:paddingBottom="6dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/student_list"
+                android:drawablePadding="12dp"
+                android:textSize="15sp"
+                android:textColor="@color/color_330"
+                android:text="学生列表" />
+            <TextView
+                android:id="@+id/tvReTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="13dp"
+                android:paddingBottom="6dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/color_1f7"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/student_list"
+                android:drawablePadding="12dp"
+                android:textSize="15sp"
+                android:textColor="@color/color_330"
+                android:text="抽样复测" />
+            <TextView
+                android:id="@+id/tvEnv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="13dp"
+                android:paddingBottom="6dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/color_1f7"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/student_list"
+                android:drawablePadding="12dp"
+                android:textSize="15sp"
+                android:textColor="@color/color_330"
+                android:text="环境监测" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/color_26"
+                    android:text="设备管理" />
+                <TextView
+                    android:id="@+id/tvScan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_cb7"
+                    android:text="扫描设备二维码连接设备" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:textSize="11sp"
+        android:textColor="@color/color_99"
+        android:text="©浙江省疾病预防控制中心"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

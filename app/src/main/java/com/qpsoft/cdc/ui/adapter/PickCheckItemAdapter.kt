@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui.adapter
 import android.text.Html
 import android.widget.CheckBox
 import com.blankj.utilcode.util.CacheDiskStaticUtils
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseSectionQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.qpsoft.cdc.App
@@ -33,6 +34,11 @@ class PickCheckItemAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutabl
         cbItem.isChecked = checkItem.check
         cbItem.setOnCheckedChangeListener { compoundButton, b ->
             checkItem.check = b
+            App.instance.checkItemList.forEach {
+                if (it.key == checkItem.key) {
+                    it.check = b
+                }
+            }
             if (b) {
                 App.instance.checkItemList.add(checkItem)
             } else {

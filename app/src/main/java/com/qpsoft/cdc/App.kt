@@ -17,7 +17,7 @@ import java.util.logging.Level
 class App: Application() {
 
     var checkItemList = mutableListOf<CheckItem>()
-    var selectSchool = mutableMapOf<String, School>()
+    var selectSchool: School? = null
 
     companion object {
         lateinit var instance: App
