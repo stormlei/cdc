@@ -1,9 +1,6 @@
 package com.qpsoft.cdc.ui.adapter
 
-import android.text.Html
 import android.widget.CheckBox
-import com.blankj.utilcode.util.CacheDiskStaticUtils
-import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseSectionQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.qpsoft.cdc.App

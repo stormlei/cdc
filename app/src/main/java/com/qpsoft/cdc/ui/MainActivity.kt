@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -16,6 +17,7 @@ import com.qpsoft.cdc.utils.LevelConvert
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.ui.entity.School
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -38,6 +40,15 @@ class MainActivity : BaseActivity() {
                     .putExtra("fromMain", true))
         }
 
+        tvGradeClazzList.setOnClickListener {
+            val selSchool = App.instance.selectSchool
+            if (selSchool != null) {
+                startActivity(Intent(this@MainActivity, GradeClazzListActivity::class.java)
+                        .putExtra("school", selSchool))
+            } else {
+                ToastUtils.showShort("请先选择学校")
+            }
+        }
 
     }
 
