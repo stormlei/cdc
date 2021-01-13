@@ -7,4 +7,6 @@ object Api {
     const val CURRENT_PLAN = "$HOST/client/v1/user/current-plan"
     const val SCHOOL = "$HOST/client/v1/school"
     const val GRADE_CLAZZ_LIST = "$HOST/client/v1/student/grade-clazz-list"
+    const val STU_COMPLETE_STATUS = "$HOST/client/v1/student/complate-status"
+    const val STUDENT = "$HOST/client/v1/student"
 }

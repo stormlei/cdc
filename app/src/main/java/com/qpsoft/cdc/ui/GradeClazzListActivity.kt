@@ -1,9 +1,9 @@
 package com.qpsoft.cdc.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -32,15 +32,43 @@ class GradeClazzListActivity : BaseActivity() {
         setTitle(school?.name)
 
         getGradeClazzList()
+        getCompleteStatus()
 
         rvGradeClazz.layoutManager = LinearLayoutManager(this)
-        rvGradeClazz.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
-        mAdapter = GradeClazzListAdapter(android.R.layout.simple_list_item_1, R.layout.def_section_head, null)
+        rvGradeClazz.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        mAdapter = GradeClazzListAdapter(android.R.layout.simple_list_item_1, R.layout.gradeclazz_section_head, null)
         rvGradeClazz.adapter = mAdapter
+
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            val mySection = mAdapter.getItem(position)
+            if (!mySection.isHeader) {
+                val grade = mySection.header as String
+                val clazz = mySection.any as String
+                startActivity(Intent(this@GradeClazzListActivity, StudentListActivity::class.java)
+                        .putExtra("school", school)
+                        .putExtra("grade", grade)
+                        .putExtra("clazz", clazz)
+                )
+            }
+
+        }
     }
 
 
+    private fun getCompleteStatus() {
+        OkGo.get<LzyResponse<CompleteStatus>>(Api.STU_COMPLETE_STATUS)
+                .params("schoolId", school?.id)
+                .execute(object : DialogCallback<LzyResponse<CompleteStatus>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<CompleteStatus>>) {
+                        val stuCompleteStatus = response.body()?.data
+                        tvComNum.text = stuCompleteStatus?.complateNum
+                        tvUnComNum.text = stuCompleteStatus?.unComplateNum
+                    }
+                })
+    }
 
+
+    lateinit var list: MutableList<MySection>
     private fun getGradeClazzList() {
         OkGo.get<LzyResponse<MutableMap<String, MutableList<String>>>>(Api.GRADE_CLAZZ_LIST)
                 .params("schoolId", school?.id)
@@ -48,7 +76,7 @@ class GradeClazzListActivity : BaseActivity() {
                     override fun onSuccess(response: Response<LzyResponse<MutableMap<String, MutableList<String>>>>) {
                         val dataMap = response.body()?.data
 
-                        val list = getItemData(dataMap!!)
+                        list = getItemData(dataMap!!)
                         mAdapter.setNewInstance(list)
                     }
                 })
@@ -60,9 +88,9 @@ class GradeClazzListActivity : BaseActivity() {
         val ml = mutableListOf<MySection>()
 
         itemList.forEach { (key, list) ->
-            ml.add(MySection(true, key))
+            ml.add(MySection(true, key, ""))
             for (item in list) {
-                ml.add(MySection(false, item))
+                ml.add(MySection(false, item, key))
             }
         }
         return ml

@@ -37,8 +37,9 @@ class PickCheckItemActivity : BaseActivity() {
 
         getCurrentPlan()
 
+        rvCheckItem.setHasFixedSize(true)
         rvCheckItem.layoutManager = LinearLayoutManager(this)
-        mAdapter = PickCheckItemAdapter(R.layout.item_pick_checkitem, R.layout.def_section_head, null)
+        mAdapter = PickCheckItemAdapter(R.layout.item_pick_checkitem, R.layout.pick_chekitem_section_head, null)
         rvCheckItem.adapter = mAdapter
 
         tvNext.setOnClickListener {
@@ -71,28 +72,28 @@ class PickCheckItemActivity : BaseActivity() {
         val ml = mutableListOf<MySection>()
 
         if (planType == "Vision" || planType == "CommonDisease") {
-            ml.add(MySection(true, ""))
+            ml.add(MySection(true, "", ""))
             for (checkItem in itemList) {
                 App.instance.checkItemList.forEach {
                     if (it.key == checkItem.key) {
                         checkItem.check = it.check
                     }
                 }
-                ml.add(MySection(false, checkItem))
+                ml.add(MySection(false, checkItem, ""))
             }
             return ml
         }
 
         val gb = itemList.groupBy { it.group }
         gb.forEach { (s, list) ->
-            ml.add(MySection(true, s))
+            ml.add(MySection(true, s, ""))
             for (checkItem in list) {
                 App.instance.checkItemList.forEach {
                     if (it.key == checkItem.key) {
                         checkItem.check = it.check
                     }
                 }
-                ml.add(MySection(false, checkItem))
+                ml.add(MySection(false, checkItem, ""))
             }
         }
         return ml

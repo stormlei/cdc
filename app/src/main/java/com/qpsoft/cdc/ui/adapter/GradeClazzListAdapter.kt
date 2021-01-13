@@ -14,7 +14,7 @@ class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutab
 
     override fun convertHeader(helper: BaseViewHolder, item: MySection) {
         if (item.any is String) {
-            helper.setText(R.id.header, item.any as String?)
+            helper.setText(R.id.header, item.any as String)
         }
     }
 
