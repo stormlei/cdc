@@ -6,7 +6,6 @@ object PlanTypeConvert {
             "Vision" -> "视力筛查"
             "CommonDisease" -> "常见病筛查"
             "Checkup" -> "体检筛查"
-            "YiwuCheck" -> "义乌普查"
             else -> ""
         }
     }

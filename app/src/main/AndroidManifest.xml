@@ -34,6 +34,9 @@
         <activity android:name=".ui.GradeClazzListActivity" />
         <activity android:name=".ui.StudentListActivity" />
         <activity android:name=".ui.ManageActivity" />
+        <activity android:name=".ui.retest.RetestTitleListActivity" />
+        <activity android:name=".ui.retest.RetestListActivity" />
+        <activity android:name=".ui.retest.RetestStudentListActivity" />
     </application>
 
 </manifest>

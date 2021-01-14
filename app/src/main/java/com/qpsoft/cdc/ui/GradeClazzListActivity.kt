@@ -2,6 +2,7 @@ package com.qpsoft.cdc.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lzy.okgo.OkGo
@@ -13,6 +14,7 @@ import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.GradeClazzListAdapter
 import com.qpsoft.cdc.ui.entity.*
+import com.qpsoft.cdc.ui.retest.RetestStudentListActivity
 import kotlinx.android.synthetic.main.activity_grade_clazz_list.*
 
 
@@ -21,22 +23,31 @@ class GradeClazzListActivity : BaseActivity() {
     private lateinit var mAdapter: GradeClazzListAdapter
 
     private var school: School? = null
+    private var isRetest: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_grade_clazz_list)
 
         school = intent.getParcelableExtra("school")
+        isRetest = intent.getBooleanExtra("isRetest", false)
 
         setBackBtn()
         setTitle(school?.name)
 
         getGradeClazzList()
-        getCompleteStatus()
+
+        if (isRetest) {
+            llTop.visibility = View.GONE
+        } else {
+            llTop.visibility = View.VISIBLE
+            getCompleteStatus()
+        }
+
 
         rvGradeClazz.layoutManager = LinearLayoutManager(this)
         rvGradeClazz.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mAdapter = GradeClazzListAdapter(android.R.layout.simple_list_item_1, R.layout.gradeclazz_section_head, null)
+        mAdapter = GradeClazzListAdapter(android.R.layout.simple_list_item_1, R.layout.gradeclazz_section_head, null, isRetest)
         rvGradeClazz.adapter = mAdapter
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
@@ -44,11 +55,20 @@ class GradeClazzListActivity : BaseActivity() {
             if (!mySection.isHeader) {
                 val grade = mySection.header as String
                 val clazz = mySection.any as String
-                startActivity(Intent(this@GradeClazzListActivity, StudentListActivity::class.java)
+                if (isRetest) {
+                    startActivity(Intent(this@GradeClazzListActivity, RetestStudentListActivity::class.java)
                         .putExtra("school", school)
                         .putExtra("grade", grade)
                         .putExtra("clazz", clazz)
-                )
+                    )
+                } else {
+                    startActivity(Intent(this@GradeClazzListActivity, StudentListActivity::class.java)
+                        .putExtra("school", school)
+                        .putExtra("grade", grade)
+                        .putExtra("clazz", clazz)
+                    )
+                }
+
             }
 
         }

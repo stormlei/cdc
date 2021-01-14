@@ -17,6 +17,7 @@ import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.entity.CurrentPlan
+import com.qpsoft.cdc.ui.retest.RetestTitleListActivity
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -51,6 +52,16 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        tvReTest.setOnClickListener {
+            val selSchool = App.instance.selectSchool
+            if (selSchool != null) {
+                startActivity(Intent(this@MainActivity, RetestTitleListActivity::class.java)
+                    .putExtra("school", selSchool).putExtra("planId", planId))
+            } else {
+                ToastUtils.showShort("请先选择学校")
+            }
+        }
+
         tvManage.setOnClickListener {
             startActivity(Intent(this@MainActivity, ManageActivity::class.java))
         }
@@ -70,12 +81,14 @@ class MainActivity : BaseActivity() {
         tvSchool.text = selSchool?.name ?: "请选择"
     }
 
+    private var planId: String? = null
     private fun getCurrentPlan() {
         OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
                 .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
                         val currentPlan = response.body()?.data
 
+                        planId = currentPlan?.id
                         val planName = currentPlan?.name
                         val level = LevelConvert.toCh(currentPlan?.level)
                         tvPlanName.text = planName

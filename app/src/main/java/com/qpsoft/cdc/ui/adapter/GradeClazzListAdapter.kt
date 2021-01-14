@@ -6,7 +6,7 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.ui.entity.MySection
 
 
-class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: MutableList<MySection>?) : BaseSectionQuickAdapter<MySection, BaseViewHolder>(sectionHeadResId, data) {
+class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: MutableList<MySection>?, private val isRetest: Boolean) : BaseSectionQuickAdapter<MySection, BaseViewHolder>(sectionHeadResId, data) {
 
     init {
         setNormalLayout(layoutResId)
@@ -14,8 +14,9 @@ class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutab
 
     override fun convertHeader(helper: BaseViewHolder, item: MySection) {
         if (item.any is String) {
-            helper.setText(R.id.header, item.any as String)
+            helper.setText(R.id.tvHeader, item.any as String)
         }
+        if (isRetest) helper.setVisible(R.id.tvTips, false)
     }
 
     override fun convert(holder: BaseViewHolder, item: MySection) {

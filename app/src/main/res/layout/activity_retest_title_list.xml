@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rlTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <TextView
+            android:id="@+id/tvPlanName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/color_330"
+            android:text="" />
+        <TextView
+            android:layout_toRightOf="@+id/tvPlanName"
+            android:id="@+id/tvLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:background="#E9F1F7"
+            android:textSize="17sp"
+            android:textColor="@color/color_26"
+            android:text="" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_below="@+id/rlTop"
+        android:id="@+id/tvRetestCheckItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="22dp"
+        android:textSize="15sp"
+        android:textColor="@color/color_66"
+        android:text="复测必查项目：" />
+
+    <TextView
+        android:layout_below="@+id/tvRetestCheckItem"
+        android:id="@+id/tvTips"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:paddingStart="16dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:background="@color/color_b3b"
+        android:textSize="13sp"
+        android:textColor="@color/color_107"
+        android:text="系统按日自动生成复测组、点击详情开始复测" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/tvTips"
+        android:id="@+id/rvRetestTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="52dp"
+        />
+
+    <TextView
+        android:id="@+id/tvCreateRetestTitle"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_cb7"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="+新建复测组"
+        />
+
+</RelativeLayout>
