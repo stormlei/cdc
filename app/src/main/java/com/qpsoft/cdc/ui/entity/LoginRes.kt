@@ -1,3 +1,3 @@
 package com.qpsoft.cdc.ui.entity
 
-data class LoginRes(val user: Any, val token: String)
+data class LoginRes(val user: User, val token: String)

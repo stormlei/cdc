@@ -46,7 +46,6 @@ class LoginActivity : BaseActivity() {
                     val loginRes = response.body()?.data
                     CacheDiskStaticUtils.put(Keys.TOKEN, loginRes?.token)
                     startActivity(Intent(this@LoginActivity, PickCheckItemActivity::class.java))
-                    finish()
                 }
             })
 

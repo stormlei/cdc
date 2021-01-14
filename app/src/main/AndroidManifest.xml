@@ -33,6 +33,7 @@
         <activity android:name=".ui.SelectSchoolActivity" />
         <activity android:name=".ui.GradeClazzListActivity" />
         <activity android:name=".ui.StudentListActivity" />
+        <activity android:name=".ui.ManageActivity" />
     </application>
 
 </manifest>

@@ -2,11 +2,14 @@ package com.qpsoft.cdc.ui
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
+import com.lzy.okgo.request.base.Request
 import com.qpsoft.cdc.Api
+import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
@@ -55,6 +58,13 @@ class StudentListActivity : BaseActivity() {
             val student = mAdapter.getItem(position)
             //startActivity(Intent(this@StudentListActivity, MainActivity::class.java))
         }
+
+        sg.setOnCheckedChangeListener { radioGroup, checkedId ->
+            when(checkedId) {
+                R.id.rbWaiting -> getStudentList(0)
+                R.id.rbAll -> getStudentList()
+            }
+        }
     }
 
     private fun getCompleteStatus() {
@@ -72,7 +82,7 @@ class StudentListActivity : BaseActivity() {
     }
 
 
-    private fun getStudentList() {
+    private fun getStudentList(status: Int = -1) {
         OkGo.get<LzyResponse<Page<MutableList<Student>>>>(Api.STUDENT)
             .params("schoolId", school?.id)
             .params("grade", grade)
@@ -83,6 +93,15 @@ class StudentListActivity : BaseActivity() {
                     val studentList = response.body()?.data?.items
 
                     mAdapter.setNewInstance(studentList)
+                }
+
+                override fun onStart(request: Request<LzyResponse<Page<MutableList<Student>>>, out Request<Any, Request<*, *>>>) {
+                    super.onStart(request)
+                    if (status == 0) {
+                        val checkItemStr = App.instance.checkItemList.joinToString(",") { it.key }
+                        LogUtils.e("-----------$checkItemStr")
+                        request.params("filterWaiting", checkItemStr)
+                    }
                 }
             })
     }

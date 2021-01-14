@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.widget.Toast
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -13,19 +14,19 @@ import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.Keys
-import com.qpsoft.cdc.utils.LevelConvert
-import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
-import com.qpsoft.cdc.ui.entity.School
+import com.qpsoft.cdc.ui.entity.CurrentPlan
+import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : BaseActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //CacheDiskStaticUtils.remove(Keys.TOKEN)
         if (!checkLogin()) return
 
         getCurrentPlan()
@@ -50,13 +51,16 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        tvManage.setOnClickListener {
+            startActivity(Intent(this@MainActivity, ManageActivity::class.java))
+        }
     }
 
     override fun onResume() {
         super.onResume()
 
-        LogUtils.e("------"+ App.instance.checkItemList)
-        LogUtils.e("------"+ App.instance.selectSchool)
+        LogUtils.e("------" + App.instance.checkItemList)
+        LogUtils.e("------" + App.instance.selectSchool)
 
         val checkItemList = App.instance.checkItemList
         val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
@@ -81,8 +85,10 @@ class MainActivity : BaseActivity() {
     }
 
 
-
-
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (!checkLogin()) return
+    }
 
 
 
@@ -98,5 +104,19 @@ class MainActivity : BaseActivity() {
     }
 
 
+    override fun onBackPressed() {
+        exitApp()
+    }
+
+    private var exitTime: Long = 0
+
+    private fun exitApp() {
+        if (System.currentTimeMillis() - exitTime > 2000) {
+            Toast.makeText(this, "再按一次退出应用程序", Toast.LENGTH_SHORT).show()
+            exitTime = System.currentTimeMillis()
+        } else {
+            finish()
+        }
+    }
 
 }

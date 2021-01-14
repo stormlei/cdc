@@ -9,4 +9,6 @@ object Api {
     const val GRADE_CLAZZ_LIST = "$HOST/client/v1/student/grade-clazz-list"
     const val STU_COMPLETE_STATUS = "$HOST/client/v1/student/complate-status"
     const val STUDENT = "$HOST/client/v1/student"
+    const val CURRENT_USER = "$HOST/client/v1/user/current-user"
+    const val CURRENT_STATION = "$HOST/client/v1/user/current-station"
 }
