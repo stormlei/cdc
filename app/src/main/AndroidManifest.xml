@@ -37,6 +37,15 @@
         <activity android:name=".ui.retest.RetestTitleListActivity" />
         <activity android:name=".ui.retest.RetestListActivity" />
         <activity android:name=".ui.retest.RetestStudentListActivity" />
+        <activity android:name=".qrcodegenerator.BleDeviceListActivity" />
+        <activity
+            android:windowSoftInputMode="stateHidden"
+            android:name=".qrcodegenerator.GenQrcodeActivity" />
+
+        <activity
+            android:name=".ui.CustomCaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CaptureTheme"/>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.qrcodegenerator.BleDeviceListActivity
 import com.qpsoft.cdc.ui.entity.User
 import kotlinx.android.synthetic.main.activity_manage.*
 
@@ -42,6 +43,9 @@ class ManageActivity : BaseActivity() {
             dialog.show()
         }
 
+        llBle.setOnClickListener {
+            startActivity(Intent(this@ManageActivity, BleDeviceListActivity::class.java))
+        }
     }
 
     private fun getUser() {

@@ -73,7 +73,7 @@ class RetestTitleListActivity : BaseActivity() {
                     mAdapter.setNewInstance(retestTitleList)
                 }
                 positiveButton {  }
-                //negativeButton {  }
+                negativeButton {  }
             }
 
         }

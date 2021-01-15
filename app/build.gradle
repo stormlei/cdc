@@ -53,4 +53,6 @@ dependencies {
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    implementation 'com.king.zxing:zxing-lite:2.0.2'
 }

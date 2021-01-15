@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -18,6 +20,7 @@ import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.retest.RetestTitleListActivity
+import com.qpsoft.cdc.utils.HC08OpUtil
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,20 +36,26 @@ class MainActivity : BaseActivity() {
         getCurrentPlan()
 
         llRePickCheckItem.setOnClickListener {
-            startActivity(Intent(this@MainActivity, PickCheckItemActivity::class.java)
-                    .putExtra("fromMain", true))
+            startActivity(
+                Intent(this@MainActivity, PickCheckItemActivity::class.java)
+                    .putExtra("fromMain", true)
+            )
         }
 
         llReSelSchool.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SelectSchoolActivity::class.java)
-                    .putExtra("fromMain", true))
+            startActivity(
+                Intent(this@MainActivity, SelectSchoolActivity::class.java)
+                    .putExtra("fromMain", true)
+            )
         }
 
         tvGradeClazzList.setOnClickListener {
             val selSchool = App.instance.selectSchool
             if (selSchool != null) {
-                startActivity(Intent(this@MainActivity, GradeClazzListActivity::class.java)
-                        .putExtra("school", selSchool))
+                startActivity(
+                    Intent(this@MainActivity, GradeClazzListActivity::class.java)
+                        .putExtra("school", selSchool)
+                )
             } else {
                 ToastUtils.showShort("请先选择学校")
             }
@@ -55,8 +64,10 @@ class MainActivity : BaseActivity() {
         tvReTest.setOnClickListener {
             val selSchool = App.instance.selectSchool
             if (selSchool != null) {
-                startActivity(Intent(this@MainActivity, RetestTitleListActivity::class.java)
-                    .putExtra("school", selSchool).putExtra("planId", planId))
+                startActivity(
+                    Intent(this@MainActivity, RetestTitleListActivity::class.java)
+                        .putExtra("school", selSchool).putExtra("planId", planId)
+                )
             } else {
                 ToastUtils.showShort("请先选择学校")
             }
@@ -65,6 +76,30 @@ class MainActivity : BaseActivity() {
         tvManage.setOnClickListener {
             startActivity(Intent(this@MainActivity, ManageActivity::class.java))
         }
+
+        ivScan.setOnClickListener {
+            startActivityForResult(
+                Intent(this@MainActivity, CustomCaptureActivity::class.java),
+                300
+            )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 300 && resultCode == RESULT_OK) {
+            var result = data?.getStringExtra("result")
+            if (result == null) {
+                result = CameraScan.parseScanResult(data)
+            }
+            connBleDevice(result)
+        }
+    }
+
+    private fun connBleDevice(result: String?) {
+        val deviceObj = JSON.parseObject(result)
+        val mac = deviceObj.getString("bluetooth_mac")
+        HC08OpUtil.connectBleDevice(mac)
     }
 
     override fun onResume() {
