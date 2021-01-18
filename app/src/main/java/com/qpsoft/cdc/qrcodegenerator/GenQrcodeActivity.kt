@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.view.View
 import com.alibaba.fastjson.JSONObject
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
@@ -18,11 +17,10 @@ import com.king.zxing.util.CodeUtils
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.ui.MainActivity
-import com.qpsoft.cdc.utils.CommonUtil
+import com.qpsoft.cdc.utils.AlbumUtil
 import com.qpsoft.cdc.utils.HC08OpUtil
 import kotlinx.android.synthetic.main.activity_gen_qrcode.*
 import java.util.*
-import java.util.stream.Collectors
 
 
 class GenQrcodeActivity : BaseActivity() {
@@ -126,7 +124,7 @@ class GenQrcodeActivity : BaseActivity() {
             jsonObj.put("write_id", HC08OpUtil.uuid_write)
             val txtStr: String = jsonObj.toJSONString()
             val qrCodeBitmap: Bitmap = CodeUtils.createQRCode(txtStr, 200)
-            CommonUtil.saveBitmap2file(qrCodeBitmap, tvDeviceName.text.toString(), this@GenQrcodeActivity)
+            AlbumUtil.saveBitmap2file(qrCodeBitmap, tvDeviceName.text.toString(), this@GenQrcodeActivity)
             startActivity(Intent(this@GenQrcodeActivity, MainActivity::class.java))
         }
     }

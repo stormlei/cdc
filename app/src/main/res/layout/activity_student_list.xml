@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/llTop"
@@ -98,12 +99,26 @@
     </info.hoang8f.android.segmented.SegmentedGroup>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:layout_below="@+id/sg"
+        android:id="@+id/rvStudent111"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="62dp"
+        />
+
+    <me.yokeyword.indexablerv.IndexableLayout
         android:layout_below="@+id/sg"
         android:id="@+id/rvStudent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="52dp"
-        />
+        android:paddingBottom="62dp"
+        app:indexBar_layout_width="24dp"
+        app:indexBar_background="#08000000"
+        app:indexBar_textColor="#000000"
+        app:indexBar_selectedTextColor="@color/color_cb7"
+        app:indexBar_textSize="14sp"
+        app:indexBar_textSpace="6dp" />
 
     <TextView
         android:id="@+id/tvNext"

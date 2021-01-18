@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.Toast
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
@@ -114,6 +115,23 @@ class MainActivity : BaseActivity() {
 
         val selSchool = App.instance.selectSchool
         tvSchool.text = selSchool?.name ?: "请选择"
+
+        handleDeviceUI(ciStr)
+    }
+
+    private fun handleDeviceUI(ciStr: String) {
+        if (ciStr.contains("视力")) {
+            llEyeChart.visibility = View.VISIBLE
+            //是否连接
+        } else {
+            llEyeChart.visibility = View.GONE
+        }
+        if (ciStr.contains("屈光")) {
+            llDiopter.visibility = View.VISIBLE
+            //是否连接
+        } else {
+            llDiopter.visibility = View.GONE
+        }
     }
 
     private var planId: String? = null

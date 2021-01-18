@@ -61,7 +61,7 @@
         android:id="@+id/rvRetestTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="52dp"
+        android:paddingBottom="62dp"
         />
 
     <TextView

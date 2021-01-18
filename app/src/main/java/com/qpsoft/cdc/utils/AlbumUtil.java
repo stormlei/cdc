@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class CommonUtil {
+public class AlbumUtil {
 
     public static void saveBitmap2file(Bitmap bmp, String name, Context context) {
         //String savePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+File.separator;

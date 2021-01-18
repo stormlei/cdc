@@ -13,7 +13,7 @@
             android:id="@+id/tvPlanName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
+            android:textSize="17sp"
             android:textColor="@color/color_330"
             android:text="" />
         <TextView
@@ -25,15 +25,16 @@
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
             android:background="#E9F1F7"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textColor="@color/color_cb7"
             android:text="" />
         <TextView
             android:id="@+id/tvManage"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:layout_alignParentRight="true"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/color_26"
             android:text="管理" />
     </RelativeLayout>
@@ -53,21 +54,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:textSize="17sp"
                 android:textColor="@color/color_66"
                 android:text="我负责的项目：" />
             <TextView
                 android:id="@+id/tvCheckItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp"
+                android:textSize="20sp"
                 android:textColor="@color/color_26"
                 android:text="" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:textSize="13sp"
+                android:textSize="17sp"
                 android:textColor="@color/color_cb7"
                 android:text="重选" />
         </LinearLayout>
@@ -86,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:textSize="17sp"
+                android:textSize="20sp"
                 android:textColor="@color/color_26"
                 android:text="" />
         </LinearLayout>
@@ -114,7 +115,7 @@
                 android:layout_weight="1"
                 android:drawableTop="@drawable/student_list"
                 android:drawablePadding="12dp"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:textColor="@color/color_330"
                 android:text="学生列表" />
             <TextView
@@ -129,7 +130,7 @@
                 android:layout_weight="1"
                 android:drawableTop="@drawable/student_list"
                 android:drawablePadding="12dp"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:textColor="@color/color_330"
                 android:text="抽样复测" />
             <TextView
@@ -144,7 +145,7 @@
                 android:layout_weight="1"
                 android:drawableTop="@drawable/student_list"
                 android:drawablePadding="12dp"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:textColor="@color/color_330"
                 android:text="环境监测" />
 
@@ -153,14 +154,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="20sp"
                     android:textColor="@color/color_26"
                     android:text="设备管理" />
                 <TextView
@@ -168,10 +170,54 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textSize="13sp"
+                    android:textSize="17sp"
                     android:textColor="@color/color_cb7"
                     android:text="扫描设备二维码连接设备" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llEyeChart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/color_26"
+                    android:text="电子视力表 未连接" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_cb7"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llDiopter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/color_26"
+                    android:text="电脑验光仪 未连接" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_cb7"
+                    android:text="" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>
@@ -181,7 +227,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/color_99"
         android:text="©浙江省疾病预防控制中心"
         />

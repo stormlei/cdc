@@ -28,6 +28,7 @@ object HC08OpUtil {
             }
 
             override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
+                ToastUtils.showShort("连接失败，请重试")
             }
 
             override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt, status: Int) {
