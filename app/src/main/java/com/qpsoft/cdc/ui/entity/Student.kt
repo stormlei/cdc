@@ -1,7 +1,10 @@
 package com.qpsoft.cdc.ui.entity
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import me.yokeyword.indexablerv.IndexableEntity
 
+@Parcelize
 data class Student(
         val id: String,
         var name: String,
@@ -16,7 +19,7 @@ data class Student(
         val grade: String,
         val clazz: String,
         val schoolCategory: String
-        ): IndexableEntity {
+        ): IndexableEntity, Parcelable {
         override fun getFieldIndexBy(): String {
                 return name
         }

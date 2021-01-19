@@ -1,4 +1,4 @@
-package com.qpsoft.cdc.ui
+package com.qpsoft.cdc.ui.physical.retest
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,14 +15,11 @@ import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.StudentAdapter
 import com.qpsoft.cdc.ui.entity.Page
 import com.qpsoft.cdc.ui.entity.School
-import com.qpsoft.cdc.ui.entity.CompleteStatus
 import com.qpsoft.cdc.ui.entity.Student
-import kotlinx.android.synthetic.main.activity_student_list.*
-import kotlinx.android.synthetic.main.activity_student_list.tvComNum
-import kotlinx.android.synthetic.main.activity_student_list.tvUnComNum
+import kotlinx.android.synthetic.main.activity_retest_student_list.*
 
 
-class StudentListActivity : BaseActivity() {
+class RetestStudentListActivity : BaseActivity() {
 
     private lateinit var mAdapter: StudentAdapter
 
@@ -32,7 +29,7 @@ class StudentListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_student_list)
+        setContentView(R.layout.activity_retest_student_list)
 
         school = intent.getParcelableExtra("school")
         grade = intent.getStringExtra("grade")
@@ -41,42 +38,21 @@ class StudentListActivity : BaseActivity() {
         setBackBtn()
         setTitle(school?.name + " " +grade+ " " +clazz)
 
-        getStudentList()
-        getCompleteStatus()
+        getRetestStudentList()
 
-        rvStudent.setLayoutManager(LinearLayoutManager(this))
-        rvStudent.setOverlayStyle_MaterialDesign(R.color.color_cb7)
+        rvRetestStudent.setLayoutManager(LinearLayoutManager(this))
+        rvRetestStudent.setOverlayStyle_MaterialDesign(R.color.color_cb7)
         mAdapter = StudentAdapter(this)
-        rvStudent.setAdapter(mAdapter)
+        rvRetestStudent.setAdapter(mAdapter)
 
         mAdapter.setOnItemContentClickListener { v, originalPosition, currentPosition, entity ->
 
         }
 
-        sg.setOnCheckedChangeListener { radioGroup, checkedId ->
-            when(checkedId) {
-                R.id.rbWaiting -> getStudentList(0)
-                R.id.rbAll -> getStudentList()
-            }
-        }
-    }
-
-    private fun getCompleteStatus() {
-        OkGo.get<LzyResponse<CompleteStatus>>(Api.STU_COMPLETE_STATUS)
-            .params("schoolId", school?.id)
-            .params("grade", grade)
-            .params("clazz", clazz)
-            .execute(object : DialogCallback<LzyResponse<CompleteStatus>>(this) {
-                override fun onSuccess(response: Response<LzyResponse<CompleteStatus>>) {
-                    val stuCompleteStatus = response.body()?.data
-                    tvComNum.text = stuCompleteStatus?.complateNum
-                    tvUnComNum.text = stuCompleteStatus?.unComplateNum
-                }
-            })
     }
 
 
-    private fun getStudentList(status: Int = -1) {
+    private fun getRetestStudentList() {
         OkGo.get<LzyResponse<Page<MutableList<Student>>>>(Api.STUDENT)
             .params("schoolId", school?.id)
             .params("grade", grade)
@@ -91,11 +67,10 @@ class StudentListActivity : BaseActivity() {
 
                 override fun onStart(request: Request<LzyResponse<Page<MutableList<Student>>>, out Request<Any, Request<*, *>>>) {
                     super.onStart(request)
-                    if (status == 0) {
-                        val checkItemStr = App.instance.checkItemList.joinToString(",") { it.key }
-                        LogUtils.e("-----------$checkItemStr")
-                        request.params("filterWaiting", checkItemStr)
-                    }
+                    val checkItemStr = App.instance.checkItemList.joinToString(",") { it.key }
+                    LogUtils.e("-----------$checkItemStr")
+                    request.params("filterDone", checkItemStr)
+
                 }
             })
     }

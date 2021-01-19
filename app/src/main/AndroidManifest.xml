@@ -31,12 +31,13 @@
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.PickCheckItemActivity" />
         <activity android:name=".ui.SelectSchoolActivity" />
-        <activity android:name=".ui.GradeClazzListActivity" />
-        <activity android:name=".ui.StudentListActivity" />
+        <activity android:name=".ui.physical.GradeClazzListActivity" />
+        <activity android:name=".ui.physical.StudentListActivity" />
+        <activity android:name=".ui.physical.PhysicalTestActivity" />
+        <activity android:name=".ui.physical.retest.RetestTitleListActivity" />
+        <activity android:name=".ui.physical.retest.RetestListActivity" />
+        <activity android:name=".ui.physical.retest.RetestStudentListActivity" />
         <activity android:name=".ui.ManageActivity" />
-        <activity android:name=".ui.retest.RetestTitleListActivity" />
-        <activity android:name=".ui.retest.RetestListActivity" />
-        <activity android:name=".ui.retest.RetestStudentListActivity" />
         <activity android:name=".qrcodegenerator.BleDeviceListActivity" />
         <activity
             android:windowSoftInputMode="stateHidden"

@@ -1,4 +1,4 @@
-package com.qpsoft.cdc.ui
+package com.qpsoft.cdc.ui.physical
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.GradeClazzListAdapter
 import com.qpsoft.cdc.ui.entity.*
-import com.qpsoft.cdc.ui.retest.RetestStudentListActivity
+import com.qpsoft.cdc.ui.physical.retest.RetestStudentListActivity
 import kotlinx.android.synthetic.main.activity_grade_clazz_list.*
 
 

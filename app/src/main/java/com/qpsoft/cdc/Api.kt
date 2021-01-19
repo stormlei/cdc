@@ -12,4 +12,5 @@ object Api {
     const val CURRENT_USER = "$HOST/client/v1/user/current-user"
     const val RETEST_TITLE_LIST = "$HOST/client/v1/retest/title-list"
     const val RETEST_SUMMARY_VISION = "$HOST/client/v1/retest/summary-vision"
+    const val RECORD_SUBMIT = "$HOST/client/v1/record/submit"
 }

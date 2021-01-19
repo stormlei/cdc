@@ -20,7 +20,8 @@ import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.entity.CurrentPlan
-import com.qpsoft.cdc.ui.retest.RetestTitleListActivity
+import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
+import com.qpsoft.cdc.ui.physical.retest.RetestTitleListActivity
 import com.qpsoft.cdc.utils.HC08OpUtil
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*

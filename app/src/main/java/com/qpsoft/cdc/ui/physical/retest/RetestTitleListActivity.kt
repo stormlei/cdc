@@ -1,9 +1,11 @@
-package com.qpsoft.cdc.ui.retest
+package com.qpsoft.cdc.ui.physical.retest
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
@@ -13,72 +15,73 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
-import com.qpsoft.cdc.ui.GradeClazzListActivity
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.entity.RetestTitle
 import com.qpsoft.cdc.ui.entity.School
-import kotlinx.android.synthetic.main.activity_retest_list.*
+import com.qpsoft.cdc.utils.LevelConvert
+import kotlinx.android.synthetic.main.activity_retest_title_list.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class RetestListActivity : BaseActivity() {
+class RetestTitleListActivity : BaseActivity() {
 
     private lateinit var mAdapter: BaseQuickAdapter<RetestTitle, BaseViewHolder>
 
     private var school: School? = null
     private var planId: String? = null
-    private var retestTitle: String? = null
-    private var planType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_retest_list)
+        setContentView(R.layout.activity_retest_title_list)
 
         school = intent.getParcelableExtra("school")
         planId = intent.getStringExtra("planId")
-        retestTitle = intent.getStringExtra("retestTitle")
-        planType = intent.getStringExtra("planType")
 
         setBackBtn()
         setTitle(school?.name)
 
-        tvRetestTitle.text = retestTitle
-        when(planType) {
-            "Vision" -> tvPlanType.text = "视力复测质控"
-            "CommonDisease" -> tvPlanType.text = "形态复测质控"
-            "Checkup" -> tvPlanType.text = "体检复测质控"
-        }
+        getCurrentPlan()
+        getRetestTitleList()
 
-        getRetestSummary()
-        //getRetestList()
-
-        rvRetest.layoutManager = LinearLayoutManager(this)
-        rvRetest.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mAdapter = object: BaseQuickAdapter<RetestTitle, BaseViewHolder>(R.layout.item_retest_list) {
+        rvRetestTitle.layoutManager = LinearLayoutManager(this)
+        rvRetestTitle.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        mAdapter = object: BaseQuickAdapter<RetestTitle, BaseViewHolder>(R.layout.item_retest_title_list) {
             override fun convert(holder: BaseViewHolder, item: RetestTitle) {
                 holder.setText(R.id.tvTitle, item.title)
             }
 
         }
-        rvRetest.adapter = mAdapter
+        rvRetestTitle.adapter = mAdapter
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val retestTitle = mAdapter.getItem(position)
-            //startActivity(Intent(this@RetestListActivity, MainActivity::class.java))
+            startActivity(Intent(this@RetestTitleListActivity, RetestListActivity::class.java)
+                .putExtra("school", school)
+                .putExtra("planId", planId)
+                .putExtra("retestTitle", retestTitle.title)
+                .putExtra("planType", planType)
+            )
         }
 
-        tvStuList.setOnClickListener {
-            startActivity(Intent(this@RetestListActivity, GradeClazzListActivity::class.java)
-                .putExtra("school", school)
-                .putExtra("isRetest", true)
-            )
+
+
+        tvCreateRetestTitle.setOnClickListener {
+            MaterialDialog(this).show {
+                input(hint = "请输入复测组名称") {dialog, text ->
+                    retestTitleList?.add(RetestTitle(text.toString()))
+                    mAdapter.setNewInstance(retestTitleList)
+                }
+                positiveButton {  }
+                negativeButton {  }
+            }
+
         }
     }
 
 
     private var retestTitleList: MutableList<RetestTitle>? = null
-    private fun getRetestList() {
+    private fun getRetestTitleList() {
         OkGo.get<LzyResponse<MutableList<RetestTitle>>>(Api.RETEST_TITLE_LIST)
             .params("schoolId", school?.id)
             .params("planId", planId)
@@ -98,20 +101,25 @@ class RetestListActivity : BaseActivity() {
             })
     }
 
-    private fun getRetestSummary() {
-        var url = Api.RETEST_SUMMARY_VISION
-        when(planType) {
-            "Vision" -> url = Api.RETEST_SUMMARY_VISION
-            "CommonDisease" -> url = Api.RETEST_SUMMARY_VISION
-            "Checkup" -> url = Api.RETEST_SUMMARY_VISION
-        }
-        OkGo.get<LzyResponse<CurrentPlan>>(url)
-            .params("schoolId", school?.id)
-            .params("planId", planId)
-            .params("title", retestTitle)
+    private var planType: String? = null
+    private fun getCurrentPlan() {
+        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
                 .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
                         val currentPlan = response.body()?.data
+
+                        val planName = currentPlan?.name
+                        val level = LevelConvert.toCh(currentPlan?.level)
+                        tvPlanName.text = planName
+                        tvLevel.text = level
+                        planType = currentPlan?.planType
+                        val retestItem = when (currentPlan?.planType) {
+                            "Vision" -> "视力、屈光"
+                            "CommonDisease" -> "视力、屈光、身高、体重"
+                            "Checkup" -> "身高、体重、龋齿、沙眼"
+                            else -> ""
+                        }
+                        tvRetestCheckItem.text = "复测必查项目：$retestItem"
                     }
                 })
     }
