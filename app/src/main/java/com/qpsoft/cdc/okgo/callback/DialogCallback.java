@@ -40,7 +40,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     private void initDialog(Activity activity) {
         dialog = new ProgressDialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("请求网络中...");
     }

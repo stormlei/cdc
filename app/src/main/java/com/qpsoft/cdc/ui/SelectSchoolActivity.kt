@@ -2,6 +2,7 @@ package com.qpsoft.cdc.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -14,6 +15,7 @@ import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.entity.School
+import kotlinx.android.synthetic.main.activity_grade_clazz_list.*
 import kotlinx.android.synthetic.main.activity_select_school.*
 
 
@@ -35,6 +37,7 @@ class SelectSchoolActivity : BaseActivity() {
         getSchool()
 
         rvSchool.layoutManager = LinearLayoutManager(this)
+        rvSchool.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         mAdapter = object: BaseQuickAdapter<School, BaseViewHolder>(android.R.layout.simple_list_item_1) {
             override fun convert(holder: BaseViewHolder, item: School) {
                 holder.setText(android.R.id.text1, item.name)

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@color/white">
+
+  <RelativeLayout
+    android:layout_width="72dp"
+    android:layout_height="72dp">
+    <ImageView
+      android:id="@+id/ivAddPic"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_centerInParent="true"
+      android:scaleType="centerCrop"
+      android:src="@drawable/pic_addpic" />
+    <LinearLayout
+      android:visibility="gone"
+      android:id="@+id/llDel"
+      android:layout_width="30dp"
+      android:layout_height="35dp"
+      android:layout_alignParentEnd="true"
+      android:gravity="end"
+      android:orientation="vertical">
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        android:src="@drawable/btn_delletepicture" />
+    </LinearLayout>
+  </RelativeLayout>
+
+
+</RelativeLayout>

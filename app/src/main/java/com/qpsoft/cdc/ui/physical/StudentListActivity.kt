@@ -2,6 +2,8 @@ package com.qpsoft.cdc.ui.physical
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.get
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
@@ -46,6 +48,7 @@ class StudentListActivity : BaseActivity() {
         getCompleteStatus()
 
         rvStudent.setLayoutManager(LinearLayoutManager(this))
+        rvStudent.recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvStudent.setOverlayStyle_MaterialDesign(R.color.color_cb7)
         mAdapter = StudentAdapter(this)
         rvStudent.setAdapter(mAdapter)
@@ -59,8 +62,8 @@ class StudentListActivity : BaseActivity() {
 
         sg.setOnCheckedChangeListener { radioGroup, checkedId ->
             when(checkedId) {
-                R.id.rbWaiting -> getStudentList(0)
-                R.id.rbAll -> getStudentList()
+                R.id.rbWaiting -> getStudentList()
+                R.id.rbAll -> getStudentList(-1)
             }
         }
     }
@@ -80,7 +83,7 @@ class StudentListActivity : BaseActivity() {
     }
 
 
-    private fun getStudentList(status: Int = -1) {
+    private fun getStudentList(status: Int = 0) {
         OkGo.get<LzyResponse<Page<MutableList<Student>>>>(Api.STUDENT)
             .params("schoolId", school?.id)
             .params("grade", grade)
