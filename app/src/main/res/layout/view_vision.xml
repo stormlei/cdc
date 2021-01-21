@@ -248,7 +248,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="度数右"/>
+                android:text="度数右-"/>
             <EditText
                 android:id="@+id/edtOkGlassRight"
                 android:layout_width="match_parent"
@@ -273,7 +273,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="度数左"/>
+                android:text="度数左-"/>
             <EditText
                 android:id="@+id/edtOkGlassLeft"
                 android:layout_width="match_parent"
@@ -305,7 +305,7 @@
             android:textSize="17sp"
             android:text="眼睛是否病变"/>
         <com.kyleduo.switchbutton.SwitchButton
-            android:id="@+id/sbtnEyeAbnormal"
+            android:id="@+id/sbtnEyeAbnormalVision"
             style="@style/SwitchButtonStyle"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"

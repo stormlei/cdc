@@ -1,13 +1,12 @@
 package com.qpsoft.cdc.ui.physical
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
-import android.view.Window
 import androidx.recyclerview.widget.GridLayoutManager
-import com.alibaba.fastjson.JSON
-import com.blankj.utilcode.util.CacheDiskStaticUtils
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.luck.picture.lib.PictureSelector
@@ -19,26 +18,27 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
-import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
-import com.qpsoft.cdc.ui.PickCheckItemActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
-import com.qpsoft.cdc.ui.entity.LoginRes
 import com.qpsoft.cdc.ui.entity.Student
 import kotlinx.android.synthetic.main.activity_physical_test.*
-import kotlinx.android.synthetic.main.activity_physical_test.tvName
 import kotlinx.android.synthetic.main.view_diopter.*
+import kotlinx.android.synthetic.main.view_medicalhistory.*
+import kotlinx.android.synthetic.main.view_medicalhistory.view.*
 import kotlinx.android.synthetic.main.view_vision.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 
 class PhysicalTestActivity : BaseActivity() {
 
     private var student: Student? = null
+
+    private var ciStr = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +52,17 @@ class PhysicalTestActivity : BaseActivity() {
         tvName.text = student?.name
         tvGradeClazz.text = student?.grade + student?.clazz
 
+        getPhysical()
+
         tvSubmit.setOnClickListener { doSubmit() }
 
 
         val checkItemList = App.instance.checkItemList
-        val ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
-        handleUI(ciStr)
+        ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
+        handleUI()
     }
 
-    private fun handleUI(ciStr: String) {
+    private fun handleUI() {
         LogUtils.e("-----------$ciStr")
 
         if (ciStr.contains("vision")) {
@@ -73,25 +75,32 @@ class PhysicalTestActivity : BaseActivity() {
                         llUnGlass.visibility = View.VISIBLE
                         llGlass.visibility = View.GONE
                         llOkGlass.visibility = View.GONE
+                        glassType = "No"
                     }
                     R.id.rbGlass -> {
                         llUnGlass.visibility = View.VISIBLE
                         llGlass.visibility = View.VISIBLE
                         llOkGlass.visibility = View.GONE
+                        glassType = "Frame"
                     }
                     R.id.rbLens -> {
                         llUnGlass.visibility = View.VISIBLE
                         llGlass.visibility = View.VISIBLE
                         llOkGlass.visibility = View.GONE
+                        glassType = "ContactLens"
                     }
                     R.id.rbOkGlass -> {
                         llUnGlass.visibility = View.GONE
                         llGlass.visibility = View.VISIBLE
                         llOkGlass.visibility = View.VISIBLE
+                        glassType = "OkGlass"
                     }
                 }
             }
 
+            sbtnEyeAbnormalVision.setOnCheckedChangeListener { compoundButton, isChecked ->
+                eyeAbnormalVision = isChecked
+            }
         }
         if (ciStr.contains("diopter")) {
             val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
@@ -126,10 +135,27 @@ class PhysicalTestActivity : BaseActivity() {
                 selPicList.removeAt(position)
                 mUploadAdapter.setItems(selPicList)
             }
+
+            sbtnEyeAbnormalDiopter.setOnCheckedChangeListener { compoundButton, isChecked ->
+                eyeAbnormalDiopter = isChecked
+            }
         }
         if (ciStr.contains("medicalHistory")) {
             val medicalHistoryView = layoutInflater.inflate(R.layout.view_medicalhistory, null)
             llContent.addView(medicalHistoryView)
+
+            var initSel = intArrayOf()
+            tvMedicalHistory.setOnClickListener {
+                val myItems = mutableListOf("肝炎", "肾炎", "心脏病", "高血压", "贫血", "过敏性哮喘", "身体残疾", "均无")
+                MaterialDialog(this).show {
+                    listItemsMultiChoice(items = myItems, initialSelection = initSel) { dialog, indices, items ->
+                        initSel = indices
+                        this@PhysicalTestActivity.tvMedicalHistory.text = items.joinToString(limit = 4)
+                        medicalHistoryList = items as MutableList<String>
+                    }
+                    positiveButton()
+                }
+            }
         }
         if (ciStr.contains("caries")) {
             val cariesView = layoutInflater.inflate(R.layout.view_caries, null)
@@ -189,9 +215,10 @@ class PhysicalTestActivity : BaseActivity() {
         for (i in selectList.indices) {
             files.add(File(selectList[i].path))
         }
+        val objectName = "cdc/"+ System.currentTimeMillis() + ".jpg"
         OkGo.post<LzyResponse<Any>>(Api.OSS_UPLOAD)
             .addFileParams("file", files)
-            .params("objectName", "abc/efg/123.jpg")
+            .params("objectName", objectName)
             .execute(object : DialogCallback<LzyResponse<Any>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<Any>>) {
                     val s = response.body()?.data.toString()
@@ -203,29 +230,150 @@ class PhysicalTestActivity : BaseActivity() {
             })
     }
 
+    private fun downloadImage(optometryFile: String?) {
+        if (!TextUtils.isEmpty(optometryFile)) {
+            OkGo.get<LzyResponse<Any>>(Api.OSS_DOWNLOAD)
+                .params("objectName", optometryFile)
+                .execute(object : DialogCallback<LzyResponse<Any>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<Any>>) {
+                        val s = response.body()?.data.toString()
+                        val localMedia = LocalMedia()
+                        localMedia.path = s
+                        selPicList.add(localMedia)
+                        mUploadAdapter.setItems(selPicList)
+                        licensePics.add(optometryFile!!)
+                    }
+                })
+        }
+    }
 
+
+
+    private fun getPhysical() {
+        OkGo.get<LzyResponse<Student>>(Api.STUDENT + "/" + student?.id + "?expand=record")
+            .execute(object : DialogCallback<LzyResponse<Student>>(this) {
+                override fun onSuccess(response: Response<LzyResponse<Student>>) {
+                    val student = response.body()?.data!!
+                    //vision
+                    val vision = student.record?.data?.vision
+                    if (vision != null) {
+                        when (vision.glassType) {
+                            "No" -> rbUnGlass.isChecked = true
+                            "Frame" -> rbGlass.isChecked = true
+                            "ContactLens" -> rbLens.isChecked = true
+                            "OkGlass" -> rbOkGlass.isChecked = true
+                        }
+                        edtUnGlassRight.setText(vision.nakedDegree?.od)
+                        edtUnGlassLeft.setText(vision.nakedDegree?.os)
+                        edtGlassRight.setText(vision.glassDegree?.od)
+                        edtGlassLeft.setText(vision.glassDegree?.os)
+                        edtOkGlassRight.setText(vision.spectacles?.od)
+                        edtOkGlassLeft.setText(vision.spectacles?.os)
+
+                        sbtnEyeAbnormalVision.isChecked = vision.eyeAbnormal
+
+                    }
+                    //diopter
+                    val diopter = student.record?.data?.diopter
+                    LogUtils.e("-----" + diopter)
+                    if (diopter != null) {
+                        edtSRight.setText(diopter.sph?.od)
+                        edtSLeft.setText(diopter.sph?.os)
+                        edtCRight.setText(diopter.cyl?.od)
+                        edtCLeft.setText(diopter.cyl?.os)
+                        edtARight.setText(diopter.axle?.od)
+                        edtALeft.setText(diopter.axle?.os)
+
+                        downloadImage(diopter.optometryFile)
+
+                        sbtnEyeAbnormalDiopter.isChecked = diopter.eyeAbnormal
+
+                    }
+                }
+            })
+    }
+
+    //vision
+    private var glassType = "Frame"
+    private var eyeAbnormalVision = false
+
+    //diopter
     private lateinit var mUploadAdapter: UploadImageAdapter
     private val selPicList = mutableListOf<LocalMedia>()
     private val licensePics = mutableListOf<String>()
+    private var eyeAbnormalDiopter = false
 
+
+    private var medicalHistoryList = mutableListOf<String>()
 
     private fun doSubmit() {
+        //vision
+        val ndObj = com.alibaba.fastjson.JSONObject()
+        ndObj["od"] = edtUnGlassRight.text.toString().trim()
+        ndObj["os"] = edtUnGlassLeft.text.toString().trim()
+        val gdObj = com.alibaba.fastjson.JSONObject()
+        gdObj["od"] = edtGlassRight.text.toString().trim()
+        gdObj["os"] = edtGlassLeft.text.toString().trim()
+        val stObj = com.alibaba.fastjson.JSONObject()
+        stObj["od"] = edtOkGlassRight.text.toString().trim()
+        stObj["os"] = edtOkGlassLeft.text.toString().trim()
+        val contextObj = com.alibaba.fastjson.JSONObject()
+        contextObj["userId"] = ""
+        contextObj["userName"] = ""
+        contextObj["deviceId"] = ""
+        contextObj["deviceName"] = ""
+        contextObj["submitAt"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+        val visionObj = com.alibaba.fastjson.JSONObject()
+        when(glassType) {
+            "No" -> visionObj["nakedDegree"] = ndObj
+            "Frame", "ContactLens" -> {
+                visionObj["nakedDegree"] = ndObj
+                visionObj["glassDegree"] = gdObj
+            }
+            "OkGlass" -> {
+                visionObj["glassDegree"] = gdObj
+                visionObj["spectacles"] = stObj
+            }
+        }
+        visionObj["glassType"] = glassType
+        visionObj["eyeAbnormal"] = eyeAbnormalVision
+        visionObj["context"] = contextObj
+
+        //diopter
+        val sphObj = com.alibaba.fastjson.JSONObject()
+        sphObj["od"] = edtSRight.text.toString().trim()
+        sphObj["os"] = edtSLeft.text.toString().trim()
+        val cylObj = com.alibaba.fastjson.JSONObject()
+        cylObj["od"] = edtCRight.text.toString().trim()
+        cylObj["os"] = edtCLeft.text.toString().trim()
+        val axleObj = com.alibaba.fastjson.JSONObject()
+        axleObj["od"] = edtARight.text.toString().trim().toInt()
+        axleObj["os"] = edtALeft.text.toString().trim().toInt()
+        val diopterObj = com.alibaba.fastjson.JSONObject()
+        diopterObj["sph"] = sphObj
+        diopterObj["cyl"] = cylObj
+        diopterObj["axle"] = axleObj
+        diopterObj["optometryFile"] = if(licensePics.size == 0) "" else licensePics[0]
+        diopterObj["eyeAbnormal"] = eyeAbnormalDiopter
+        diopterObj["context"] = contextObj
+
+
+
+        val dataObj = com.alibaba.fastjson.JSONObject()
+        if (ciStr.contains("vision")) dataObj["vision"] = visionObj
+        if (ciStr.contains("diopter")) dataObj["diopter"] = diopterObj
+
         val upMap = mutableMapOf<Any?, Any?>()
         upMap["studentId"] = student?.id
-        upMap["data"] = "Aa@123456"
+        upMap["data"] = dataObj
         val jsonObj = JSONObject(upMap)
-        OkGo.post<LzyResponse<LoginRes>>(Api.RECORD_SUBMIT)
+        OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
             .upJson(jsonObj)
-            .execute(object : DialogCallback<LzyResponse<LoginRes>>(this) {
-                override fun onSuccess(response: Response<LzyResponse<LoginRes>>) {
-                    val loginRes = response.body()?.data
-                    CacheDiskStaticUtils.put(Keys.TOKEN, loginRes?.token)
-                    startActivity(
-                        Intent(
-                            this@PhysicalTestActivity,
-                            PickCheckItemActivity::class.java
-                        )
-                    )
+            .execute(object : DialogCallback<LzyResponse<Any>>(this) {
+                override fun onSuccess(response: Response<LzyResponse<Any>>) {
+                    val any = response.body()?.data
+                    ToastUtils.showShort("提交成功")
+                    finish()
                 }
             })
 

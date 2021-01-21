@@ -38,9 +38,12 @@ class SelectSchoolActivity : BaseActivity() {
 
         rvSchool.layoutManager = LinearLayoutManager(this)
         rvSchool.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mAdapter = object: BaseQuickAdapter<School, BaseViewHolder>(android.R.layout.simple_list_item_1) {
+        mAdapter = object: BaseQuickAdapter<School, BaseViewHolder>(R.layout.item_select_school) {
             override fun convert(holder: BaseViewHolder, item: School) {
-                holder.setText(android.R.id.text1, item.name)
+                holder.setText(R.id.tvName, item.name)
+                if (item.name == App.instance.selectSchool?.name) {
+                    holder.setTextColor(R.id.tvName, resources.getColor(R.color.color_cb7))
+                }
             }
 
         }

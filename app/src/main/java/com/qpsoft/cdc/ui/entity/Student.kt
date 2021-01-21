@@ -1,7 +1,9 @@
 package com.qpsoft.cdc.ui.entity
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import me.yokeyword.indexablerv.IndexableEntity
 
 @Parcelize
@@ -11,7 +13,7 @@ data class Student(
         var py:String,
         val mobile: String?,
         val idcard: String,
-        val gender: String,
+        val gender: String?,
         val birthday: String,
         val nation: String,
         val birthPlace: String?,
@@ -32,4 +34,5 @@ data class Student(
                 this.py = pinyin
         }
 
+        val record: Record? = null
 }

@@ -14,4 +14,5 @@ object Api {
     const val RETEST_SUMMARY_VISION = "$HOST/client/v1/retest/summary-vision"
     const val RECORD_SUBMIT = "$HOST/client/v1/record/submit"
     const val OSS_UPLOAD = "$HOST/client/v1/oss/upload"
+    const val OSS_DOWNLOAD = "$HOST/client/v1/oss/download"
 }

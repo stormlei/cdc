@@ -23,7 +23,7 @@ class PickCheckItemAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutabl
 
     override fun convert(holder: BaseViewHolder, item: MySection) {
         val checkItem = item.any as CheckItem
-        holder.setText(R.id.tvOptional, if(checkItem.optional) "" else "必查")
+        holder.setText(R.id.tvOptional, if(checkItem.optional || checkItem.group == null) "" else "必查")
         val cbItem = holder.getView<CheckBox>(R.id.cbItem)
         cbItem.text = checkItem.name
 

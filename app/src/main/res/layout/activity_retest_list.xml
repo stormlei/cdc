@@ -16,7 +16,7 @@
             android:paddingStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:textColor="@color/color_66"
             android:text="" />
 
@@ -28,7 +28,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:text="视力复测质控"
             />
 
@@ -259,7 +259,7 @@
         android:layout_marginTop="12dp"
         android:gravity="center_vertical"
         android:background="@color/color_b3b"
-        android:textSize="13sp"
+        android:textSize="15sp"
         android:textColor="@color/color_107"
         android:text="请从当日测试人数中抽取5%进行复测，达标要求错误率低于5%。" />
 
@@ -286,7 +286,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:text="扫描学生体验码"
             />
         <TextView
@@ -297,7 +297,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/color_cb7"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:text="复测学生列表"
             />
     </LinearLayout>

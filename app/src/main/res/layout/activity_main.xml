@@ -217,6 +217,48 @@
                     android:text="" />
             </LinearLayout>
 
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llHeightWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/color_26"
+                    android:text="身高体重仪 未连接" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_cb7"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llBloodPressure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/color_26"
+                    android:text="电子血压计 未连接" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_cb7"
+                    android:text="" />
+            </LinearLayout>
+
 
         </LinearLayout>
 

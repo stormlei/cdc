@@ -22,7 +22,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="12dp"
         android:background="@color/color_f5"/>
 
     <LinearLayout
@@ -30,10 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:background="@color/color_f0"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -85,7 +80,7 @@
                     android:layout_height="match_parent"
                     android:inputType="numberSigned"
                     android:background="@null"
-                    android:hint="请输入"/>
+                    android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -132,14 +127,13 @@
                     android:layout_height="match_parent"
                     android:inputType="numberSigned"
                     android:background="@null"
-                    android:hint="请输入"/>
+                    android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="64dp"
-            android:background="@color/color_f0"/>
+            android:background="@color/color_e5"/>
 
     </LinearLayout>
 

@@ -22,7 +22,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="12dp"
         android:background="@color/color_f5"/>
 
     <LinearLayout
@@ -30,38 +29,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:background="@color/color_f0"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:text="身高体重"/>
-
-        <TextView
-            android:id="@+id/tvYuanCeWH"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:textSize="17sp"
-            android:paddingStart="16sp"
-            android:gravity="center_vertical"
-            android:text="原测："/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_e5"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
                 <TextView
@@ -76,7 +51,7 @@
                     android:layout_height="match_parent"
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
-                    android:hint="请输入"/>
+                    android:hint="请填写"/>
             </LinearLayout>
             <View
                 android:layout_width="1dp"
@@ -85,7 +60,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
                 <TextView
@@ -100,29 +75,36 @@
                     android:layout_height="match_parent"
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
-                    android:hint="请输入"/>
+                    android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_e5"/>
+
 
         <LinearLayout
-            android:id="@+id/llWHBt"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="1dp"
-            android:gravity="center_vertical"
-            android:background="#FAFAFA">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/iv_login"/>
+            android:layout_height="52dp"
+            android:layout_margin="16dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/bg_cb7_stroke_shape">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="@color/color_e89"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="身高体重测量仪连接"/>
+                android:text="身高体重仪：未连接"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/color_cb7"
+                android:textSize="17sp"
+                android:text="扫码连接设备"/>
         </LinearLayout>
     </LinearLayout>
 

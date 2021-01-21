@@ -111,13 +111,18 @@ class MainActivity : BaseActivity() {
         LogUtils.e("------" + App.instance.selectSchool)
 
         val checkItemList = App.instance.checkItemList
-        val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
-        tvCheckItem.text = ciStr
+        val ciTxt = if(checkItemList.size > 2) {
+            checkItemList.joinToString(limit = 2) { checkItem -> checkItem.name }
+        } else {
+            checkItemList.joinToString { checkItem -> checkItem.name }
+        }
+
+        tvCheckItem.text = ciTxt
 
         val selSchool = App.instance.selectSchool
         tvSchool.text = selSchool?.name ?: "请选择"
 
-        handleDeviceUI(ciStr)
+        handleDeviceUI(checkItemList.joinToString { checkItem -> checkItem.name })
     }
 
     private fun handleDeviceUI(ciStr: String) {
@@ -133,6 +138,18 @@ class MainActivity : BaseActivity() {
         } else {
             llDiopter.visibility = View.GONE
         }
+        if (ciStr.contains("身高") || ciStr.contains("体重")) {
+            llHeightWeight.visibility = View.VISIBLE
+            //是否连接
+        } else {
+            llHeightWeight.visibility = View.GONE
+        }
+        if (ciStr.contains("血压")) {
+            llBloodPressure.visibility = View.VISIBLE
+            //是否连接
+        } else {
+            llBloodPressure.visibility = View.GONE
+        }
     }
 
     private var planId: String? = null
@@ -147,6 +164,8 @@ class MainActivity : BaseActivity() {
                         val level = LevelConvert.toCh(currentPlan?.level)
                         tvPlanName.text = planName
                         tvLevel.text = level
+
+                        if (currentPlan?.planType == "Vision") tvEnv.visibility = View.GONE
                     }
                 })
     }
