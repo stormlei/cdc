@@ -2,10 +2,10 @@ package com.qpsoft.cdc.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -17,14 +17,21 @@ import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.Keys
+import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.okgo.utils.Convert
 import com.qpsoft.cdc.ui.entity.CurrentPlan
+import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
 import com.qpsoft.cdc.ui.physical.retest.RetestTitleListActivity
-import com.qpsoft.cdc.utils.HC08OpUtil
+import com.qpsoft.cdc.utils.BleDeviceOpUtil
+import com.qpsoft.cdc.utils.EyeChartOpUtil
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MainActivity : BaseActivity() {
@@ -85,6 +92,23 @@ class MainActivity : BaseActivity() {
                 300
             )
         }
+
+        tvEyeChartDisconn.setOnClickListener {
+            EyeChartOpUtil.disConnected()
+            updateDeviceStatusUi()
+        }
+        tvDiopterDisconn.setOnClickListener {
+            BleDeviceOpUtil.diopterDisConnected()
+            updateDeviceStatusUi()
+        }
+        tvHWDisconn.setOnClickListener {
+            BleDeviceOpUtil.hwDisConnected()
+            updateDeviceStatusUi()
+        }
+        tvBPDisconn.setOnClickListener {
+            BleDeviceOpUtil.bpDisConnected()
+            updateDeviceStatusUi()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -99,13 +123,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun connBleDevice(result: String?) {
-        val deviceObj = JSON.parseObject(result)
-        val mac = deviceObj.getString("bluetooth_mac")
-        HC08OpUtil.connectBleDevice(mac)
+        LogUtils.e("---------$result")
+        val qrCodeInfo = Convert.fromJson(result, QrCodeInfo::class.java)
+        BleDeviceOpUtil.connectDevice(qrCodeInfo)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
 
         LogUtils.e("------" + App.instance.checkItemList)
         LogUtils.e("------" + App.instance.selectSchool)
@@ -122,31 +147,78 @@ class MainActivity : BaseActivity() {
         val selSchool = App.instance.selectSchool
         tvSchool.text = selSchool?.name ?: "请选择"
 
-        handleDeviceUI(checkItemList.joinToString { checkItem -> checkItem.name })
+        updateDeviceStatusUi()
     }
 
-    private fun handleDeviceUI(ciStr: String) {
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceStatusEvent(connStatusEvent: DeviceStatusEvent) {
+        updateDeviceStatusUi()
+    }
+
+
+
+    private fun updateDeviceStatusUi() {
+        val checkItemList = App.instance.checkItemList
+        val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
+
         if (ciStr.contains("视力")) {
             llEyeChart.visibility = View.VISIBLE
             //是否连接
+            if(EyeChartOpUtil.isConnected()) {
+                val eyeChartName = EyeChartOpUtil.deviceInfo()?.name
+                tvEyeChartName.text = Html.fromHtml("电子视力表 已连接 <font color=\"#247CB7\">$eyeChartName</font>")
+                tvEyeChartDisconn.text = "断开连接"
+            } else {
+                tvEyeChartName.text = "电子视力表 未连接"
+                tvEyeChartDisconn.text = ""
+            }
         } else {
             llEyeChart.visibility = View.GONE
         }
         if (ciStr.contains("屈光")) {
             llDiopter.visibility = View.VISIBLE
             //是否连接
+            if(BleDeviceOpUtil.isDiopterConnected()) {
+                val diopterName = BleDeviceOpUtil.diopterDeviceInfo()?.name
+                tvDiopterName.text = Html.fromHtml("电脑验光仪 已连接 <font color=\"#247CB7\">$diopterName</font>")
+                tvDiopterDisconn.text = "断开连接"
+            } else {
+                tvDiopterName.text = "电脑验光仪 未连接"
+                tvDiopterDisconn.text = ""
+            }
         } else {
             llDiopter.visibility = View.GONE
         }
         if (ciStr.contains("身高") || ciStr.contains("体重")) {
             llHeightWeight.visibility = View.VISIBLE
             //是否连接
+            if(BleDeviceOpUtil.isHWConnected()) {
+                val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
+                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWDisconn.text = "断开连接"
+            } else {
+                tvHWName.text = "身高体重仪 未连接"
+                tvHWDisconn.text = ""
+            }
         } else {
             llHeightWeight.visibility = View.GONE
         }
         if (ciStr.contains("血压")) {
             llBloodPressure.visibility = View.VISIBLE
             //是否连接
+            if(BleDeviceOpUtil.isBPConnected()) {
+                val bpName = BleDeviceOpUtil.bpDeviceInfo()?.name
+                tvBPName.text = Html.fromHtml("电子血压计 已连接 <font color=\"#247CB7\">$bpName</font>")
+                tvBPDisconn.text = "断开连接"
+            } else {
+                tvBPName.text = "电子血压计 未连接"
+                tvBPDisconn.text = ""
+            }
         } else {
             llBloodPressure.visibility = View.GONE
         }

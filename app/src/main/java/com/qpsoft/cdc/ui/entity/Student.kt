@@ -1,9 +1,7 @@
 package com.qpsoft.cdc.ui.entity
 
 import android.os.Parcelable
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
 import me.yokeyword.indexablerv.IndexableEntity
 
 @Parcelize

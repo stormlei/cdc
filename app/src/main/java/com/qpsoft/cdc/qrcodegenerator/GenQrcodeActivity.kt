@@ -18,7 +18,7 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.ui.MainActivity
 import com.qpsoft.cdc.utils.AlbumUtil
-import com.qpsoft.cdc.utils.HC08OpUtil
+import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import kotlinx.android.synthetic.main.activity_gen_qrcode.*
 import java.util.*
 
@@ -116,12 +116,12 @@ class GenQrcodeActivity : BaseActivity() {
             jsonObj.put("brand", tvBrand.text.toString())
             jsonObj.put("model", tvModel.text.toString())
             jsonObj.put("no", edtNo.text.toString())
-            jsonObj.put("name", tvDeviceName.text.toString())
+            jsonObj.put("name", tvBrand.text.toString()+"_"+tvModel.text.toString()+"_"+edtNo.text.toString())
             jsonObj.put("bluetooth_name", bleDevice?.name)
             jsonObj.put("bluetooth_mac", bleDevice?.mac)
-            jsonObj.put("service_id", HC08OpUtil.uuid_server)
-            jsonObj.put("notify_id", HC08OpUtil.uuid_notify)
-            jsonObj.put("write_id", HC08OpUtil.uuid_write)
+            jsonObj.put("service_id", BleDeviceOpUtil.uuid_service)
+            jsonObj.put("notify_id", BleDeviceOpUtil.uuid_notify)
+            jsonObj.put("write_id", BleDeviceOpUtil.uuid_write)
             val txtStr: String = jsonObj.toJSONString()
             val qrCodeBitmap: Bitmap = CodeUtils.createQRCode(txtStr, 200)
             AlbumUtil.saveBitmap2file(qrCodeBitmap, tvDeviceName.text.toString(), this@GenQrcodeActivity)

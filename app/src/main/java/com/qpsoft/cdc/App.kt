@@ -7,7 +7,7 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor
 import com.qpsoft.cdc.ui.entity.CheckItem
 import com.qpsoft.cdc.ui.entity.School
-import com.qpsoft.cdc.utils.HC08OpUtil
+import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -36,7 +36,7 @@ class App: Application() {
         // okgo
         initOkGo()
         //ble
-        HC08OpUtil.initBle(this)
+        BleDeviceOpUtil.initBle(this)
     }
 
     private fun initOkGo() {

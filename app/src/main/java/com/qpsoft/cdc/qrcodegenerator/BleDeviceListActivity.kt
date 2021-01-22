@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleScanCallback
 import com.clj.fastble.data.BleDevice
+import com.clj.fastble.scan.BleScanRuleConfig
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_bledevice_list.*
@@ -51,6 +52,7 @@ class BleDeviceListActivity : BaseActivity() {
     }
 
     private fun getDeviceList() {
+        BleManager.getInstance().initScanRule(BleScanRuleConfig())
         BleManager.getInstance().scan(object : BleScanCallback() {
             override fun onScanStarted(success: Boolean) {}
             override fun onScanning(bleDevice: BleDevice) {

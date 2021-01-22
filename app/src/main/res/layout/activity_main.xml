@@ -182,16 +182,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
                 <TextView
+                    android:id="@+id/tvEyeChartName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textColor="@color/color_26"
                     android:text="电子视力表 未连接" />
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvEyeChartDisconn"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textSize="13sp"
+                    android:gravity="end"
+                    android:textSize="17sp"
                     android:textColor="@color/color_cb7"
                     android:text="" />
             </LinearLayout>
@@ -203,16 +205,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
                 <TextView
+                    android:id="@+id/tvDiopterName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textColor="@color/color_26"
                     android:text="电脑验光仪 未连接" />
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvDiopterDisconn"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textSize="13sp"
+                    android:gravity="end"
+                    android:textSize="17sp"
                     android:textColor="@color/color_cb7"
                     android:text="" />
             </LinearLayout>
@@ -224,16 +228,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
                 <TextView
+                    android:id="@+id/tvHWName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textColor="@color/color_26"
                     android:text="身高体重仪 未连接" />
                 <TextView
+                    android:id="@+id/tvHWDisconn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textSize="13sp"
+                    android:textSize="17sp"
                     android:textColor="@color/color_cb7"
                     android:text="" />
             </LinearLayout>
@@ -245,16 +251,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
                 <TextView
+                    android:id="@+id/tvBPName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textColor="@color/color_26"
                     android:text="电子血压计 未连接" />
                 <TextView
+                    android:id="@+id/tvBPDisconn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textSize="13sp"
+                    android:textSize="17sp"
                     android:textColor="@color/color_cb7"
                     android:text="" />
             </LinearLayout>
