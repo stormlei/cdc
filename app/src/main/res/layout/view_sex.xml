@@ -24,23 +24,15 @@
         android:layout_height="1dp"
         android:background="@color/color_f5"/>
 
+    <!-- 中小学生  -->
     <LinearLayout
-        android:id="@+id/llScExam"
+        android:visibility="gone"
+        android:id="@+id/llZhongXiaoXue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:text="是否来月经（仅女生填写）, 遗精（仅男生填写）"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_e5"/>
         <LinearLayout
+            android:id="@+id/llWomen"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal">
@@ -73,14 +65,14 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="首次月经年龄（周岁）："/>
+                    android:text="首次月经年龄(周岁)："/>
                 <EditText
                     android:id="@+id/edtWomenAge"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="numberSigned"
                     android:background="@null"
-                    android:hint="请填写"/>
+                    android:hint="请输入"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -88,6 +80,7 @@
             android:layout_height="1dp"
             android:background="@color/color_e5"/>
         <LinearLayout
+            android:id="@+id/llMen"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal">
@@ -120,21 +113,159 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="首次遗精年龄（周岁）："/>
+                    android:text="首次遗精年龄(周岁)："/>
                 <EditText
                     android:id="@+id/edtMenAge"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="numberSigned"
                     android:background="@null"
-                    android:hint="请填写"/>
+                    android:hint="请输入"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 大学生  -->
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/llDaXue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/llWomenDaXue"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/cbWomenWhetherDaXue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="18sp"
+                    android:text="是否来月经"/>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/color_f0"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:text="大约："/>
+                    <EditText
+                        android:id="@+id/edtFrequency"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:inputType="numberSigned"
+                        android:background="@null"
+                        android:hint="请输入"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:text="天一次"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:text="每次平均："/>
+                    <EditText
+                        android:id="@+id/edtDuration"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:background="@null"
+                        android:hint="请输入"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:text="天"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/color_e5"/>
-
+        <LinearLayout
+            android:id="@+id/llMenDaXue"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/cbMenWhetherDaXue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="18sp"
+                    android:text="是否遗精"/>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/color_f0"/>
+            <LinearLayout
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:text="首次遗精年龄（周岁）："/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="numberSigned"
+                    android:background="@null"
+                    android:hint="请输入"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_e5"/>
 
 </LinearLayout>

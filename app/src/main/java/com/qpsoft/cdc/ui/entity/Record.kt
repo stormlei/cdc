@@ -3,7 +3,15 @@ package com.qpsoft.cdc.ui.entity
 data class Record(val data: Data) {
         data class Data(
                 val vision: Vision?,
-                val diopter: Diopter?) {
+                val diopter: Diopter?,
+                val medicalHistory: MutableList<String>?,
+                val caries: Caries?,
+                val height: String?,
+                val weight: String?,
+                val bloodPressure: BloodPressure?,
+                val spine: Spine?,
+                val sexuality: Sexuality?
+                ) {
                 data class Vision(
                         val nakedDegree: Degree?,
                         val glassType: String,
@@ -27,6 +35,59 @@ data class Record(val data: Data) {
                         data class Degree(
                                 val od: String,
                                 val os: String
+                        )
+
+                }
+                data class Caries(
+                        val babyTooth: Tooth?,
+                        val adultTooth: Tooth?,
+                ) {
+                        data class Tooth(
+                                val caries: ToothData?,
+                                val missing: ToothData?,
+                                val fill: ToothData?
+                        ) {
+                                data class ToothData(
+                                        val count: Int,
+                                        val list: MutableList<Int>,
+                                )
+                        }
+
+                }
+                data class BloodPressure(
+                        val sbp: String?,
+                        val dbp: String?,
+
+                )
+                data class Spine(
+                        val sideBend: SideBend?,
+                        val baBend: SideBend.ScoliosisData?,
+                ) {
+                        data class SideBend(
+                                val chest: ScoliosisData?,
+                                val waistChest: ScoliosisData?,
+                                val waist: ScoliosisData?
+                        ) {
+                                data class ScoliosisData(
+                                        val category: String,
+                                        val degree: String,
+                                )
+                        }
+
+                }
+                data class Sexuality(
+                        val menstruation: Menstruation?,
+                        val nocturnalEmission: NocturnalEmission?,
+                ) {
+                        data class Menstruation(
+                                val whether: Int?,
+                                val startAge: Int?,
+                                val frequency: Int?,
+                                val duration: Int?
+                        )
+                        data class NocturnalEmission(
+                                val whether: Int?,
+                                val startAge: Int?,
                         )
 
                 }
