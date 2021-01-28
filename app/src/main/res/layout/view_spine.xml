@@ -62,6 +62,8 @@
                     android:id="@+id/tvXiong"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -88,6 +90,8 @@
                     android:id="@+id/tvXiongDegree"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -118,6 +122,8 @@
                     android:id="@+id/tvYaoXiong"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -144,6 +150,8 @@
                     android:id="@+id/tvYaoXiongDegree"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -174,6 +182,8 @@
                     android:id="@+id/tvYao"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -200,6 +210,8 @@
                     android:id="@+id/tvYaoDegree"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -242,6 +254,8 @@
                     android:id="@+id/tvQianHou"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>
@@ -268,6 +282,8 @@
                     android:id="@+id/tvQianHouDegree"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:gravity="center"
                     android:drawableRight="@drawable/icon_arrow_r"
                     android:hint="请选择"/>

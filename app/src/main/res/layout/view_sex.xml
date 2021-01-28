@@ -251,8 +251,9 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="首次遗精年龄（周岁）："/>
+                    android:text="首次遗精年龄(周岁)："/>
                 <EditText
+                    android:id="@+id/edtMenAgeDaXue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="numberSigned"

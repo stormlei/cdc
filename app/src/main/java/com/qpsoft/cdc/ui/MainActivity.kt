@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -47,14 +46,14 @@ class MainActivity : BaseActivity() {
         llRePickCheckItem.setOnClickListener {
             startActivity(
                 Intent(this@MainActivity, PickCheckItemActivity::class.java)
-                    .putExtra("fromMain", true)
+                    .putExtra("isReSel", true)
             )
         }
 
         llReSelSchool.setOnClickListener {
             startActivity(
                 Intent(this@MainActivity, SelectSchoolActivity::class.java)
-                    .putExtra("fromMain", true)
+                    .putExtra("isReSel", true)
             )
         }
 
@@ -66,7 +65,10 @@ class MainActivity : BaseActivity() {
                         .putExtra("school", selSchool)
                 )
             } else {
-                ToastUtils.showShort("请先选择学校")
+                //ToastUtils.showShort("请先选择学校")
+                startActivity(Intent(this@MainActivity, SelectSchoolActivity::class.java)
+                                .putExtra("noSelSchool", true)
+                )
             }
         }
 
@@ -78,7 +80,10 @@ class MainActivity : BaseActivity() {
                         .putExtra("school", selSchool).putExtra("planId", planId)
                 )
             } else {
-                ToastUtils.showShort("请先选择学校")
+                //ToastUtils.showShort("请先选择学校")
+                startActivity(Intent(this@MainActivity, SelectSchoolActivity::class.java)
+                        .putExtra("noSelSchoolReTest", true).putExtra("planId", planId)
+                )
             }
         }
 
@@ -109,6 +114,11 @@ class MainActivity : BaseActivity() {
             BleDeviceOpUtil.bpDisConnected()
             updateDeviceStatusUi()
         }
+
+
+        refreshLayout.setOnRefreshListener {
+            getCurrentPlan()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -132,11 +142,15 @@ class MainActivity : BaseActivity() {
         super.onStart()
         EventBus.getDefault().register(this)
 
+        refreshUI()
+    }
+
+    private fun refreshUI() {
         LogUtils.e("------" + App.instance.checkItemList)
         LogUtils.e("------" + App.instance.selectSchool)
 
         val checkItemList = App.instance.checkItemList
-        val ciTxt = if(checkItemList.size > 2) {
+        val ciTxt = if (checkItemList.size > 2) {
             checkItemList.joinToString(limit = 2) { checkItem -> checkItem.name }
         } else {
             checkItemList.joinToString { checkItem -> checkItem.name }
@@ -161,7 +175,6 @@ class MainActivity : BaseActivity() {
     }
 
 
-
     private fun updateDeviceStatusUi() {
         val checkItemList = App.instance.checkItemList
         val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
@@ -179,6 +192,7 @@ class MainActivity : BaseActivity() {
             }
         } else {
             llEyeChart.visibility = View.GONE
+            EyeChartOpUtil.disConnected()
         }
         if (ciStr.contains("屈光")) {
             llDiopter.visibility = View.VISIBLE
@@ -193,6 +207,7 @@ class MainActivity : BaseActivity() {
             }
         } else {
             llDiopter.visibility = View.GONE
+            BleDeviceOpUtil.diopterDisConnected()
         }
         if (ciStr.contains("身高") || ciStr.contains("体重")) {
             llHeightWeight.visibility = View.VISIBLE
@@ -207,6 +222,7 @@ class MainActivity : BaseActivity() {
             }
         } else {
             llHeightWeight.visibility = View.GONE
+            BleDeviceOpUtil.hwDisConnected()
         }
         if (ciStr.contains("血压")) {
             llBloodPressure.visibility = View.VISIBLE
@@ -221,6 +237,7 @@ class MainActivity : BaseActivity() {
             }
         } else {
             llBloodPressure.visibility = View.GONE
+            BleDeviceOpUtil.bpDisConnected()
         }
     }
 
@@ -229,8 +246,14 @@ class MainActivity : BaseActivity() {
         OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
                 .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
+                        refreshLayout.finishRefresh()
                         val currentPlan = response.body()?.data
 
+                        if (planId != currentPlan?.id) {
+                            App.instance.checkItemList.clear()
+                            App.instance.selectSchool = null
+                            refreshUI()
+                        }
                         planId = currentPlan?.id
                         val planName = currentPlan?.name
                         val level = LevelConvert.toCh(currentPlan?.level)
@@ -247,8 +270,6 @@ class MainActivity : BaseActivity() {
         super.onNewIntent(intent)
         if (!checkLogin()) return
     }
-
-
 
 
     private fun checkLogin(): Boolean {

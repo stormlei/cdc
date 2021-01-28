@@ -7,6 +7,7 @@ import me.yokeyword.indexablerv.IndexableEntity
 @Parcelize
 data class Student(
         val id: String,
+        var studentId: String?,
         var name: String,
         var py:String,
         val mobile: String?,
@@ -33,4 +34,5 @@ data class Student(
         }
 
         val record: Record? = null
+        val data: DataItem? = null
 }

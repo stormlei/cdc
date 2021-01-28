@@ -48,17 +48,18 @@
             android:gravity="center"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvRetestCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_cb7"
-                android:textSize="15sp"
+                android:textSize="24sp"
                 android:text="0"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_66"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:text="完成复测人数"
                 />
         </LinearLayout>
@@ -73,17 +74,18 @@
             android:gravity="center"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvRetestItemCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_cb7"
-                android:textSize="15sp"
+                android:textSize="24sp"
                 android:text="0"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_66"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:text="复测项次"
                 />
         </LinearLayout>
@@ -98,17 +100,18 @@
             android:gravity="center"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvErrorCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_cb7"
-                android:textSize="15sp"
+                android:textSize="24sp"
                 android:text="0"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_66"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:text="错误项次"
                 />
         </LinearLayout>
@@ -123,17 +126,18 @@
             android:gravity="center"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvErrorRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_cb7"
-                android:textSize="15sp"
+                android:textSize="24sp"
                 android:text="0%"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_66"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:text="错误率"
                 />
         </LinearLayout>

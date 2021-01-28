@@ -24,13 +24,13 @@ class PickCheckItemActivity : BaseActivity() {
 
     private lateinit var mAdapter: PickCheckItemAdapter
 
-    private var fromMain: Boolean = false
+    private var isReSel: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pick_checkitem)
 
-        fromMain = intent.getBooleanExtra("fromMain", false)
+        isReSel = intent.getBooleanExtra("isReSel", false)
 
         setBackBtn()
         setTitle("本次筛查我负责的项目")
@@ -46,7 +46,7 @@ class PickCheckItemActivity : BaseActivity() {
             startActivity(Intent(this@PickCheckItemActivity, SelectSchoolActivity::class.java))
         }
 
-        if (fromMain) {
+        if (isReSel) {
             tvNext.visibility = View.GONE
         }
     }

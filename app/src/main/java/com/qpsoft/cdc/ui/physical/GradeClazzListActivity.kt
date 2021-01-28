@@ -23,14 +23,20 @@ class GradeClazzListActivity : BaseActivity() {
     private lateinit var mAdapter: GradeClazzListAdapter
 
     private var school: School? = null
+
     private var isRetest: Boolean = false
+    private var retestTitle: String? = null
+    private var planType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_grade_clazz_list)
 
         school = intent.getParcelableExtra("school")
+
         isRetest = intent.getBooleanExtra("isRetest", false)
+        retestTitle = intent.getStringExtra("retestTitle")
+        planType = intent.getStringExtra("planType")
 
         setBackBtn()
         setTitle(school?.name)
@@ -60,6 +66,8 @@ class GradeClazzListActivity : BaseActivity() {
                         .putExtra("school", school)
                         .putExtra("grade", grade)
                         .putExtra("clazz", clazz)
+                        .putExtra("retestTitle", retestTitle)
+                        .putExtra("planType", planType)
                     )
                 } else {
                     startActivity(Intent(this@GradeClazzListActivity, StudentListActivity::class.java)

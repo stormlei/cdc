@@ -22,6 +22,8 @@ import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_retest_title_list.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 
 class RetestTitleListActivity : BaseActivity() {
@@ -41,14 +43,18 @@ class RetestTitleListActivity : BaseActivity() {
         setBackBtn()
         setTitle(school?.name)
 
-        getCurrentPlan()
-        getRetestTitleList()
-
         rvRetestTitle.layoutManager = LinearLayoutManager(this)
         rvRetestTitle.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         mAdapter = object: BaseQuickAdapter<RetestTitle, BaseViewHolder>(R.layout.item_retest_title_list) {
             override fun convert(holder: BaseViewHolder, item: RetestTitle) {
                 holder.setText(R.id.tvTitle, item.title)
+                if (item.allStatisticalTable != null) {
+                    holder.setText(R.id.tvRetestCount, ""+item.allStatisticalTable.retestCount)
+                    holder.setText(R.id.tvRetestItemCount, ""+item.allStatisticalTable.retestItemCount)
+                    holder.setText(R.id.tvErrorCount, ""+item.allStatisticalTable.errorCount)
+                    val rate = (item.allStatisticalTable.errorCount) * 100f/(item.allStatisticalTable.retestItemCount)
+                    holder.setText(R.id.tvErrorRate, ""+rate.roundToInt()+"%")
+                }
             }
 
         }
@@ -79,12 +85,19 @@ class RetestTitleListActivity : BaseActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        getCurrentPlan()
+        getRetestTitleList()
+    }
+
 
     private var retestTitleList: MutableList<RetestTitle>? = null
     private fun getRetestTitleList() {
         OkGo.get<LzyResponse<MutableList<RetestTitle>>>(Api.RETEST_TITLE_LIST)
             .params("schoolId", school?.id)
             .params("planId", planId)
+            .params("expand", "all")
             .execute(object : DialogCallback<LzyResponse<MutableList<RetestTitle>>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<MutableList<RetestTitle>>>) {
                     retestTitleList = response.body()?.data
@@ -92,7 +105,8 @@ class RetestTitleListActivity : BaseActivity() {
                     if (retestTitleList?.size == 0) {
                         retestTitleList!!.add(RetestTitle(customTitle))
                     } else {
-                        if (!retestTitleList?.contains(customTitle)!!) {
+                        val titleList = retestTitleList?.map { it.title }
+                        if (!titleList?.contains(customTitle)!!) {
                             retestTitleList!!.add(0, RetestTitle(customTitle))
                         }
                     }

@@ -1,4 +1,4 @@
-package com.qpsoft.cdc.ui.physical
+package com.qpsoft.cdc.ui.physical.retest
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +27,7 @@ import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
 import com.qpsoft.cdc.ui.entity.Student
 import kotlinx.android.synthetic.main.activity_physical_test.*
+import kotlinx.android.synthetic.main.activity_retest_list.*
 import kotlinx.android.synthetic.main.view_bloodpressure.*
 import kotlinx.android.synthetic.main.view_caries.*
 import kotlinx.android.synthetic.main.view_diopter.*
@@ -43,26 +44,34 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PhysicalTestActivity : BaseActivity() {
+class ReTestActivity : BaseActivity() {
 
     private var student: Student? = null
+    private var retestTitle: String? = null
+    private var planType: String? = null
 
     private var ciStr = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_physical_test)
+        setContentView(R.layout.activity_retest)
 
         student = intent.getParcelableExtra("student")
+        retestTitle = intent.getStringExtra("retestTitle")
+        planType = intent.getStringExtra("planType")
 
         setBackBtn()
-        setTitle("健康监测")
+        setTitle("健康复测")
 
         tvName.text = student?.name
         tvGradeClazz.text = student?.grade + student?.clazz
 
-        val checkItemList = App.instance.checkItemList
-        ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
+        LogUtils.e("-----------$planType")
+        when(planType) {
+            "Vision" -> ciStr = "vision, diopter"
+            "CommonDisease" -> ciStr = "vision, diopter, height, weight"
+            "Checkup" -> ciStr = "height, weight, caries, trachoma"
+        }
         handleUI()
 
         getPhysical()
@@ -121,11 +130,11 @@ class PhysicalTestActivity : BaseActivity() {
             rvOriPic.adapter = mUploadAdapter
             mUploadAdapter.setOnItemClickListener { adapter, view, position ->
                 if (adapter.getItemViewType(position) == 1) {
-                    PictureSelector.create(this@PhysicalTestActivity)
+                    PictureSelector.create(this@ReTestActivity)
                         .themeStyle(R.style.picture_default_style)
                         .openExternalPreview(position, selPicList)
                 } else {
-                    PictureSelector.create(this@PhysicalTestActivity)
+                    PictureSelector.create(this@ReTestActivity)
                         .openCamera(PictureMimeType.ofImage()) //.maxSelectNum(4 - selPicList.size())
                         .maxSelectNum(1)
                         .enableCrop(true)
@@ -146,31 +155,6 @@ class PhysicalTestActivity : BaseActivity() {
 
             sbtnEyeAbnormalDiopter.setOnCheckedChangeListener { compoundButton, isChecked ->
                 eyeAbnormalDiopter = isChecked
-            }
-        }
-        if (ciStr.contains("medicalHistory")) {
-            val medicalHistoryView = layoutInflater.inflate(R.layout.view_medicalhistory, null)
-            llContent.addView(medicalHistoryView)
-
-            val myItems = mutableListOf("肝炎", "肾炎", "心脏病", "高血压", "贫血", "过敏性哮喘", "身体残疾", "均无")
-            val indexSel = mutableListOf<Int>()
-            for(mh in medicalHistoryList) {
-                for(item in myItems) {
-                    if (mh == item) {
-                        indexSel.add(myItems.indexOf(item))
-                    }
-                }
-            }
-            var initSel = intArrayOf(elements = indexSel.toIntArray())
-            tvMedicalHistory.setOnClickListener {
-                MaterialDialog(this).show {
-                    listItemsMultiChoice(items = myItems, initialSelection = initSel) { dialog, indices, items ->
-                        initSel = indices
-                        this@PhysicalTestActivity.tvMedicalHistory.text = items.joinToString(limit = 4)
-                        medicalHistoryList = items as MutableList<String>
-                    }
-                    positiveButton()
-                }
             }
         }
         if (ciStr.contains("caries")) {
@@ -237,51 +221,6 @@ class PhysicalTestActivity : BaseActivity() {
             val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
             llContent.addView(heightWeightView)
         }
-        if (ciStr.contains("bloodPressure")) {
-            val bloodPressureView = layoutInflater.inflate(R.layout.view_bloodpressure, null)
-            llContent.addView(bloodPressureView)
-        }
-        if (ciStr.contains("spine")) {
-            val spineView = layoutInflater.inflate(R.layout.view_spine, null)
-            llContent.addView(spineView)
-
-            tvXiong.setOnClickListener { handleCeWan(tvXiong, llXiongDegree) }
-            tvYaoXiong.setOnClickListener { handleCeWan(tvYaoXiong, llYaoXiongDegree) }
-            tvYao.setOnClickListener { handleCeWan(tvYao, llYaoDegree) }
-
-            tvQianHou.setOnClickListener { handleWanQu(tvQianHou, llQianHouDegree) }
-
-            tvXiongDegree.setOnClickListener { handleDegree(tvXiongDegree) }
-            tvYaoXiongDegree.setOnClickListener { handleDegree(tvYaoXiongDegree) }
-            tvYaoDegree.setOnClickListener { handleDegree(tvYaoDegree) }
-            tvQianHouDegree.setOnClickListener { handleDegree(tvQianHouDegree) }
-        }
-        if (ciStr.contains("sexuality") && student?.schoolCategory != SchoolCategory.Kindergarten.name) {
-            val sexView = layoutInflater.inflate(R.layout.view_sex, null)
-            llContent.addView(sexView)
-
-            if (student?.schoolCategory != SchoolCategory.University.name) {
-                llZhongXiaoXue.visibility = View.VISIBLE
-                llDaXue.visibility = View.GONE
-                if (student?.gender == "Male") {
-                    llMen.visibility = View.VISIBLE
-                    llWomen.visibility = View.GONE
-                } else {
-                    llMen.visibility = View.GONE
-                    llWomen.visibility = View.VISIBLE
-                }
-            } else {
-                llZhongXiaoXue.visibility = View.GONE
-                llDaXue.visibility = View.VISIBLE
-                if (student?.gender == "Male") {
-                    llMenDaXue.visibility = View.VISIBLE
-                    llWomenDaXue.visibility = View.GONE
-                } else {
-                    llMenDaXue.visibility = View.GONE
-                    llWomenDaXue.visibility = View.VISIBLE
-                }
-            }
-        }
     }
 
 
@@ -296,7 +235,7 @@ class PhysicalTestActivity : BaseActivity() {
                 val oriFile = File(backList[0].cutPath)
                 val selectList = mutableListOf<LocalMedia>()
                 val localMedia = LocalMedia()
-                Luban.compress(this@PhysicalTestActivity, oriFile).setMaxSize(100)
+                Luban.compress(this@ReTestActivity, oriFile).setMaxSize(100)
                     .launch(object : OnCompressListener {
                         override fun onStart() {}
                         override fun onSuccess(file: File) {
@@ -362,26 +301,26 @@ class PhysicalTestActivity : BaseActivity() {
                 when(index) {
                     0 -> {
                         when (pos) {
-                            15 -> this@PhysicalTestActivity.tvDeciTooth15.text = "d"
-                            14 -> this@PhysicalTestActivity.tvDeciTooth14.text = "d"
-                            13 -> this@PhysicalTestActivity.tvDeciTooth13.text = "d"
-                            12 -> this@PhysicalTestActivity.tvDeciTooth12.text = "d"
-                            11 -> this@PhysicalTestActivity.tvDeciTooth11.text = "d"
-                            21 -> this@PhysicalTestActivity.tvDeciTooth21.text = "d"
-                            22 -> this@PhysicalTestActivity.tvDeciTooth22.text = "d"
-                            23 -> this@PhysicalTestActivity.tvDeciTooth23.text = "d"
-                            24 -> this@PhysicalTestActivity.tvDeciTooth24.text = "d"
-                            25 -> this@PhysicalTestActivity.tvDeciTooth25.text = "d"
-                            45 -> this@PhysicalTestActivity.tvDeciTooth45.text = "d"
-                            44 -> this@PhysicalTestActivity.tvDeciTooth44.text = "d"
-                            43 -> this@PhysicalTestActivity.tvDeciTooth43.text = "d"
-                            42 -> this@PhysicalTestActivity.tvDeciTooth42.text = "d"
-                            41 -> this@PhysicalTestActivity.tvDeciTooth41.text = "d"
-                            31 -> this@PhysicalTestActivity.tvDeciTooth31.text = "d"
-                            32 -> this@PhysicalTestActivity.tvDeciTooth32.text = "d"
-                            33 -> this@PhysicalTestActivity.tvDeciTooth33.text = "d"
-                            34 -> this@PhysicalTestActivity.tvDeciTooth34.text = "d"
-                            35 -> this@PhysicalTestActivity.tvDeciTooth35.text = "d"
+                            15 -> this@ReTestActivity.tvDeciTooth15.text = "d"
+                            14 -> this@ReTestActivity.tvDeciTooth14.text = "d"
+                            13 -> this@ReTestActivity.tvDeciTooth13.text = "d"
+                            12 -> this@ReTestActivity.tvDeciTooth12.text = "d"
+                            11 -> this@ReTestActivity.tvDeciTooth11.text = "d"
+                            21 -> this@ReTestActivity.tvDeciTooth21.text = "d"
+                            22 -> this@ReTestActivity.tvDeciTooth22.text = "d"
+                            23 -> this@ReTestActivity.tvDeciTooth23.text = "d"
+                            24 -> this@ReTestActivity.tvDeciTooth24.text = "d"
+                            25 -> this@ReTestActivity.tvDeciTooth25.text = "d"
+                            45 -> this@ReTestActivity.tvDeciTooth45.text = "d"
+                            44 -> this@ReTestActivity.tvDeciTooth44.text = "d"
+                            43 -> this@ReTestActivity.tvDeciTooth43.text = "d"
+                            42 -> this@ReTestActivity.tvDeciTooth42.text = "d"
+                            41 -> this@ReTestActivity.tvDeciTooth41.text = "d"
+                            31 -> this@ReTestActivity.tvDeciTooth31.text = "d"
+                            32 -> this@ReTestActivity.tvDeciTooth32.text = "d"
+                            33 -> this@ReTestActivity.tvDeciTooth33.text = "d"
+                            34 -> this@ReTestActivity.tvDeciTooth34.text = "d"
+                            35 -> this@ReTestActivity.tvDeciTooth35.text = "d"
                         }
 
                         if (!babyDList.contains(pos)) {
@@ -396,26 +335,26 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     1 -> {
                         when (pos) {
-                            15 -> this@PhysicalTestActivity.tvDeciTooth15.text = "m"
-                            14 -> this@PhysicalTestActivity.tvDeciTooth14.text = "m"
-                            13 -> this@PhysicalTestActivity.tvDeciTooth13.text = "m"
-                            12 -> this@PhysicalTestActivity.tvDeciTooth12.text = "m"
-                            11 -> this@PhysicalTestActivity.tvDeciTooth11.text = "m"
-                            21 -> this@PhysicalTestActivity.tvDeciTooth21.text = "m"
-                            22 -> this@PhysicalTestActivity.tvDeciTooth22.text = "m"
-                            23 -> this@PhysicalTestActivity.tvDeciTooth23.text = "m"
-                            24 -> this@PhysicalTestActivity.tvDeciTooth24.text = "m"
-                            25 -> this@PhysicalTestActivity.tvDeciTooth25.text = "m"
-                            45 -> this@PhysicalTestActivity.tvDeciTooth45.text = "m"
-                            44 -> this@PhysicalTestActivity.tvDeciTooth44.text = "m"
-                            43 -> this@PhysicalTestActivity.tvDeciTooth43.text = "m"
-                            42 -> this@PhysicalTestActivity.tvDeciTooth42.text = "m"
-                            41 -> this@PhysicalTestActivity.tvDeciTooth41.text = "m"
-                            31 -> this@PhysicalTestActivity.tvDeciTooth31.text = "m"
-                            32 -> this@PhysicalTestActivity.tvDeciTooth32.text = "m"
-                            33 -> this@PhysicalTestActivity.tvDeciTooth33.text = "m"
-                            34 -> this@PhysicalTestActivity.tvDeciTooth34.text = "m"
-                            35 -> this@PhysicalTestActivity.tvDeciTooth35.text = "m"
+                            15 -> this@ReTestActivity.tvDeciTooth15.text = "m"
+                            14 -> this@ReTestActivity.tvDeciTooth14.text = "m"
+                            13 -> this@ReTestActivity.tvDeciTooth13.text = "m"
+                            12 -> this@ReTestActivity.tvDeciTooth12.text = "m"
+                            11 -> this@ReTestActivity.tvDeciTooth11.text = "m"
+                            21 -> this@ReTestActivity.tvDeciTooth21.text = "m"
+                            22 -> this@ReTestActivity.tvDeciTooth22.text = "m"
+                            23 -> this@ReTestActivity.tvDeciTooth23.text = "m"
+                            24 -> this@ReTestActivity.tvDeciTooth24.text = "m"
+                            25 -> this@ReTestActivity.tvDeciTooth25.text = "m"
+                            45 -> this@ReTestActivity.tvDeciTooth45.text = "m"
+                            44 -> this@ReTestActivity.tvDeciTooth44.text = "m"
+                            43 -> this@ReTestActivity.tvDeciTooth43.text = "m"
+                            42 -> this@ReTestActivity.tvDeciTooth42.text = "m"
+                            41 -> this@ReTestActivity.tvDeciTooth41.text = "m"
+                            31 -> this@ReTestActivity.tvDeciTooth31.text = "m"
+                            32 -> this@ReTestActivity.tvDeciTooth32.text = "m"
+                            33 -> this@ReTestActivity.tvDeciTooth33.text = "m"
+                            34 -> this@ReTestActivity.tvDeciTooth34.text = "m"
+                            35 -> this@ReTestActivity.tvDeciTooth35.text = "m"
                         }
 
                         if (!babyMList.contains(pos)) {
@@ -430,26 +369,26 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     2 -> {
                         when (pos) {
-                            15 -> this@PhysicalTestActivity.tvDeciTooth15.text = "f"
-                            14 -> this@PhysicalTestActivity.tvDeciTooth14.text = "f"
-                            13 -> this@PhysicalTestActivity.tvDeciTooth13.text = "f"
-                            12 -> this@PhysicalTestActivity.tvDeciTooth12.text = "f"
-                            11 -> this@PhysicalTestActivity.tvDeciTooth11.text = "f"
-                            21 -> this@PhysicalTestActivity.tvDeciTooth21.text = "f"
-                            22 -> this@PhysicalTestActivity.tvDeciTooth22.text = "f"
-                            23 -> this@PhysicalTestActivity.tvDeciTooth23.text = "f"
-                            24 -> this@PhysicalTestActivity.tvDeciTooth24.text = "f"
-                            25 -> this@PhysicalTestActivity.tvDeciTooth25.text = "f"
-                            45 -> this@PhysicalTestActivity.tvDeciTooth45.text = "f"
-                            44 -> this@PhysicalTestActivity.tvDeciTooth44.text = "f"
-                            43 -> this@PhysicalTestActivity.tvDeciTooth43.text = "f"
-                            42 -> this@PhysicalTestActivity.tvDeciTooth42.text = "f"
-                            41 -> this@PhysicalTestActivity.tvDeciTooth41.text = "f"
-                            31 -> this@PhysicalTestActivity.tvDeciTooth31.text = "f"
-                            32 -> this@PhysicalTestActivity.tvDeciTooth32.text = "f"
-                            33 -> this@PhysicalTestActivity.tvDeciTooth33.text = "f"
-                            34 -> this@PhysicalTestActivity.tvDeciTooth34.text = "f"
-                            35 -> this@PhysicalTestActivity.tvDeciTooth35.text = "f"
+                            15 -> this@ReTestActivity.tvDeciTooth15.text = "f"
+                            14 -> this@ReTestActivity.tvDeciTooth14.text = "f"
+                            13 -> this@ReTestActivity.tvDeciTooth13.text = "f"
+                            12 -> this@ReTestActivity.tvDeciTooth12.text = "f"
+                            11 -> this@ReTestActivity.tvDeciTooth11.text = "f"
+                            21 -> this@ReTestActivity.tvDeciTooth21.text = "f"
+                            22 -> this@ReTestActivity.tvDeciTooth22.text = "f"
+                            23 -> this@ReTestActivity.tvDeciTooth23.text = "f"
+                            24 -> this@ReTestActivity.tvDeciTooth24.text = "f"
+                            25 -> this@ReTestActivity.tvDeciTooth25.text = "f"
+                            45 -> this@ReTestActivity.tvDeciTooth45.text = "f"
+                            44 -> this@ReTestActivity.tvDeciTooth44.text = "f"
+                            43 -> this@ReTestActivity.tvDeciTooth43.text = "f"
+                            42 -> this@ReTestActivity.tvDeciTooth42.text = "f"
+                            41 -> this@ReTestActivity.tvDeciTooth41.text = "f"
+                            31 -> this@ReTestActivity.tvDeciTooth31.text = "f"
+                            32 -> this@ReTestActivity.tvDeciTooth32.text = "f"
+                            33 -> this@ReTestActivity.tvDeciTooth33.text = "f"
+                            34 -> this@ReTestActivity.tvDeciTooth34.text = "f"
+                            35 -> this@ReTestActivity.tvDeciTooth35.text = "f"
                         }
 
                         if (!babyFList.contains(pos)) {
@@ -464,26 +403,26 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     3 -> {
                         when (pos) {
-                            15 -> this@PhysicalTestActivity.tvDeciTooth15.text = ""
-                            14 -> this@PhysicalTestActivity.tvDeciTooth14.text = ""
-                            13 -> this@PhysicalTestActivity.tvDeciTooth13.text = ""
-                            12 -> this@PhysicalTestActivity.tvDeciTooth12.text = ""
-                            11 -> this@PhysicalTestActivity.tvDeciTooth11.text = ""
-                            21 -> this@PhysicalTestActivity.tvDeciTooth21.text = ""
-                            22 -> this@PhysicalTestActivity.tvDeciTooth22.text = ""
-                            23 -> this@PhysicalTestActivity.tvDeciTooth23.text = ""
-                            24 -> this@PhysicalTestActivity.tvDeciTooth24.text = ""
-                            25 -> this@PhysicalTestActivity.tvDeciTooth25.text = ""
-                            45 -> this@PhysicalTestActivity.tvDeciTooth45.text = ""
-                            44 -> this@PhysicalTestActivity.tvDeciTooth44.text = ""
-                            43 -> this@PhysicalTestActivity.tvDeciTooth43.text = ""
-                            42 -> this@PhysicalTestActivity.tvDeciTooth42.text = ""
-                            41 -> this@PhysicalTestActivity.tvDeciTooth41.text = ""
-                            31 -> this@PhysicalTestActivity.tvDeciTooth31.text = ""
-                            32 -> this@PhysicalTestActivity.tvDeciTooth32.text = ""
-                            33 -> this@PhysicalTestActivity.tvDeciTooth33.text = ""
-                            34 -> this@PhysicalTestActivity.tvDeciTooth34.text = ""
-                            35 -> this@PhysicalTestActivity.tvDeciTooth35.text = ""
+                            15 -> this@ReTestActivity.tvDeciTooth15.text = ""
+                            14 -> this@ReTestActivity.tvDeciTooth14.text = ""
+                            13 -> this@ReTestActivity.tvDeciTooth13.text = ""
+                            12 -> this@ReTestActivity.tvDeciTooth12.text = ""
+                            11 -> this@ReTestActivity.tvDeciTooth11.text = ""
+                            21 -> this@ReTestActivity.tvDeciTooth21.text = ""
+                            22 -> this@ReTestActivity.tvDeciTooth22.text = ""
+                            23 -> this@ReTestActivity.tvDeciTooth23.text = ""
+                            24 -> this@ReTestActivity.tvDeciTooth24.text = ""
+                            25 -> this@ReTestActivity.tvDeciTooth25.text = ""
+                            45 -> this@ReTestActivity.tvDeciTooth45.text = ""
+                            44 -> this@ReTestActivity.tvDeciTooth44.text = ""
+                            43 -> this@ReTestActivity.tvDeciTooth43.text = ""
+                            42 -> this@ReTestActivity.tvDeciTooth42.text = ""
+                            41 -> this@ReTestActivity.tvDeciTooth41.text = ""
+                            31 -> this@ReTestActivity.tvDeciTooth31.text = ""
+                            32 -> this@ReTestActivity.tvDeciTooth32.text = ""
+                            33 -> this@ReTestActivity.tvDeciTooth33.text = ""
+                            34 -> this@ReTestActivity.tvDeciTooth34.text = ""
+                            35 -> this@ReTestActivity.tvDeciTooth35.text = ""
                         }
 
                         if (babyDList.contains(pos)) {
@@ -508,38 +447,38 @@ class PhysicalTestActivity : BaseActivity() {
                 when(index) {
                     0 -> {
                         when (pos) {
-                            18 -> this@PhysicalTestActivity.tvPermTooth18.text = "D"
-                            17 -> this@PhysicalTestActivity.tvPermTooth17.text = "D"
-                            16 -> this@PhysicalTestActivity.tvPermTooth16.text = "D"
-                            15 -> this@PhysicalTestActivity.tvPermTooth15.text = "D"
-                            14 -> this@PhysicalTestActivity.tvPermTooth14.text = "D"
-                            13 -> this@PhysicalTestActivity.tvPermTooth13.text = "D"
-                            12 -> this@PhysicalTestActivity.tvPermTooth12.text = "D"
-                            11 -> this@PhysicalTestActivity.tvPermTooth11.text = "D"
-                            21 -> this@PhysicalTestActivity.tvPermTooth21.text = "D"
-                            22 -> this@PhysicalTestActivity.tvPermTooth22.text = "D"
-                            23 -> this@PhysicalTestActivity.tvPermTooth23.text = "D"
-                            24 -> this@PhysicalTestActivity.tvPermTooth24.text = "D"
-                            25 -> this@PhysicalTestActivity.tvPermTooth25.text = "D"
-                            26 -> this@PhysicalTestActivity.tvPermTooth26.text = "D"
-                            27 -> this@PhysicalTestActivity.tvPermTooth27.text = "D"
-                            28 -> this@PhysicalTestActivity.tvPermTooth28.text = "D"
-                            48 -> this@PhysicalTestActivity.tvPermTooth48.text = "D"
-                            47 -> this@PhysicalTestActivity.tvPermTooth47.text = "D"
-                            46 -> this@PhysicalTestActivity.tvPermTooth46.text = "D"
-                            45 -> this@PhysicalTestActivity.tvPermTooth45.text = "D"
-                            44 -> this@PhysicalTestActivity.tvPermTooth44.text = "D"
-                            43 -> this@PhysicalTestActivity.tvPermTooth43.text = "D"
-                            42 -> this@PhysicalTestActivity.tvPermTooth42.text = "D"
-                            41 -> this@PhysicalTestActivity.tvPermTooth41.text = "D"
-                            31 -> this@PhysicalTestActivity.tvPermTooth31.text = "D"
-                            32 -> this@PhysicalTestActivity.tvPermTooth32.text = "D"
-                            33 -> this@PhysicalTestActivity.tvPermTooth33.text = "D"
-                            34 -> this@PhysicalTestActivity.tvPermTooth34.text = "D"
-                            35 -> this@PhysicalTestActivity.tvPermTooth35.text = "D"
-                            36 -> this@PhysicalTestActivity.tvPermTooth36.text = "D"
-                            37 -> this@PhysicalTestActivity.tvPermTooth37.text = "D"
-                            38 -> this@PhysicalTestActivity.tvPermTooth38.text = "D"
+                            18 -> this@ReTestActivity.tvPermTooth18.text = "D"
+                            17 -> this@ReTestActivity.tvPermTooth17.text = "D"
+                            16 -> this@ReTestActivity.tvPermTooth16.text = "D"
+                            15 -> this@ReTestActivity.tvPermTooth15.text = "D"
+                            14 -> this@ReTestActivity.tvPermTooth14.text = "D"
+                            13 -> this@ReTestActivity.tvPermTooth13.text = "D"
+                            12 -> this@ReTestActivity.tvPermTooth12.text = "D"
+                            11 -> this@ReTestActivity.tvPermTooth11.text = "D"
+                            21 -> this@ReTestActivity.tvPermTooth21.text = "D"
+                            22 -> this@ReTestActivity.tvPermTooth22.text = "D"
+                            23 -> this@ReTestActivity.tvPermTooth23.text = "D"
+                            24 -> this@ReTestActivity.tvPermTooth24.text = "D"
+                            25 -> this@ReTestActivity.tvPermTooth25.text = "D"
+                            26 -> this@ReTestActivity.tvPermTooth26.text = "D"
+                            27 -> this@ReTestActivity.tvPermTooth27.text = "D"
+                            28 -> this@ReTestActivity.tvPermTooth28.text = "D"
+                            48 -> this@ReTestActivity.tvPermTooth48.text = "D"
+                            47 -> this@ReTestActivity.tvPermTooth47.text = "D"
+                            46 -> this@ReTestActivity.tvPermTooth46.text = "D"
+                            45 -> this@ReTestActivity.tvPermTooth45.text = "D"
+                            44 -> this@ReTestActivity.tvPermTooth44.text = "D"
+                            43 -> this@ReTestActivity.tvPermTooth43.text = "D"
+                            42 -> this@ReTestActivity.tvPermTooth42.text = "D"
+                            41 -> this@ReTestActivity.tvPermTooth41.text = "D"
+                            31 -> this@ReTestActivity.tvPermTooth31.text = "D"
+                            32 -> this@ReTestActivity.tvPermTooth32.text = "D"
+                            33 -> this@ReTestActivity.tvPermTooth33.text = "D"
+                            34 -> this@ReTestActivity.tvPermTooth34.text = "D"
+                            35 -> this@ReTestActivity.tvPermTooth35.text = "D"
+                            36 -> this@ReTestActivity.tvPermTooth36.text = "D"
+                            37 -> this@ReTestActivity.tvPermTooth37.text = "D"
+                            38 -> this@ReTestActivity.tvPermTooth38.text = "D"
                         }
 
                         if (!adultDList.contains(pos)) {
@@ -554,38 +493,38 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     1 -> {
                         when (pos) {
-                            18 -> this@PhysicalTestActivity.tvPermTooth18.text = "M"
-                            17 -> this@PhysicalTestActivity.tvPermTooth17.text = "M"
-                            16 -> this@PhysicalTestActivity.tvPermTooth16.text = "M"
-                            15 -> this@PhysicalTestActivity.tvPermTooth15.text = "M"
-                            14 -> this@PhysicalTestActivity.tvPermTooth14.text = "M"
-                            13 -> this@PhysicalTestActivity.tvPermTooth13.text = "M"
-                            12 -> this@PhysicalTestActivity.tvPermTooth12.text = "M"
-                            11 -> this@PhysicalTestActivity.tvPermTooth11.text = "M"
-                            21 -> this@PhysicalTestActivity.tvPermTooth21.text = "M"
-                            22 -> this@PhysicalTestActivity.tvPermTooth22.text = "M"
-                            23 -> this@PhysicalTestActivity.tvPermTooth23.text = "M"
-                            24 -> this@PhysicalTestActivity.tvPermTooth24.text = "M"
-                            25 -> this@PhysicalTestActivity.tvPermTooth25.text = "M"
-                            26 -> this@PhysicalTestActivity.tvPermTooth26.text = "M"
-                            27 -> this@PhysicalTestActivity.tvPermTooth27.text = "M"
-                            28 -> this@PhysicalTestActivity.tvPermTooth28.text = "M"
-                            48 -> this@PhysicalTestActivity.tvPermTooth48.text = "M"
-                            47 -> this@PhysicalTestActivity.tvPermTooth47.text = "M"
-                            46 -> this@PhysicalTestActivity.tvPermTooth46.text = "M"
-                            45 -> this@PhysicalTestActivity.tvPermTooth45.text = "M"
-                            44 -> this@PhysicalTestActivity.tvPermTooth44.text = "M"
-                            43 -> this@PhysicalTestActivity.tvPermTooth43.text = "M"
-                            42 -> this@PhysicalTestActivity.tvPermTooth42.text = "M"
-                            41 -> this@PhysicalTestActivity.tvPermTooth41.text = "M"
-                            31 -> this@PhysicalTestActivity.tvPermTooth31.text = "M"
-                            32 -> this@PhysicalTestActivity.tvPermTooth32.text = "M"
-                            33 -> this@PhysicalTestActivity.tvPermTooth33.text = "M"
-                            34 -> this@PhysicalTestActivity.tvPermTooth34.text = "M"
-                            35 -> this@PhysicalTestActivity.tvPermTooth35.text = "M"
-                            36 -> this@PhysicalTestActivity.tvPermTooth36.text = "M"
-                            37 -> this@PhysicalTestActivity.tvPermTooth37.text = "M"
-                            38 -> this@PhysicalTestActivity.tvPermTooth38.text = "M"
+                            18 -> this@ReTestActivity.tvPermTooth18.text = "M"
+                            17 -> this@ReTestActivity.tvPermTooth17.text = "M"
+                            16 -> this@ReTestActivity.tvPermTooth16.text = "M"
+                            15 -> this@ReTestActivity.tvPermTooth15.text = "M"
+                            14 -> this@ReTestActivity.tvPermTooth14.text = "M"
+                            13 -> this@ReTestActivity.tvPermTooth13.text = "M"
+                            12 -> this@ReTestActivity.tvPermTooth12.text = "M"
+                            11 -> this@ReTestActivity.tvPermTooth11.text = "M"
+                            21 -> this@ReTestActivity.tvPermTooth21.text = "M"
+                            22 -> this@ReTestActivity.tvPermTooth22.text = "M"
+                            23 -> this@ReTestActivity.tvPermTooth23.text = "M"
+                            24 -> this@ReTestActivity.tvPermTooth24.text = "M"
+                            25 -> this@ReTestActivity.tvPermTooth25.text = "M"
+                            26 -> this@ReTestActivity.tvPermTooth26.text = "M"
+                            27 -> this@ReTestActivity.tvPermTooth27.text = "M"
+                            28 -> this@ReTestActivity.tvPermTooth28.text = "M"
+                            48 -> this@ReTestActivity.tvPermTooth48.text = "M"
+                            47 -> this@ReTestActivity.tvPermTooth47.text = "M"
+                            46 -> this@ReTestActivity.tvPermTooth46.text = "M"
+                            45 -> this@ReTestActivity.tvPermTooth45.text = "M"
+                            44 -> this@ReTestActivity.tvPermTooth44.text = "M"
+                            43 -> this@ReTestActivity.tvPermTooth43.text = "M"
+                            42 -> this@ReTestActivity.tvPermTooth42.text = "M"
+                            41 -> this@ReTestActivity.tvPermTooth41.text = "M"
+                            31 -> this@ReTestActivity.tvPermTooth31.text = "M"
+                            32 -> this@ReTestActivity.tvPermTooth32.text = "M"
+                            33 -> this@ReTestActivity.tvPermTooth33.text = "M"
+                            34 -> this@ReTestActivity.tvPermTooth34.text = "M"
+                            35 -> this@ReTestActivity.tvPermTooth35.text = "M"
+                            36 -> this@ReTestActivity.tvPermTooth36.text = "M"
+                            37 -> this@ReTestActivity.tvPermTooth37.text = "M"
+                            38 -> this@ReTestActivity.tvPermTooth38.text = "M"
                         }
 
                         if (!adultMList.contains(pos)) {
@@ -600,38 +539,38 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     2 -> {
                         when (pos) {
-                            18 -> this@PhysicalTestActivity.tvPermTooth18.text = "F"
-                            17 -> this@PhysicalTestActivity.tvPermTooth17.text = "F"
-                            16 -> this@PhysicalTestActivity.tvPermTooth16.text = "F"
-                            15 -> this@PhysicalTestActivity.tvPermTooth15.text = "F"
-                            14 -> this@PhysicalTestActivity.tvPermTooth14.text = "F"
-                            13 -> this@PhysicalTestActivity.tvPermTooth13.text = "F"
-                            12 -> this@PhysicalTestActivity.tvPermTooth12.text = "F"
-                            11 -> this@PhysicalTestActivity.tvPermTooth11.text = "F"
-                            21 -> this@PhysicalTestActivity.tvPermTooth21.text = "F"
-                            22 -> this@PhysicalTestActivity.tvPermTooth22.text = "F"
-                            23 -> this@PhysicalTestActivity.tvPermTooth23.text = "F"
-                            24 -> this@PhysicalTestActivity.tvPermTooth24.text = "F"
-                            25 -> this@PhysicalTestActivity.tvPermTooth25.text = "F"
-                            26 -> this@PhysicalTestActivity.tvPermTooth26.text = "F"
-                            27 -> this@PhysicalTestActivity.tvPermTooth27.text = "F"
-                            28 -> this@PhysicalTestActivity.tvPermTooth28.text = "F"
-                            48 -> this@PhysicalTestActivity.tvPermTooth48.text = "F"
-                            47 -> this@PhysicalTestActivity.tvPermTooth47.text = "F"
-                            46 -> this@PhysicalTestActivity.tvPermTooth46.text = "F"
-                            45 -> this@PhysicalTestActivity.tvPermTooth45.text = "F"
-                            44 -> this@PhysicalTestActivity.tvPermTooth44.text = "F"
-                            43 -> this@PhysicalTestActivity.tvPermTooth43.text = "F"
-                            42 -> this@PhysicalTestActivity.tvPermTooth42.text = "F"
-                            41 -> this@PhysicalTestActivity.tvPermTooth41.text = "F"
-                            31 -> this@PhysicalTestActivity.tvPermTooth31.text = "F"
-                            32 -> this@PhysicalTestActivity.tvPermTooth32.text = "F"
-                            33 -> this@PhysicalTestActivity.tvPermTooth33.text = "F"
-                            34 -> this@PhysicalTestActivity.tvPermTooth34.text = "F"
-                            35 -> this@PhysicalTestActivity.tvPermTooth35.text = "F"
-                            36 -> this@PhysicalTestActivity.tvPermTooth36.text = "F"
-                            37 -> this@PhysicalTestActivity.tvPermTooth37.text = "F"
-                            38 -> this@PhysicalTestActivity.tvPermTooth38.text = "F"
+                            18 -> this@ReTestActivity.tvPermTooth18.text = "F"
+                            17 -> this@ReTestActivity.tvPermTooth17.text = "F"
+                            16 -> this@ReTestActivity.tvPermTooth16.text = "F"
+                            15 -> this@ReTestActivity.tvPermTooth15.text = "F"
+                            14 -> this@ReTestActivity.tvPermTooth14.text = "F"
+                            13 -> this@ReTestActivity.tvPermTooth13.text = "F"
+                            12 -> this@ReTestActivity.tvPermTooth12.text = "F"
+                            11 -> this@ReTestActivity.tvPermTooth11.text = "F"
+                            21 -> this@ReTestActivity.tvPermTooth21.text = "F"
+                            22 -> this@ReTestActivity.tvPermTooth22.text = "F"
+                            23 -> this@ReTestActivity.tvPermTooth23.text = "F"
+                            24 -> this@ReTestActivity.tvPermTooth24.text = "F"
+                            25 -> this@ReTestActivity.tvPermTooth25.text = "F"
+                            26 -> this@ReTestActivity.tvPermTooth26.text = "F"
+                            27 -> this@ReTestActivity.tvPermTooth27.text = "F"
+                            28 -> this@ReTestActivity.tvPermTooth28.text = "F"
+                            48 -> this@ReTestActivity.tvPermTooth48.text = "F"
+                            47 -> this@ReTestActivity.tvPermTooth47.text = "F"
+                            46 -> this@ReTestActivity.tvPermTooth46.text = "F"
+                            45 -> this@ReTestActivity.tvPermTooth45.text = "F"
+                            44 -> this@ReTestActivity.tvPermTooth44.text = "F"
+                            43 -> this@ReTestActivity.tvPermTooth43.text = "F"
+                            42 -> this@ReTestActivity.tvPermTooth42.text = "F"
+                            41 -> this@ReTestActivity.tvPermTooth41.text = "F"
+                            31 -> this@ReTestActivity.tvPermTooth31.text = "F"
+                            32 -> this@ReTestActivity.tvPermTooth32.text = "F"
+                            33 -> this@ReTestActivity.tvPermTooth33.text = "F"
+                            34 -> this@ReTestActivity.tvPermTooth34.text = "F"
+                            35 -> this@ReTestActivity.tvPermTooth35.text = "F"
+                            36 -> this@ReTestActivity.tvPermTooth36.text = "F"
+                            37 -> this@ReTestActivity.tvPermTooth37.text = "F"
+                            38 -> this@ReTestActivity.tvPermTooth38.text = "F"
                         }
 
                         if (!adultFList.contains(pos)) {
@@ -646,38 +585,38 @@ class PhysicalTestActivity : BaseActivity() {
                     }
                     3 -> {
                         when (pos) {
-                            18 -> this@PhysicalTestActivity.tvPermTooth18.text = ""
-                            17 -> this@PhysicalTestActivity.tvPermTooth17.text = ""
-                            16 -> this@PhysicalTestActivity.tvPermTooth16.text = ""
-                            15 -> this@PhysicalTestActivity.tvPermTooth15.text = ""
-                            14 -> this@PhysicalTestActivity.tvPermTooth14.text = ""
-                            13 -> this@PhysicalTestActivity.tvPermTooth13.text = ""
-                            12 -> this@PhysicalTestActivity.tvPermTooth12.text = ""
-                            11 -> this@PhysicalTestActivity.tvPermTooth11.text = ""
-                            21 -> this@PhysicalTestActivity.tvPermTooth21.text = ""
-                            22 -> this@PhysicalTestActivity.tvPermTooth22.text = ""
-                            23 -> this@PhysicalTestActivity.tvPermTooth23.text = ""
-                            24 -> this@PhysicalTestActivity.tvPermTooth24.text = ""
-                            25 -> this@PhysicalTestActivity.tvPermTooth25.text = ""
-                            26 -> this@PhysicalTestActivity.tvPermTooth26.text = ""
-                            27 -> this@PhysicalTestActivity.tvPermTooth27.text = ""
-                            28 -> this@PhysicalTestActivity.tvPermTooth28.text = ""
-                            48 -> this@PhysicalTestActivity.tvPermTooth48.text = ""
-                            47 -> this@PhysicalTestActivity.tvPermTooth47.text = ""
-                            46 -> this@PhysicalTestActivity.tvPermTooth46.text = ""
-                            45 -> this@PhysicalTestActivity.tvPermTooth45.text = ""
-                            44 -> this@PhysicalTestActivity.tvPermTooth44.text = ""
-                            43 -> this@PhysicalTestActivity.tvPermTooth43.text = ""
-                            42 -> this@PhysicalTestActivity.tvPermTooth42.text = ""
-                            41 -> this@PhysicalTestActivity.tvPermTooth41.text = ""
-                            31 -> this@PhysicalTestActivity.tvPermTooth31.text = ""
-                            32 -> this@PhysicalTestActivity.tvPermTooth32.text = ""
-                            33 -> this@PhysicalTestActivity.tvPermTooth33.text = ""
-                            34 -> this@PhysicalTestActivity.tvPermTooth34.text = ""
-                            35 -> this@PhysicalTestActivity.tvPermTooth35.text = ""
-                            36 -> this@PhysicalTestActivity.tvPermTooth36.text = ""
-                            37 -> this@PhysicalTestActivity.tvPermTooth37.text = ""
-                            38 -> this@PhysicalTestActivity.tvPermTooth38.text = ""
+                            18 -> this@ReTestActivity.tvPermTooth18.text = ""
+                            17 -> this@ReTestActivity.tvPermTooth17.text = ""
+                            16 -> this@ReTestActivity.tvPermTooth16.text = ""
+                            15 -> this@ReTestActivity.tvPermTooth15.text = ""
+                            14 -> this@ReTestActivity.tvPermTooth14.text = ""
+                            13 -> this@ReTestActivity.tvPermTooth13.text = ""
+                            12 -> this@ReTestActivity.tvPermTooth12.text = ""
+                            11 -> this@ReTestActivity.tvPermTooth11.text = ""
+                            21 -> this@ReTestActivity.tvPermTooth21.text = ""
+                            22 -> this@ReTestActivity.tvPermTooth22.text = ""
+                            23 -> this@ReTestActivity.tvPermTooth23.text = ""
+                            24 -> this@ReTestActivity.tvPermTooth24.text = ""
+                            25 -> this@ReTestActivity.tvPermTooth25.text = ""
+                            26 -> this@ReTestActivity.tvPermTooth26.text = ""
+                            27 -> this@ReTestActivity.tvPermTooth27.text = ""
+                            28 -> this@ReTestActivity.tvPermTooth28.text = ""
+                            48 -> this@ReTestActivity.tvPermTooth48.text = ""
+                            47 -> this@ReTestActivity.tvPermTooth47.text = ""
+                            46 -> this@ReTestActivity.tvPermTooth46.text = ""
+                            45 -> this@ReTestActivity.tvPermTooth45.text = ""
+                            44 -> this@ReTestActivity.tvPermTooth44.text = ""
+                            43 -> this@ReTestActivity.tvPermTooth43.text = ""
+                            42 -> this@ReTestActivity.tvPermTooth42.text = ""
+                            41 -> this@ReTestActivity.tvPermTooth41.text = ""
+                            31 -> this@ReTestActivity.tvPermTooth31.text = ""
+                            32 -> this@ReTestActivity.tvPermTooth32.text = ""
+                            33 -> this@ReTestActivity.tvPermTooth33.text = ""
+                            34 -> this@ReTestActivity.tvPermTooth34.text = ""
+                            35 -> this@ReTestActivity.tvPermTooth35.text = ""
+                            36 -> this@ReTestActivity.tvPermTooth36.text = ""
+                            37 -> this@ReTestActivity.tvPermTooth37.text = ""
+                            38 -> this@ReTestActivity.tvPermTooth38.text = ""
                         }
 
                         if (adultDList.contains(pos)) {
@@ -695,59 +634,15 @@ class PhysicalTestActivity : BaseActivity() {
         }
     }
 
-    //脊柱
-    private fun handleCeWan(tv: TextView, ll: LinearLayout) {
-        val myItems = listOf("无侧弯", "左凸", "右凸")
-        MaterialDialog(this).show {
-            listItems(items = myItems){ dialog, index, text ->
-                when(index) {
-                    0 -> {
-                        tv.text = text
-                        ll.visibility = View.INVISIBLE
-                    }
-                    1, 2 -> {
-                        tv.text = text
-                        ll.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-    }
-    private fun handleWanQu(tv: TextView, ll: LinearLayout) {
-        val myItems = listOf("无前后弯曲异常", "直背", "前凸异常", "后凸异常")
-        MaterialDialog(this).show {
-            listItems(items = myItems){ dialog, index, text ->
-                when(index) {
-                    0 -> {
-                        tv.text = text
-                        ll.visibility = View.INVISIBLE
-                    }
-                    1, 2, 3 -> {
-                        tv.text = text
-                        ll.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-    }
-    private fun handleDegree(tv: TextView) {
-        val myItems = listOf("I", "II", "III")
-        MaterialDialog(this).show {
-            listItems(items = myItems){ dialog, index, text ->
-                when(index) {
-                    0, 1, 2 -> tv.text = text
-                }
-            }
-        }
-    }
-
-
     private fun getPhysical() {
-        OkGo.get<LzyResponse<Student>>(Api.STUDENT + "/" + student?.id + "?expand=record")
+        OkGo.get<LzyResponse<Student>>(Api.RETEST_VIEW_BY_STUDENT_ID)
+            .params("studentId", student?.studentId)
+            //.params("planId", planId)
+            .params("title", retestTitle)
             .execute(object : DialogCallback<LzyResponse<Student>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<Student>>) {
                     val student = response.body()?.data!!
-                    val data = student.record?.data
+                    val data = student.data
                     //vision
                     val vision = data?.vision
                     if (ciStr.contains("vision") && vision != null) {
@@ -781,13 +676,6 @@ class PhysicalTestActivity : BaseActivity() {
 
                         sbtnEyeAbnormalDiopter.isChecked = diopter.eyeAbnormal
 
-                    }
-
-                    //medicalHistory
-                    val medicalHistory = data?.medicalHistory
-                    if (ciStr.contains("medicalHistory") && medicalHistory != null) {
-                        tvMedicalHistory.text = medicalHistory.data?.joinToString(limit = 4)
-                        medicalHistoryList = medicalHistory.data as MutableList<String>
                     }
 
                     //caries
@@ -999,83 +887,6 @@ class PhysicalTestActivity : BaseActivity() {
                         edtHeight.setText(height?.data)
                         edtWeight.setText(weight?.data)
                     }
-
-                    //bloodPressure
-                    val bloodPressure = data?.bloodPressure
-                    if (ciStr.contains("bloodPressure") && bloodPressure != null) {
-                        edtSystolic.setText(bloodPressure.sbp)
-                        edtDiastolic.setText(bloodPressure.dbp)
-                    }
-
-                    //spine
-                    val spine = data?.spine
-                    if (ciStr.contains("spine") && spine != null) {
-                        val chest = spine.sideBend?.chest
-                        tvXiong.text = chest?.category
-                        tvXiongDegree.text = chest?.degree
-                        if ("无侧弯" == chest?.category) llXiongDegree.visibility = View.INVISIBLE
-
-                        val waistChest = spine.sideBend?.waistChest
-                        tvYaoXiong.text = waistChest?.category
-                        tvYaoXiongDegree.text = waistChest?.degree
-                        if ("无侧弯" == waistChest?.category) llYaoXiongDegree.visibility =
-                            View.INVISIBLE
-
-                        val waist = spine.sideBend?.waist
-                        tvYao.text = waist?.category
-                        tvYaoDegree.text = waist?.degree
-                        if ("无侧弯" == waist?.category) llYaoDegree.visibility = View.INVISIBLE
-
-                        val baBend = spine.baBend
-                        tvQianHou.text = baBend?.category
-                        tvQianHouDegree.text = baBend?.degree
-                        if ("无前后弯曲异常" == baBend?.category) llQianHouDegree.visibility =
-                            View.INVISIBLE
-                    }
-
-                    //sexuality
-                    val sexuality = data?.sexuality
-                    if (ciStr.contains("sexuality") && sexuality != null) {
-                        if (student.schoolCategory != SchoolCategory.University.name) {
-                            llZhongXiaoXue.visibility = View.VISIBLE
-                            llDaXue.visibility = View.GONE
-                            if (student.gender == "Male") {
-                                llMen.visibility = View.VISIBLE
-                                llWomen.visibility = View.GONE
-                            } else {
-                                llMen.visibility = View.GONE
-                                llWomen.visibility = View.VISIBLE
-                            }
-                        } else {
-                            llZhongXiaoXue.visibility = View.GONE
-                            llDaXue.visibility = View.VISIBLE
-                            if (student.gender == "Male") {
-                                llMenDaXue.visibility = View.VISIBLE
-                                llWomenDaXue.visibility = View.GONE
-                            } else {
-                                llMenDaXue.visibility = View.GONE
-                                llWomenDaXue.visibility = View.VISIBLE
-                            }
-                        }
-
-                        val menstruation = sexuality.menstruation
-                        if (menstruation?.whether == 1) {
-                            cbWomenWhether.isChecked = true
-                            cbWomenWhetherDaXue.isChecked = true
-                        }
-                        edtWomenAge.setText("" + menstruation?.startAge)
-                        edtFrequency.setText("" + menstruation?.frequency)
-                        edtDuration.setText("" + menstruation?.duration)
-
-                        val nocturnalEmission = sexuality.nocturnalEmission
-                        if (nocturnalEmission?.whether == 1) {
-                            cbMenWhether.isChecked = true
-                            cbMenWhetherDaXue.isChecked = true
-                        }
-                        edtMenAge.setText("" + nocturnalEmission?.startAge)
-
-
-                    }
                 }
             })
     }
@@ -1089,9 +900,6 @@ class PhysicalTestActivity : BaseActivity() {
     private val selPicList = mutableListOf<LocalMedia>()
     private val licensePics = mutableListOf<String>()
     private var eyeAbnormalDiopter = false
-
-    //medicalHistory
-    private var medicalHistoryList = mutableListOf<String>()
 
     //caries
     //乳牙数据
@@ -1156,11 +964,6 @@ class PhysicalTestActivity : BaseActivity() {
         diopterObj["eyeAbnormal"] = eyeAbnormalDiopter
         diopterObj["context"] = contextObj
 
-        //medicalHistory
-        val medicalHistoryObj = com.alibaba.fastjson.JSONObject()
-        medicalHistoryObj["data"] = medicalHistoryList.toTypedArray()
-        medicalHistoryObj["context"] = contextObj
-
         //caries
         val cariesObj = com.alibaba.fastjson.JSONObject()
         //乳牙
@@ -1207,80 +1010,20 @@ class PhysicalTestActivity : BaseActivity() {
         weightObj["data"] = edtWeight.text.toString().trim()
         weightObj["context"] = contextObj
 
-        //bloodPressure
-        val bloodPressureObj = com.alibaba.fastjson.JSONObject()
-        bloodPressureObj["sbp"] = edtSystolic.text.toString().trim()
-        bloodPressureObj["dbp"] = edtDiastolic.text.toString().trim()
-        bloodPressureObj["context"] = contextObj
-
-        //spineObj
-        val spineObj = com.alibaba.fastjson.JSONObject()
-
-        val sideBendObj = com.alibaba.fastjson.JSONObject()
-        val xiongObj = com.alibaba.fastjson.JSONObject()
-        xiongObj["category"] = tvXiong.text.toString()
-        xiongObj["degree"] = tvXiongDegree.text.toString()
-        sideBendObj["chest"] = xiongObj
-        val yaoXiongObj = com.alibaba.fastjson.JSONObject()
-        yaoXiongObj["category"] = tvYaoXiong.text.toString()
-        yaoXiongObj["degree"] = tvYaoXiongDegree.text.toString()
-        sideBendObj["waistChest"] = yaoXiongObj
-        val yaoObj = com.alibaba.fastjson.JSONObject()
-        yaoObj["category"] = tvYao.text.toString()
-        yaoObj["degree"] = tvYaoDegree.text.toString()
-        sideBendObj["waist"] = yaoObj
-        spineObj["sideBend"] = sideBendObj
-
-        val baBendObj = com.alibaba.fastjson.JSONObject()
-        baBendObj["category"] = tvQianHou.text.toString()
-        baBendObj["degree"] = tvQianHouDegree.text.toString()
-
-        spineObj["baBend"] = baBendObj
-        spineObj["context"] = contextObj
-
-        //sexuality
-        val sexualityObj = com.alibaba.fastjson.JSONObject()
-        if (student?.gender == "Male") {
-            val nocturnalEmissionObj = com.alibaba.fastjson.JSONObject()
-            if (student?.schoolCategory == SchoolCategory.University.name) {
-                nocturnalEmissionObj["whether"] = if (cbMenWhetherDaXue.isChecked) 1 else 0
-            } else {
-                nocturnalEmissionObj["whether"] = if (cbMenWhether.isChecked) 1 else 0
-            }
-            nocturnalEmissionObj["startAge"] = edtMenAge.text.toString().trim()
-            sexualityObj["nocturnalEmission"] = nocturnalEmissionObj
-        } else {
-            val menstruationObj = com.alibaba.fastjson.JSONObject()
-            if (student?.schoolCategory == SchoolCategory.University.name) {
-                menstruationObj["whether"] = if (cbWomenWhetherDaXue.isChecked) 1 else 0
-            } else {
-                menstruationObj["whether"] = if (cbWomenWhether.isChecked) 1 else 0
-            }
-            menstruationObj["startAge"] = edtWomenAge.text.toString().trim()
-            menstruationObj["frequency"] = edtFrequency.text.toString().trim()
-            menstruationObj["duration"] = edtDuration.text.toString().trim()
-            sexualityObj["menstruation"] = menstruationObj
-        }
-        sexualityObj["context"] = contextObj
-
-
 
         val dataObj = com.alibaba.fastjson.JSONObject()
         if (ciStr.contains("vision")) dataObj["vision"] = visionObj
         if (ciStr.contains("diopter")) dataObj["diopter"] = diopterObj
-        if (ciStr.contains("medicalHistory")) dataObj["medicalHistory"] = medicalHistoryObj
         if (ciStr.contains("caries")) dataObj["caries"] = cariesObj
         if (ciStr.contains("height")) dataObj["height"] = heightObj
         if (ciStr.contains("weight")) dataObj["weight"] = weightObj
-        if (ciStr.contains("bloodPressure")) dataObj["bloodPressure"] = bloodPressureObj
-        if (ciStr.contains("spine")) dataObj["spine"] = spineObj
-        if (ciStr.contains("sexuality")) dataObj["sexuality"] = sexualityObj
 
         val upMap = mutableMapOf<Any?, Any?>()
-        upMap["studentId"] = student?.id
+        upMap["studentId"] = student?.studentId
+        upMap["title"] = retestTitle
         upMap["data"] = dataObj
         val jsonObj = JSONObject(upMap)
-        OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
+        OkGo.post<LzyResponse<Any>>(Api.RETEST_SUBMIT)
             .upJson(jsonObj)
             .execute(object : DialogCallback<LzyResponse<Any>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<Any>>) {

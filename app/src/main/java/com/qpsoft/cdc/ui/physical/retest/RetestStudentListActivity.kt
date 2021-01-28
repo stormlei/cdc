@@ -1,5 +1,6 @@
 package com.qpsoft.cdc.ui.physical.retest
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
@@ -27,6 +28,9 @@ class RetestStudentListActivity : BaseActivity() {
     private var grade: String? = null
     private var clazz: String? = null
 
+    private var retestTitle: String? = null
+    private var planType: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_retest_student_list)
@@ -34,6 +38,9 @@ class RetestStudentListActivity : BaseActivity() {
         school = intent.getParcelableExtra("school")
         grade = intent.getStringExtra("grade")
         clazz = intent.getStringExtra("clazz")
+
+        retestTitle = intent.getStringExtra("retestTitle")
+        planType = intent.getStringExtra("planType")
 
         setBackBtn()
         setTitle(school?.name + " " +grade+ " " +clazz)
@@ -46,7 +53,13 @@ class RetestStudentListActivity : BaseActivity() {
         rvRetestStudent.setAdapter(mAdapter)
 
         mAdapter.setOnItemContentClickListener { v, originalPosition, currentPosition, entity ->
-
+            entity.studentId = entity.id
+            startActivity(
+                Intent(this@RetestStudentListActivity, ReTestActivity::class.java)
+                    .putExtra("student", entity)
+                    .putExtra("retestTitle", retestTitle)
+                    .putExtra("planType", planType)
+            )
         }
 
     }

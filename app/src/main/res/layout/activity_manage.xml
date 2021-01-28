@@ -8,7 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,13 +40,32 @@
         <LinearLayout
             android:id="@+id/llBle"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="16dp">
+            android:layout_height="62dp"
+            android:layout_marginTop="0dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="蓝牙设备二维码生成>>"
+                android:textSize="17sp"
+                android:textColor="@color/color_26" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_f5"/>
+
+        <LinearLayout
+            android:id="@+id/llConnHelp"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="0dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="电脑验光仪连接帮助>>"
                 android:textSize="17sp"
                 android:textColor="@color/color_26" />
         </LinearLayout>

@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -13,18 +11,17 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.ui.adapter.StudentAdapter
+import com.qpsoft.cdc.ui.entity.*
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
-import com.qpsoft.cdc.ui.entity.CurrentPlan
-import com.qpsoft.cdc.ui.entity.RetestTitle
-import com.qpsoft.cdc.ui.entity.School
 import kotlinx.android.synthetic.main.activity_retest_list.*
-import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 
 class RetestListActivity : BaseActivity() {
 
-    private lateinit var mAdapter: BaseQuickAdapter<RetestTitle, BaseViewHolder>
+    private lateinit var mAdapter: StudentAdapter
 
     private var school: School? = null
     private var planId: String? = null
@@ -50,50 +47,48 @@ class RetestListActivity : BaseActivity() {
             "Checkup" -> tvPlanType.text = "体检复测质控"
         }
 
-        getRetestSummary()
-        //getRetestList()
+        rvRetest.setLayoutManager(LinearLayoutManager(this))
+        rvRetest.recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        rvRetest.setOverlayStyle_MaterialDesign(R.color.color_cb7)
+        mAdapter = StudentAdapter(this)
+        rvRetest.setAdapter(mAdapter)
 
-        rvRetest.layoutManager = LinearLayoutManager(this)
-        rvRetest.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mAdapter = object: BaseQuickAdapter<RetestTitle, BaseViewHolder>(R.layout.item_retest_list) {
-            override fun convert(holder: BaseViewHolder, item: RetestTitle) {
-                holder.setText(R.id.tvTitle, item.title)
-            }
-
-        }
-        rvRetest.adapter = mAdapter
-
-        mAdapter.setOnItemClickListener { adapter, view, position ->
-            val retestTitle = mAdapter.getItem(position)
-            //startActivity(Intent(this@RetestListActivity, MainActivity::class.java))
+        mAdapter.setOnItemContentClickListener { v, originalPosition, currentPosition, entity ->
+            startActivity(
+                Intent(this@RetestListActivity, ReTestActivity::class.java)
+                    .putExtra("student", entity)
+                    .putExtra("retestTitle", retestTitle)
+                    .putExtra("planType", planType)
+            )
         }
 
-        tvStuList.setOnClickListener {
+        tvRetestStuList.setOnClickListener {
             startActivity(Intent(this@RetestListActivity, GradeClazzListActivity::class.java)
                 .putExtra("school", school)
                 .putExtra("isRetest", true)
+                .putExtra("retestTitle", retestTitle)
+                .putExtra("planType", planType)
             )
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        getRetestSummary()
+        getRetestList()
+    }
 
-    private var retestTitleList: MutableList<RetestTitle>? = null
+
     private fun getRetestList() {
-        OkGo.get<LzyResponse<MutableList<RetestTitle>>>(Api.RETEST_TITLE_LIST)
+        OkGo.get<LzyResponse<Page<MutableList<Student>>>>(Api.RETEST)
             .params("schoolId", school?.id)
             .params("planId", planId)
-            .execute(object : DialogCallback<LzyResponse<MutableList<RetestTitle>>>(this) {
-                override fun onSuccess(response: Response<LzyResponse<MutableList<RetestTitle>>>) {
-                    retestTitleList = response.body()?.data
-                    val customTitle = SimpleDateFormat("yyyy年MM月dd日").format(Date())
-                    if (retestTitleList?.size == 0) {
-                        retestTitleList!!.add(RetestTitle(customTitle))
-                    } else {
-                        if (!retestTitleList?.contains(customTitle)!!) {
-                            retestTitleList!!.add(0, RetestTitle(customTitle))
-                        }
-                    }
-                    mAdapter.setNewInstance(retestTitleList)
+            .params("title", retestTitle)
+            .execute(object : DialogCallback<LzyResponse<Page<MutableList<Student>>>>(this) {
+                override fun onSuccess(response: Response<LzyResponse<Page<MutableList<Student>>>>) {
+                    val studentList = response.body()?.data?.items
+
+                    mAdapter.setDatas(studentList)
                 }
             })
     }
@@ -102,16 +97,24 @@ class RetestListActivity : BaseActivity() {
         var url = Api.RETEST_SUMMARY_VISION
         when(planType) {
             "Vision" -> url = Api.RETEST_SUMMARY_VISION
-            "CommonDisease" -> url = Api.RETEST_SUMMARY_VISION
-            "Checkup" -> url = Api.RETEST_SUMMARY_VISION
+            "CommonDisease" -> url = Api.RETEST_SUMMARY_HEIGHT_WEIGHT
+            "Checkup" -> url = Api.RETEST_SUMMARY_ALL
         }
-        OkGo.get<LzyResponse<CurrentPlan>>(url)
+        OkGo.get<LzyResponse<RetestSummary>>(url)
             .params("schoolId", school?.id)
             .params("planId", planId)
             .params("title", retestTitle)
-                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
-                        val currentPlan = response.body()?.data
+                .execute(object : DialogCallback<LzyResponse<RetestSummary>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<RetestSummary>>) {
+                        val retestSummary = response.body()?.data
+                        tvRecordCount.text = "" + retestSummary?.recordCount
+                        tvRetestCount.text = "" + retestSummary?.retestCount
+                        tvRetestItemCount.text = "" + retestSummary?.retestItemCount
+                        tvErrorCount.text = "" + retestSummary?.errorCount
+                        if (retestSummary?.retestItemCount != 0) {
+                            val rate = (retestSummary?.errorCount!!) * 100f / (retestSummary.retestItemCount)
+                            tvErrorRate.text = "" + rate.roundToInt() + "%"
+                        }
                     }
                 })
     }

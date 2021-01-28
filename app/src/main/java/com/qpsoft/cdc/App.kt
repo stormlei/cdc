@@ -1,6 +1,7 @@
 package com.qpsoft.cdc
 
 import android.app.Application
+import android.content.Context
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
@@ -8,6 +9,14 @@ import com.lzy.okgo.interceptor.HttpLoggingInterceptor
 import com.qpsoft.cdc.ui.entity.CheckItem
 import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshFooter
+import com.scwang.smart.refresh.layout.api.RefreshHeader
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.scwang.smart.refresh.layout.listener.DefaultRefreshFooterCreator
+import com.scwang.smart.refresh.layout.listener.DefaultRefreshHeaderCreator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -22,8 +31,19 @@ class App: Application() {
     companion object {
         lateinit var instance: App
         //fun instance() = instance
-    }
 
+        init {
+            //设置全局的Header构建器
+            SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
+                //layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);//全局设置主题颜色
+                ClassicsHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+            }
+            //设置全局的Footer构建器
+            SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout -> //指定为经典Footer，默认是 BallPulseFooter
+                ClassicsFooter(context).setDrawableSize(20f)
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()

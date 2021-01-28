@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.blankj:utilcodex:1.30.5'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'
     implementation 'com.clj.fastble:FastBleLib:2.3.4'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.alibaba:fastjson:1.1.72.android'

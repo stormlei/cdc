@@ -41,6 +41,9 @@
         <activity android:name=".ui.physical.retest.RetestTitleListActivity" />
         <activity android:name=".ui.physical.retest.RetestListActivity" />
         <activity android:name=".ui.physical.retest.RetestStudentListActivity" />
+        <activity
+            android:windowSoftInputMode="stateHidden"
+            android:name=".ui.physical.retest.ReTestActivity" />
         <activity android:name=".ui.ManageActivity" />
         <activity android:name=".qrcodegenerator.BleDeviceListActivity" />
         <activity
