@@ -29,12 +29,16 @@ import com.qpsoft.cdc.ui.entity.Student
 import kotlinx.android.synthetic.main.activity_physical_test.*
 import kotlinx.android.synthetic.main.view_bloodpressure.*
 import kotlinx.android.synthetic.main.view_caries.*
+import kotlinx.android.synthetic.main.view_cj.*
+import kotlinx.android.synthetic.main.view_conjunctivitis.*
 import kotlinx.android.synthetic.main.view_diopter.*
 import kotlinx.android.synthetic.main.view_heightweight.*
 import kotlinx.android.synthetic.main.view_medicalhistory.*
 import kotlinx.android.synthetic.main.view_medicalhistory.view.*
+import kotlinx.android.synthetic.main.view_redgreenblind.*
 import kotlinx.android.synthetic.main.view_sex.*
 import kotlinx.android.synthetic.main.view_spine.*
+import kotlinx.android.synthetic.main.view_trachoma.*
 import kotlinx.android.synthetic.main.view_vision.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
@@ -282,10 +286,40 @@ class PhysicalTestActivity : BaseActivity() {
                 }
             }
         }
+        if (ciStr.contains("trachoma")) {
+            val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
+            llContent.addView(trachomaView)
+
+            val myItems = listOf("无", "可疑", "沙眼I", "沙眼II", "沙眼III")
+            tvTrachoma.setOnClickListener { handleSingleChoice(tvTrachoma, myItems) }
+        }
+        if (ciStr.contains("conjunctivitis")) {
+            val conjuncView = layoutInflater.inflate(R.layout.view_conjunctivitis, null)
+            llContent.addView(conjuncView)
+
+            val myItems = listOf("无", "有")
+            tvConjunc.setOnClickListener { handleSingleChoice(tvConjunc, myItems) }
+        }
+        if (ciStr.contains("redGreenBlind")) {
+            val rgbView = layoutInflater.inflate(R.layout.view_redgreenblind, null)
+            llContent.addView(rgbView)
+
+            val myItems = listOf("无", "有")
+            tvRgb.setOnClickListener { handleSingleChoice(tvRgb, myItems) }
+        }
+
+        if (ciStr.contains("cj")) {
+            val cjView = layoutInflater.inflate(R.layout.view_cj, null)
+            llContent.addView(cjView)
+
+            val myItems1 = listOf("正常", "近视", "远视", "其他")
+            tvQuGuangRight.setOnClickListener { handleSingleChoice(tvQuGuangRight, myItems1) }
+            tvQuGuangLeft.setOnClickListener { handleSingleChoice(tvQuGuangLeft, myItems1) }
+            val myItems2 = listOf("正常", "上升", "下降", "其他")
+            tvCjRight.setOnClickListener { handleSingleChoice(tvCjRight, myItems2) }
+            tvCjLeft.setOnClickListener { handleSingleChoice(tvCjLeft, myItems2) }
+        }
     }
-
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -740,6 +774,16 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
     }
+
+    //沙眼，结膜炎，红绿色盲，串镜
+    private fun handleSingleChoice(tv: TextView, items: List<String>) {
+        MaterialDialog(this).show {
+            listItems(items = items){ dialog, index, text ->
+                tv.text = text
+            }
+        }
+    }
+
 
 
     private fun getPhysical() {

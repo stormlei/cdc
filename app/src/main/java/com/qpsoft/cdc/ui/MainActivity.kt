@@ -260,7 +260,7 @@ class MainActivity : BaseActivity() {
                         tvPlanName.text = planName
                         tvLevel.text = level
 
-                        if (currentPlan?.planType == "Vision") tvEnv.visibility = View.GONE
+                        if (currentPlan?.planType == "Vision") tvEnv.visibility = View.GONE else tvEnv.visibility = View.VISIBLE
                     }
                 })
     }
