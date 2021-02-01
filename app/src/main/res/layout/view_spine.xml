@@ -56,7 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="胸段    "/>
                 <TextView
                     android:id="@+id/tvXiong"
@@ -84,7 +85,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="度数"/>
                 <TextView
                     android:id="@+id/tvXiongDegree"
@@ -116,7 +118,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="腰胸段"/>
                 <TextView
                     android:id="@+id/tvYaoXiong"
@@ -144,7 +147,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="度数"/>
                 <TextView
                     android:id="@+id/tvYaoXiongDegree"
@@ -176,7 +180,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="腰段    "/>
                 <TextView
                     android:id="@+id/tvYao"
@@ -204,7 +209,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="度数"/>
                 <TextView
                     android:id="@+id/tvYaoDegree"
@@ -248,7 +254,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="前后弯曲"/>
                 <TextView
                     android:id="@+id/tvQianHou"
@@ -276,7 +283,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="18sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="度数"/>
                 <TextView
                     android:id="@+id/tvQianHouDegree"

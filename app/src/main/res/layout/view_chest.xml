@@ -22,9 +22,9 @@
             android:gravity="center"
             android:textColor="@color/color_26"
             android:textSize="17sp"
-            android:text="沙眼"/>
+            android:text="胸部"/>
         <TextView
-            android:id="@+id/tvTrachoma"
+            android:id="@+id/tvChest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/color_26"
@@ -32,7 +32,7 @@
             android:gravity="center_vertical|end"
             android:drawableRight="@drawable/icon_arrow_r"
             android:drawablePadding="6dp"
-            android:text="无"/>
+            android:text="未见明显异常"/>
     </LinearLayout>
 
 </LinearLayout>

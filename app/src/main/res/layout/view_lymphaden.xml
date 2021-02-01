@@ -22,17 +22,17 @@
             android:gravity="center"
             android:textColor="@color/color_26"
             android:textSize="17sp"
-            android:text="沙眼"/>
+            android:text="淋巴结"/>
         <TextView
-            android:id="@+id/tvTrachoma"
+            android:id="@+id/tvLymphaden"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/color_26"
-            android:textSize="17sp"
-            android:gravity="center_vertical|end"
+            android:gravity="end|center_vertical"
             android:drawableRight="@drawable/icon_arrow_r"
             android:drawablePadding="6dp"
-            android:text="无"/>
+            android:textColor="@color/color_26"
+            android:textSize="17sp"
+            android:text="未触及" />
     </LinearLayout>
 
 </LinearLayout>

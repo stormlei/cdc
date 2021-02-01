@@ -2,9 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="0dp"
-    android:layout_marginBottom="0dp"
     android:orientation="vertical">
 
     <View
@@ -16,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:gravity="center"
-        android:text="血压"
+        android:text="眼轴"
         android:textColor="@color/color_26"
         android:textSize="20sp" />
     <View
@@ -25,7 +22,6 @@
         android:background="@color/color_f5"/>
 
     <LinearLayout
-        android:id="@+id/llBloodPressureExam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -36,7 +32,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
                 <TextView
@@ -45,13 +42,15 @@
                     android:gravity="center"
                     android:textColor="@color/color_26"
                     android:textSize="17sp"
-                    android:text="收缩压（毫米汞柱）："/>
+                    android:text="右"/>
                 <EditText
-                    android:id="@+id/edtSystolic"
+                    android:id="@+id/edtEyeAxisRight"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberSigned"
+                    android:layout_marginStart="16dp"
+                    android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
+                    android:textSize="17sp"
                     android:hint="请填写"/>
             </LinearLayout>
             <View
@@ -61,7 +60,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
                 <TextView
@@ -70,47 +70,22 @@
                     android:gravity="center"
                     android:textColor="@color/color_26"
                     android:textSize="17sp"
-                    android:text="舒张压（毫米汞柱）："/>
+                    android:text="左"/>
                 <EditText
-                    android:id="@+id/edtDiastolic"
+                    android:id="@+id/edtEyeAxisLeft"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberSigned"
+                    android:layout_marginStart="16dp"
+                    android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
+                    android:textSize="17sp"
                     android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_e5"/>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_margin="16dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:background="@drawable/bg_cb7_stroke_shape">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_26"
-            android:textSize="17sp"
-            android:text="电子血压计：未连接"/>
-        <TextView
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:textColor="@color/color_cb7"
-            android:textSize="17sp"
-            android:text="扫码连接设备"/>
+            android:layout_height="1dp"
+            android:background="@color/color_e5"/>
     </LinearLayout>
 
 </LinearLayout>

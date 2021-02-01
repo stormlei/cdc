@@ -27,19 +27,52 @@ import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
 import com.qpsoft.cdc.ui.entity.Student
 import kotlinx.android.synthetic.main.activity_physical_test.*
+import kotlinx.android.synthetic.main.view_bcgscar.*
 import kotlinx.android.synthetic.main.view_bloodpressure.*
+import kotlinx.android.synthetic.main.view_bloodtype.*
+import kotlinx.android.synthetic.main.view_bust.*
 import kotlinx.android.synthetic.main.view_caries.*
+import kotlinx.android.synthetic.main.view_chest.*
 import kotlinx.android.synthetic.main.view_cj.*
 import kotlinx.android.synthetic.main.view_conjunctivitis.*
+import kotlinx.android.synthetic.main.view_cornealcurvature.*
+import kotlinx.android.synthetic.main.view_cornealradius.*
 import kotlinx.android.synthetic.main.view_diopter.*
+import kotlinx.android.synthetic.main.view_ear.*
+import kotlinx.android.synthetic.main.view_eyeaxis.*
+import kotlinx.android.synthetic.main.view_eyepressure.*
+import kotlinx.android.synthetic.main.view_grip.*
+import kotlinx.android.synthetic.main.view_head.*
+import kotlinx.android.synthetic.main.view_hearing.*
+import kotlinx.android.synthetic.main.view_heart.*
 import kotlinx.android.synthetic.main.view_heightweight.*
+import kotlinx.android.synthetic.main.view_hemoglobin.*
+import kotlinx.android.synthetic.main.view_hips.*
+import kotlinx.android.synthetic.main.view_limb.*
+import kotlinx.android.synthetic.main.view_liver.*
+import kotlinx.android.synthetic.main.view_liverfunction.*
+import kotlinx.android.synthetic.main.view_lung.*
+import kotlinx.android.synthetic.main.view_lymphaden.*
 import kotlinx.android.synthetic.main.view_medicalhistory.*
 import kotlinx.android.synthetic.main.view_medicalhistory.view.*
+import kotlinx.android.synthetic.main.view_neck.*
+import kotlinx.android.synthetic.main.view_nose.*
+import kotlinx.android.synthetic.main.view_nutrition.*
+import kotlinx.android.synthetic.main.view_pdd.*
+import kotlinx.android.synthetic.main.view_periodontium.*
+import kotlinx.android.synthetic.main.view_pulse.*
 import kotlinx.android.synthetic.main.view_redgreenblind.*
 import kotlinx.android.synthetic.main.view_sex.*
+import kotlinx.android.synthetic.main.view_sittingheight.*
+import kotlinx.android.synthetic.main.view_skin.*
 import kotlinx.android.synthetic.main.view_spine.*
+import kotlinx.android.synthetic.main.view_spleen.*
+import kotlinx.android.synthetic.main.view_tonsil.*
 import kotlinx.android.synthetic.main.view_trachoma.*
 import kotlinx.android.synthetic.main.view_vision.*
+import kotlinx.android.synthetic.main.view_vitalcapacity.*
+import kotlinx.android.synthetic.main.view_waistline.*
+import kotlinx.android.synthetic.main.view_worm.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
 import org.json.JSONObject
@@ -157,24 +190,18 @@ class PhysicalTestActivity : BaseActivity() {
             llContent.addView(medicalHistoryView)
 
             val myItems = mutableListOf("肝炎", "肾炎", "心脏病", "高血压", "贫血", "过敏性哮喘", "身体残疾", "均无")
-            val indexSel = mutableListOf<Int>()
-            for(mh in medicalHistoryList) {
-                for(item in myItems) {
-                    if (mh == item) {
-                        indexSel.add(myItems.indexOf(item))
-                    }
-                }
-            }
-            var initSel = intArrayOf(elements = indexSel.toIntArray())
             tvMedicalHistory.setOnClickListener {
-                MaterialDialog(this).show {
-                    listItemsMultiChoice(items = myItems, initialSelection = initSel) { dialog, indices, items ->
-                        initSel = indices
-                        this@PhysicalTestActivity.tvMedicalHistory.text = items.joinToString(limit = 4)
-                        medicalHistoryList = items as MutableList<String>
+                val indexSel = mutableListOf<Int>()
+                for(mh in medicalHistoryList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
                     }
-                    positiveButton()
                 }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvMedicalHistory, myItems, initSel, "medicalHistory")
             }
         }
         if (ciStr.contains("caries")) {
@@ -255,10 +282,11 @@ class PhysicalTestActivity : BaseActivity() {
 
             tvQianHou.setOnClickListener { handleWanQu(tvQianHou, llQianHouDegree) }
 
-            tvXiongDegree.setOnClickListener { handleDegree(tvXiongDegree) }
-            tvYaoXiongDegree.setOnClickListener { handleDegree(tvYaoXiongDegree) }
-            tvYaoDegree.setOnClickListener { handleDegree(tvYaoDegree) }
-            tvQianHouDegree.setOnClickListener { handleDegree(tvQianHouDegree) }
+            val myItems = listOf("I", "II", "III")
+            tvXiongDegree.setOnClickListener { handleSingleChoice(tvXiongDegree, myItems) }
+            tvYaoXiongDegree.setOnClickListener { handleSingleChoice(tvYaoXiongDegree, myItems) }
+            tvYaoDegree.setOnClickListener { handleSingleChoice(tvYaoDegree, myItems) }
+            tvQianHouDegree.setOnClickListener { handleSingleChoice(tvQianHouDegree, myItems) }
         }
         if (ciStr.contains("sexuality") && student?.schoolCategory != SchoolCategory.Kindergarten.name) {
             val sexView = layoutInflater.inflate(R.layout.view_sex, null)
@@ -286,6 +314,7 @@ class PhysicalTestActivity : BaseActivity() {
                 }
             }
         }
+
         if (ciStr.contains("trachoma")) {
             val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
             llContent.addView(trachomaView)
@@ -307,7 +336,22 @@ class PhysicalTestActivity : BaseActivity() {
             val myItems = listOf("无", "有")
             tvRgb.setOnClickListener { handleSingleChoice(tvRgb, myItems) }
         }
-
+        if (ciStr.contains("eyeAxis")) {
+            val eyeAxisView = layoutInflater.inflate(R.layout.view_eyeaxis, null)
+            llContent.addView(eyeAxisView)
+        }
+        if (ciStr.contains("eyePressure")) {
+            val eyePressureView = layoutInflater.inflate(R.layout.view_eyepressure, null)
+            llContent.addView(eyePressureView)
+        }
+        if (ciStr.contains("cornealCurvature")) {
+            val ccView = layoutInflater.inflate(R.layout.view_cornealcurvature, null)
+            llContent.addView(ccView)
+        }
+        if (ciStr.contains("cornealRadius")) {
+            val crView = layoutInflater.inflate(R.layout.view_cornealradius, null)
+            llContent.addView(crView)
+        }
         if (ciStr.contains("cj")) {
             val cjView = layoutInflater.inflate(R.layout.view_cj, null)
             llContent.addView(cjView)
@@ -318,6 +362,299 @@ class PhysicalTestActivity : BaseActivity() {
             val myItems2 = listOf("正常", "上升", "下降", "其他")
             tvCjRight.setOnClickListener { handleSingleChoice(tvCjRight, myItems2) }
             tvCjLeft.setOnClickListener { handleSingleChoice(tvCjLeft, myItems2) }
+        }
+
+        if (ciStr.contains("pulse")) {
+            val pulseView = layoutInflater.inflate(R.layout.view_pulse, null)
+            llContent.addView(pulseView)
+        }
+        if (ciStr.contains("vitalCapacity")) {
+            val vcView = layoutInflater.inflate(R.layout.view_vitalcapacity, null)
+            llContent.addView(vcView)
+        }
+        if (ciStr.contains("bust")) {
+            val bustView = layoutInflater.inflate(R.layout.view_bust, null)
+            llContent.addView(bustView)
+        }
+        if (ciStr.contains("waistline")) {
+            val waistlineView = layoutInflater.inflate(R.layout.view_waistline, null)
+            llContent.addView(waistlineView)
+        }
+        if (ciStr.contains("hips")) {
+            val hipsView = layoutInflater.inflate(R.layout.view_hips, null)
+            llContent.addView(hipsView)
+        }
+        if (ciStr.contains("sittingHeight")) {
+            val shView = layoutInflater.inflate(R.layout.view_sittingheight, null)
+            llContent.addView(shView)
+        }
+        if (ciStr.contains("grip")) {
+            val gripView = layoutInflater.inflate(R.layout.view_grip, null)
+            llContent.addView(gripView)
+        }
+        if (ciStr.contains("nutrition")) {
+            val nutritionView = layoutInflater.inflate(R.layout.view_nutrition, null)
+            llContent.addView(nutritionView)
+
+            val myItems = listOf("正常", "生长迟缓", "营养不良", "超重", "肥胖")
+            tvNutrition.setOnClickListener { handleSingleChoice(tvNutrition, myItems) }
+        }
+
+
+        if (ciStr.contains("ear")) {
+            val earView = layoutInflater.inflate(R.layout.view_ear, null)
+            llContent.addView(earView)
+
+            val myItems = listOf("未见明显异常", "其他异常", "耵聍", "附耳", "中耳炎", "耳前萎管")
+            tvEar.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in earList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvEar, myItems, initSel, "ear")
+            }
+        }
+        if (ciStr.contains("nose")) {
+            val noseView = layoutInflater.inflate(R.layout.view_nose, null)
+            llContent.addView(noseView)
+
+            val myItems = listOf("未见明显异常", "其他异常", "鼻炎", "鼻窦炎", "鼻中隔偏曲", "鼻息肉", "鼻衄", "鼻前庭炎")
+            tvNose.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in noseList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvNose, myItems, initSel, "nose")
+            }
+        }
+        if (ciStr.contains("tonsil")) {
+            val tonsilView = layoutInflater.inflate(R.layout.view_tonsil, null)
+            llContent.addView(tonsilView)
+
+            val myItems = listOf("未见明显异常", "异常", "Ⅰ度肿大", "Ⅱ度肿大", "Ⅲ度肿大", "扁桃体切除术后")
+            tvTonsil.setOnClickListener { handleSingleChoice(tvNose, myItems) }
+        }
+        if (ciStr.contains("periodontium")) {
+            val periodontiumView = layoutInflater.inflate(R.layout.view_periodontium, null)
+            llContent.addView(periodontiumView)
+
+            val myItems = listOf("未见明显异常", "牙结石", "牙龈炎", "牙周炎", "氟斑牙", "错颔", "牙釉质发育不全", "义齿", "其他牙病")
+            tvPeriod.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in periodList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvPeriod, myItems, initSel, "periodontium")
+            }
+        }
+        if (ciStr.contains("hearing")) {
+            val hearingView = layoutInflater.inflate(R.layout.view_hearing, null)
+            llContent.addView(hearingView)
+
+            val myItems = listOf("正常", "异常")
+            tvHearingRight.setOnClickListener { handleSingleChoice(tvHearingRight, myItems) }
+            tvHearingLeft.setOnClickListener { handleSingleChoice(tvHearingLeft, myItems) }
+        }
+        if (ciStr.contains("heart")) {
+            val heartView = layoutInflater.inflate(R.layout.view_heart, null)
+            llContent.addView(heartView)
+
+            val myItems = listOf("心律齐未及明显杂音", "心脏I级杂音", "心脏II级杂音", "心脏III级以上杂音", "心动过速", "心动过缓", "心律不齐", "频发早搏")
+            tvHeart.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in heartList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvHeart, myItems, initSel, "heart")
+            }
+        }
+        if (ciStr.contains("lung")) {
+            val lungView = layoutInflater.inflate(R.layout.view_lung, null)
+            llContent.addView(lungView)
+
+            val myItems = listOf("双肺呼吸音清未及明显干湿啰音", "异常", "哮鸣音(哮喘)", "干湿性啰音(肺炎)", "双肺呼吸音增粗")
+            tvLung.setOnClickListener { handleSingleChoice(tvLung, myItems) }
+        }
+        if (ciStr.contains("liver")) {
+            val liverView = layoutInflater.inflate(R.layout.view_liver, null)
+            llContent.addView(liverView)
+
+            val myItems = listOf("肋下未及", "肿大", "肝脏肿大轻度", "肝脏肿大中度以上")
+            tvLiver.setOnClickListener { handleSingleChoice(tvLiver, myItems) }
+        }
+        if (ciStr.contains("spleen")) {
+            val spleenView = layoutInflater.inflate(R.layout.view_spleen, null)
+            llContent.addView(spleenView)
+
+            val myItems = listOf("肋下未及", "肿大", "脾脏肿大轻度")
+            tvSpleen.setOnClickListener { handleSingleChoice(tvSpleen, myItems) }
+        }
+
+
+        if (ciStr.contains("head")) {
+            val headView = layoutInflater.inflate(R.layout.view_head, null)
+            llContent.addView(headView)
+
+            val myItems = listOf("未见明显异常", "异常")
+            tvHead.setOnClickListener { handleSingleChoice(tvHead, myItems) }
+        }
+        if (ciStr.contains("neck")) {
+            val neckView = layoutInflater.inflate(R.layout.view_neck, null)
+            llContent.addView(neckView)
+
+            val myItems = listOf("未见明显异常", "异常")
+            tvNeck.setOnClickListener { handleSingleChoice(tvNeck, myItems) }
+        }
+        if (ciStr.contains("chest")) {
+            val chestView = layoutInflater.inflate(R.layout.view_chest, null)
+            llContent.addView(chestView)
+
+            val myItems = listOf("未见明显异常", "异常", "鸡胸", "漏斗胸", "扁平胸", "纵膈肿瘤术后", "胸廓不对称")
+            tvChest.setOnClickListener { handleSingleChoice(tvChest, myItems) }
+        }
+        if (ciStr.contains("limb")) {
+            val skinView = layoutInflater.inflate(R.layout.view_limb, null)
+            llContent.addView(skinView)
+
+            val myItems = listOf("未见明显异常", "异常", "O型腿", "并指畸形", "内八字", "X型腿", "关节畸形", "关节功能受限", "外伤", "四肢残缺", "脑瘫", "小儿麻痹", "跛行")
+            tvLeftTopLimb.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in leftTopLimbList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvLeftTopLimb, myItems, initSel, "left_top_limb")
+            }
+            tvRightTopLimb.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in rightTopLimbList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvRightTopLimb, myItems, initSel, "right_top_limb")
+            }
+            tvLeftBottomLimb.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in leftBottomLimbList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvLeftBottomLimb, myItems, initSel, "left_bottom_limb")
+            }
+            tvRightBottomLimb.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in rightBottomLimbList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvRightBottomLimb, myItems, initSel, "right_bottom_limb")
+            }
+        }
+        if (ciStr.contains("skin")) {
+            val skinView = layoutInflater.inflate(R.layout.view_skin, null)
+            llContent.addView(skinView)
+
+            val myItems = listOf("红润", "异常", "湿疹", "皮肤癣", "白癜风", "手术或外伤瘢痕", "血管瘤", "疥疮", "鱼鳞病", "皮炎")
+            tvSkin.setOnClickListener {
+                val indexSel = mutableListOf<Int>()
+                for(mh in skinList) {
+                    for(item in myItems) {
+                        if (mh == item) {
+                            indexSel.add(myItems.indexOf(item))
+                        }
+                    }
+                }
+                val initSel = intArrayOf(elements = indexSel.toIntArray())
+
+                handleMultiChoice(tvSkin, myItems, initSel, "skin")
+            }
+        }
+        if (ciStr.contains("lymphaden")) {
+            val lymphadenView = layoutInflater.inflate(R.layout.view_lymphaden, null)
+            llContent.addView(lymphadenView)
+
+            val myItems = listOf("未触及", "肿大")
+            tvLymphaden.setOnClickListener { handleSingleChoice(tvLymphaden, myItems) }
+        }
+        if (ciStr.contains("bcgScar")) {
+            val lymphadenView = layoutInflater.inflate(R.layout.view_bcgscar, null)
+            llContent.addView(lymphadenView)
+
+            val myItems = listOf("有", "无")
+            tvBcgScar.setOnClickListener { handleSingleChoice(tvBcgScar, myItems) }
+        }
+        if (ciStr.contains("hemoglobin")) {
+            val hemoglobinView = layoutInflater.inflate(R.layout.view_hemoglobin, null)
+            llContent.addView(hemoglobinView)
+        }
+        if (ciStr.contains("worm")) {
+            val wormView = layoutInflater.inflate(R.layout.view_worm, null)
+            llContent.addView(wormView)
+
+            val myItems = listOf("无", "有")
+            tvWorm.setOnClickListener { handleSingleChoice(tvWorm, myItems) }
+        }
+        if (ciStr.contains("bloodType")) {
+            val bloodTypeView = layoutInflater.inflate(R.layout.view_bloodtype, null)
+            llContent.addView(bloodTypeView)
+
+            val myItems = listOf("A", "B", "AB", "O", "其他血型")
+            tvBloodType.setOnClickListener { handleSingleChoice(tvBloodType, myItems) }
+        }
+        if (ciStr.contains("pdd")) {
+            val pddView = layoutInflater.inflate(R.layout.view_pdd, null)
+            llContent.addView(pddView)
+
+            val myItems = listOf("阴性", "阳性")
+            tvPdd.setOnClickListener { handleSingleChoice(tvPdd, myItems) }
+        }
+        if (ciStr.contains("liverFunction")) {
+            val liverFunctionView = layoutInflater.inflate(R.layout.view_liverfunction, null)
+            llContent.addView(liverFunctionView)
         }
     }
 
@@ -764,18 +1101,8 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
     }
-    private fun handleDegree(tv: TextView) {
-        val myItems = listOf("I", "II", "III")
-        MaterialDialog(this).show {
-            listItems(items = myItems){ dialog, index, text ->
-                when(index) {
-                    0, 1, 2 -> tv.text = text
-                }
-            }
-        }
-    }
 
-    //沙眼，结膜炎，红绿色盲，串镜
+    //沙眼，结膜炎，红绿色盲，串镜。。。
     private fun handleSingleChoice(tv: TextView, items: List<String>) {
         MaterialDialog(this).show {
             listItems(items = items){ dialog, index, text ->
@@ -783,6 +1110,27 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
     }
+
+
+    //疾病史。。。
+    private fun handleMultiChoice(tv: TextView, items: List<String>, initSel: IntArray, key: String) {
+        MaterialDialog(this).show {
+            listItemsMultiChoice(items = items, initialSelection = initSel) { dialog, indices, items ->
+                //initSel = indices
+                tv.text = items.joinToString(limit = 4)
+                when(key) {
+                    "medicalHistory" -> medicalHistoryList = items as MutableList<String>
+                    "ear" -> earList = items as MutableList<String>
+                    "periodontium" -> earList = items as MutableList<String>
+                    "heart" -> heartList = items as MutableList<String>
+                }
+
+            }
+            positiveButton()
+        }
+    }
+
+
 
 
 
@@ -826,14 +1174,12 @@ class PhysicalTestActivity : BaseActivity() {
                         sbtnEyeAbnormalDiopter.isChecked = diopter.eyeAbnormal
 
                     }
-
                     //medicalHistory
                     val medicalHistory = data?.medicalHistory
                     if (ciStr.contains("medicalHistory") && medicalHistory != null) {
                         tvMedicalHistory.text = medicalHistory.data?.joinToString(limit = 4)
                         medicalHistoryList = medicalHistory.data as MutableList<String>
                     }
-
                     //caries
                     val caries = data?.caries
                     if (ciStr.contains("caries") && caries != null) {
@@ -1035,7 +1381,6 @@ class PhysicalTestActivity : BaseActivity() {
                             }
                         }
                     }
-
                     //height weight
                     val height = data?.height
                     val weight = data?.weight
@@ -1043,14 +1388,12 @@ class PhysicalTestActivity : BaseActivity() {
                         edtHeight.setText(height?.data)
                         edtWeight.setText(weight?.data)
                     }
-
                     //bloodPressure
                     val bloodPressure = data?.bloodPressure
                     if (ciStr.contains("bloodPressure") && bloodPressure != null) {
                         edtSystolic.setText(bloodPressure.sbp)
                         edtDiastolic.setText(bloodPressure.dbp)
                     }
-
                     //spine
                     val spine = data?.spine
                     if (ciStr.contains("spine") && spine != null) {
@@ -1076,7 +1419,6 @@ class PhysicalTestActivity : BaseActivity() {
                         if ("无前后弯曲异常" == baBend?.category) llQianHouDegree.visibility =
                             View.INVISIBLE
                     }
-
                     //sexuality
                     val sexuality = data?.sexuality
                     if (ciStr.contains("sexuality") && sexuality != null) {
@@ -1120,6 +1462,224 @@ class PhysicalTestActivity : BaseActivity() {
 
 
                     }
+
+
+                    //trachoma
+                    val trachoma = data?.trachoma
+                    if (ciStr.contains("trachoma") && trachoma != null) {
+                        tvTrachoma.text = trachoma.data
+                    }
+                    //conjunctivitis
+                    val conjunctivitis = data?.conjunctivitis
+                    if (ciStr.contains("conjunctivitis") && conjunctivitis != null) {
+                        tvConjunc.text = conjunctivitis.data
+                    }
+                    //redGreenBlind
+                    val redGreenBlind = data?.redGreenBlind
+                    if (ciStr.contains("redGreenBlind") && redGreenBlind != null) {
+                        tvRgb.text = redGreenBlind.data
+                    }
+                    //eyeAxis
+                    val eyeAxis = data?.eyeAxis
+                    if (ciStr.contains("eyeAxis") && eyeAxis != null) {
+                        edtEyeAxisRight.setText(eyeAxis.od)
+                        edtEyeAxisLeft.setText(eyeAxis.os)
+                    }
+                    //eyePressure
+                    val eyePressure = data?.eyePressure
+                    if (ciStr.contains("eyePressure") && eyePressure != null) {
+                        edtEyePressRight.setText(eyePressure.od)
+                        edtEyePressLeft.setText(eyePressure.os)
+                    }
+                    //cornealCurvature
+                    val cornealCurvature = data?.cornealCurvature
+                    if (ciStr.contains("cornealCurvature") && cornealCurvature != null) {
+                        edtKsRight.setText(cornealCurvature.ks?.od)
+                        edtKsLeft.setText(cornealCurvature.ks?.os)
+                        edtKfRight.setText(cornealCurvature.kf?.od)
+                        edtKfLeft.setText(cornealCurvature.kf?.os)
+                    }
+                    //cornealRadius
+                    val cornealRadius = data?.cornealRadius
+                    if (ciStr.contains("cornealRadius") && cornealRadius != null) {
+                        edtCrRight.setText(cornealRadius.od)
+                        edtCrLeft.setText(cornealRadius.os)
+                    }
+                    //cj
+                    val cj = data?.cj
+                    if (ciStr.contains("cj") && cj != null) {
+                        tvQuGuangRight.text = cj.refractiveError?.od
+                        tvQuGuangLeft.text = cj.refractiveError?.os
+                        tvCjRight.text = cj.cjData?.od
+                        tvCjLeft.text = cj.cjData?.os
+                    }
+
+                    //pulse
+                    val pulse = data?.pulse
+                    if (ciStr.contains("pulse") && pulse != null) {
+                        edtPulse.setText(pulse.data)
+                    }
+                    //vitalCapacity
+                    val vitalCapacity = data?.vitalCapacity
+                    if (ciStr.contains("vitalCapacity") && vitalCapacity != null) {
+                        edtVC.setText(vitalCapacity.data)
+                    }
+                    //bust
+                    val bust = data?.bust
+                    if (ciStr.contains("bust") && bust != null) {
+                        edtBust.setText(bust.data)
+                    }
+                    //waistline
+                    val waistline = data?.waistline
+                    if (ciStr.contains("waistline") && waistline != null) {
+                        edtWaistline.setText(waistline.data)
+                    }
+                    //hips
+                    val hips = data?.hips
+                    if (ciStr.contains("hips") && hips != null) {
+                        edtHips.setText(hips.data)
+                    }
+                    //sittingHeight
+                    val sittingHeight = data?.sittingHeight
+                    if (ciStr.contains("sittingHeight") && sittingHeight != null) {
+                        edtSh.setText(sittingHeight.data)
+                    }
+                    //grip
+                    val grip = data?.grip
+                    if (ciStr.contains("grip") && grip != null) {
+                        edtGrip.setText(grip.data)
+                    }
+                    //nutrition
+                    val nutrition = data?.nutrition
+                    if (ciStr.contains("nutrition") && nutrition != null) {
+                        tvNutrition.text = nutrition.data
+                    }
+
+
+                    //ear
+                    val ear = data?.ear
+                    if (ciStr.contains("ear") && ear != null) {
+                        tvEar.text = ear.data?.joinToString(limit = 4)
+                        earList = ear.data as MutableList<String>
+                    }
+                    //nose
+                    val nose = data?.nose
+                    if (ciStr.contains("nose") && nose != null) {
+                        tvNose.text = nose.data?.joinToString(limit = 4)
+                        noseList = nose.data as MutableList<String>
+                    }
+                    //tonsil
+                    val tonsil = data?.tonsil
+                    if (ciStr.contains("tonsil") && tonsil != null) {
+                        tvTonsil.text = tonsil.data
+                    }
+                    //periodontium
+                    val period = data?.periodontium
+                    if (ciStr.contains("periodontium") && period != null) {
+                        tvPeriod.text = period.data?.joinToString(limit = 4)
+                        periodList = period.data as MutableList<String>
+                    }
+                    //hearing
+                    val hearing = data?.hearing
+                    if (ciStr.contains("hearing") && hearing != null) {
+                        tvHearingRight.text = hearing.rightAbnormal
+                        tvHearingLeft.text = hearing.leftAbnormal
+                    }
+                    //heart
+                    val heart = data?.heart
+                    if (ciStr.contains("heart") && heart != null) {
+                        tvHeart.text = heart.data?.joinToString(limit = 4)
+                        heartList = heart.data as MutableList<String>
+                    }
+                    //lung
+                    val lung = data?.lung
+                    if (ciStr.contains("lung") && lung != null) {
+                        tvLung.text = lung.data
+                    }
+                    //liver
+                    val liver = data?.liver
+                    if (ciStr.contains("liver") && liver != null) {
+                        tvLiver.text = liver.data
+                    }
+                    //spleen
+                    val spleen = data?.spleen
+                    if (ciStr.contains("spleen") && spleen != null) {
+                        tvSpleen.text = spleen.data
+                    }
+
+
+                    //head
+                    val head = data?.head
+                    if (ciStr.contains("head") && head != null) {
+                        tvHead.text = head.data
+                    }
+                    //neck
+                    val neck = data?.neck
+                    if (ciStr.contains("neck") && neck != null) {
+                        tvNeck.text = neck.data
+                    }
+                    //chest
+                    val chest = data?.chest
+                    if (ciStr.contains("chest") && chest != null) {
+                        tvChest.text = chest.data
+                    }
+                    //limb
+                    val limb = data?.limb
+                    if (ciStr.contains("limb") && limb != null) {
+                        tvLeftTopLimb.text = limb.lt?.joinToString(limit = 4)
+                        leftTopLimbList = limb.lt as MutableList<String>
+
+                        tvRightTopLimb.text = limb.rt?.joinToString(limit = 4)
+                        rightTopLimbList = limb.rt as MutableList<String>
+
+                        tvLeftBottomLimb.text = limb.lb?.joinToString(limit = 4)
+                        leftBottomLimbList = limb.lb as MutableList<String>
+
+                        tvRightBottomLimb.text = limb.rb?.joinToString(limit = 4)
+                        rightBottomLimbList = limb.rb as MutableList<String>
+                    }
+                    //skin
+                    val skin = data?.skin
+                    if (ciStr.contains("skin") && skin != null) {
+                        tvSkin.text = skin.data?.joinToString(limit = 4)
+                        skinList = skin.data as MutableList<String>
+                    }
+                    //lymphaden
+                    val lymphaden = data?.lymphaden
+                    if (ciStr.contains("lymphaden") && lymphaden != null) {
+                        tvLymphaden.text = lymphaden.data
+                    }
+                    //bcgScar
+                    val bcgScar = data?.bcgScar
+                    if (ciStr.contains("bcgScar") && bcgScar != null) {
+                        tvBcgScar.text = bcgScar.data
+                    }
+                    //hemoglobin
+                    val hemoglobin = data?.hemoglobin
+                    if (ciStr.contains("hemoglobin") && hemoglobin != null) {
+                        edtHemoglobin.setText(hemoglobin.data)
+                    }
+                    //bloodType
+                    val bloodType = data?.bloodType
+                    if (ciStr.contains("bloodType") && bloodType != null) {
+                        tvBloodType.text = bloodType.data
+                    }
+                    //worm
+                    val worm = data?.worm
+                    if (ciStr.contains("worm") && worm != null) {
+                        tvWorm.text = worm.data
+                    }
+                    //pdd
+                    val pdd = data?.pdd
+                    if (ciStr.contains("pdd") && pdd != null) {
+                        tvPdd.text = pdd.data
+                    }
+                    //liverFunction
+                    val liverFunction = data?.liverFunction
+                    if (ciStr.contains("liverFunction") && liverFunction != null) {
+                        edtAlt.setText(liverFunction.alt)
+                        edtBc.setText(liverFunction.bc)
+                    }
                 }
             })
     }
@@ -1146,6 +1706,22 @@ class PhysicalTestActivity : BaseActivity() {
     private var adultDList = mutableListOf<Int>()
     private var adultMList = mutableListOf<Int>()
     private var adultFList = mutableListOf<Int>()
+
+    //ear
+    private var earList = mutableListOf<String>()
+    //nose
+    private var noseList = mutableListOf<String>()
+    //periodontium
+    private var periodList = mutableListOf<String>()
+    //heart
+    private var heartList = mutableListOf<String>()
+    //limb
+    private var leftTopLimbList = mutableListOf<String>()
+    private var rightTopLimbList = mutableListOf<String>()
+    private var leftBottomLimbList = mutableListOf<String>()
+    private var rightBottomLimbList = mutableListOf<String>()
+    //limb
+    private var skinList = mutableListOf<String>()
 
 
 
@@ -1307,6 +1883,180 @@ class PhysicalTestActivity : BaseActivity() {
         }
         sexualityObj["context"] = contextObj
 
+        //trachoma
+        val trachomaObj = com.alibaba.fastjson.JSONObject()
+        trachomaObj["data"] = tvTrachoma.text.toString()
+        trachomaObj["context"] = contextObj
+        //conjunctivitis
+        val conjuncObj = com.alibaba.fastjson.JSONObject()
+        conjuncObj["data"] = tvConjunc.text.toString()
+        conjuncObj["context"] = contextObj
+        //redGreenBlind
+        val rgbObj = com.alibaba.fastjson.JSONObject()
+        rgbObj["data"] = tvRgb.text.toString()
+        rgbObj["context"] = contextObj
+        //eyeAxis
+        val eyeAxisObj = com.alibaba.fastjson.JSONObject()
+        eyeAxisObj["od"] = edtEyeAxisRight.text.toString().trim()
+        eyeAxisObj["os"] = edtEyeAxisLeft.text.toString().trim()
+        eyeAxisObj["context"] = contextObj
+        //eyePressure
+        val eyePressureObj = com.alibaba.fastjson.JSONObject()
+        eyePressureObj["od"] = edtEyePressRight.text.toString().trim()
+        eyePressureObj["os"] = edtEyePressLeft.text.toString().trim()
+        eyePressureObj["context"] = contextObj
+        //cornealCurvature
+        val ksObj = com.alibaba.fastjson.JSONObject()
+        ksObj["od"] = edtKsRight.text.toString().trim()
+        ksObj["os"] = edtKsLeft.text.toString().trim()
+        val kfObj = com.alibaba.fastjson.JSONObject()
+        kfObj["od"] = edtKfRight.text.toString().trim()
+        kfObj["os"] = edtKfLeft.text.toString().trim()
+        val ccObj = com.alibaba.fastjson.JSONObject()
+        ccObj["ks"] = ksObj
+        ccObj["kf"] = kfObj
+        ccObj["context"] = contextObj
+        //cornealRadius
+        val crObj = com.alibaba.fastjson.JSONObject()
+        crObj["od"] = edtCrRight.text.toString().trim()
+        crObj["os"] = edtCrLeft.text.toString().trim()
+        crObj["context"] = contextObj
+        //cj
+        val refErrorObj = com.alibaba.fastjson.JSONObject()
+        refErrorObj["od"] = tvQuGuangRight.text.toString().trim()
+        refErrorObj["os"] = tvQuGuangLeft.text.toString().trim()
+        val cjDataObj = com.alibaba.fastjson.JSONObject()
+        cjDataObj["od"] = tvCjRight.text.toString().trim()
+        cjDataObj["os"] = tvCjLeft.text.toString().trim()
+        val cjObj = com.alibaba.fastjson.JSONObject()
+        cjObj["refractiveError"] = refErrorObj
+        cjObj["cjData"] = cjDataObj
+        cjObj["context"] = contextObj
+
+        //pulse
+        val pulseObj = com.alibaba.fastjson.JSONObject()
+        pulseObj["data"] = edtPulse.text.toString().trim()
+        pulseObj["context"] = contextObj
+        //vitalCapacity
+        val vcObj = com.alibaba.fastjson.JSONObject()
+        vcObj["data"] = edtVC.text.toString().trim()
+        vcObj["context"] = contextObj
+        //bust
+        val bustObj = com.alibaba.fastjson.JSONObject()
+        bustObj["data"] = edtBust.text.toString().trim()
+        bustObj["context"] = contextObj
+        //waistline
+        val waistlineObj = com.alibaba.fastjson.JSONObject()
+        waistlineObj["data"] = edtWaistline.text.toString().trim()
+        waistlineObj["context"] = contextObj
+        //hips
+        val hipsObj = com.alibaba.fastjson.JSONObject()
+        hipsObj["data"] = edtHips.text.toString().trim()
+        hipsObj["context"] = contextObj
+        //sittingHeight
+        val shObj = com.alibaba.fastjson.JSONObject()
+        shObj["data"] = edtSh.text.toString().trim()
+        shObj["context"] = contextObj
+        //grip
+        val gripObj = com.alibaba.fastjson.JSONObject()
+        gripObj["data"] = edtGrip.text.toString().trim()
+        gripObj["context"] = contextObj
+        //nutrition
+        val nutritionObj = com.alibaba.fastjson.JSONObject()
+        nutritionObj["data"] = tvNutrition.text.toString()
+        nutritionObj["context"] = contextObj
+
+        //ear
+        val earObj = com.alibaba.fastjson.JSONObject()
+        earObj["data"] = earList.toTypedArray()
+        earObj["context"] = contextObj
+        //nose
+        val noseObj = com.alibaba.fastjson.JSONObject()
+        noseObj["data"] = noseList.toTypedArray()
+        noseObj["context"] = contextObj
+        //tonsil
+        val tonsilObj = com.alibaba.fastjson.JSONObject()
+        tonsilObj["data"] = tvTonsil.text.toString()
+        tonsilObj["context"] = contextObj
+        //periodontium
+        val periodObj = com.alibaba.fastjson.JSONObject()
+        periodObj["data"] = periodList.toTypedArray()
+        periodObj["context"] = contextObj
+        //hearing
+        val hearingObj = com.alibaba.fastjson.JSONObject()
+        hearingObj["rightAbnormal"] = tvHearingRight.text.toString()
+        hearingObj["leftAbnormal"] = tvHearingLeft.text.toString()
+        hearingObj["context"] = contextObj
+        //heart
+        val heartObj = com.alibaba.fastjson.JSONObject()
+        heartObj["data"] = heartList.toTypedArray()
+        heartObj["context"] = contextObj
+        //lung
+        val lungObj = com.alibaba.fastjson.JSONObject()
+        lungObj["data"] = tvLung.text.toString()
+        lungObj["context"] = contextObj
+        //liver
+        val liverObj = com.alibaba.fastjson.JSONObject()
+        liverObj["data"] = tvLiver.text.toString()
+        liverObj["context"] = contextObj
+        //spleen
+        val spleenObj = com.alibaba.fastjson.JSONObject()
+        spleenObj["data"] = tvSpleen.text.toString()
+        spleenObj["context"] = contextObj
+
+
+        //head
+        val headObj = com.alibaba.fastjson.JSONObject()
+        headObj["data"] = tvHead.text.toString()
+        headObj["context"] = contextObj
+        //neck
+        val neckObj = com.alibaba.fastjson.JSONObject()
+        neckObj["data"] = tvNeck.text.toString()
+        neckObj["context"] = contextObj
+        //chest
+        val chestObj = com.alibaba.fastjson.JSONObject()
+        chestObj["data"] = tvChest.text.toString()
+        chestObj["context"] = contextObj
+        //limb
+        val limbObj = com.alibaba.fastjson.JSONObject()
+        limbObj["lt"] = leftTopLimbList.toTypedArray()
+        limbObj["rt"] = rightTopLimbList.toTypedArray()
+        limbObj["lb"] = leftBottomLimbList.toTypedArray()
+        limbObj["rb"] = rightBottomLimbList.toTypedArray()
+        limbObj["context"] = contextObj
+        //skin
+        val skinObj = com.alibaba.fastjson.JSONObject()
+        skinObj["data"] = skinList.toTypedArray()
+        skinObj["context"] = contextObj
+        //lymphaden
+        val lymphadenObj = com.alibaba.fastjson.JSONObject()
+        lymphadenObj["data"] = tvLymphaden.text.toString()
+        lymphadenObj["context"] = contextObj
+        //bcgScar
+        val bcgScarObj = com.alibaba.fastjson.JSONObject()
+        bcgScarObj["data"] = tvBcgScar.text.toString()
+        bcgScarObj["context"] = contextObj
+        //hemoglobin
+        val hemoglobinObj = com.alibaba.fastjson.JSONObject()
+        hemoglobinObj["data"] = edtHemoglobin.text.toString()
+        hemoglobinObj["context"] = contextObj
+        //worm
+        val wormObj = com.alibaba.fastjson.JSONObject()
+        wormObj["data"] = tvWorm.text.toString()
+        wormObj["context"] = contextObj
+        //bloodType
+        val bloodTypeObj = com.alibaba.fastjson.JSONObject()
+        bloodTypeObj["data"] = tvBloodType.text.toString()
+        bloodTypeObj["context"] = contextObj
+        //pdd
+        val pddObj = com.alibaba.fastjson.JSONObject()
+        pddObj["data"] = tvPdd.text.toString()
+        pddObj["context"] = contextObj
+        //liverFunctionObj
+        val liverFunctionObj = com.alibaba.fastjson.JSONObject()
+        liverFunctionObj["alt"] = edtAlt.text.toString().trim()
+        liverFunctionObj["bc"] = edtBc.text.toString().trim()
+        liverFunctionObj["context"] = contextObj
 
 
         val dataObj = com.alibaba.fastjson.JSONObject()
@@ -1319,6 +2069,47 @@ class PhysicalTestActivity : BaseActivity() {
         if (ciStr.contains("bloodPressure")) dataObj["bloodPressure"] = bloodPressureObj
         if (ciStr.contains("spine")) dataObj["spine"] = spineObj
         if (ciStr.contains("sexuality")) dataObj["sexuality"] = sexualityObj
+
+        if (ciStr.contains("trachoma")) dataObj["trachoma"] = trachomaObj
+        if (ciStr.contains("conjunctivitis")) dataObj["conjunctivitis"] = conjuncObj
+        if (ciStr.contains("redGreenBlind")) dataObj["redGreenBlind"] = rgbObj
+        if (ciStr.contains("eyeAxis")) dataObj["eyeAxis"] = eyeAxisObj
+        if (ciStr.contains("eyePressure")) dataObj["eyePressure"] = eyePressureObj
+        if (ciStr.contains("cornealCurvature")) dataObj["cornealCurvature"] = ccObj
+        if (ciStr.contains("cornealRadius")) dataObj["cornealRadius"] = crObj
+        if (ciStr.contains("cj")) dataObj["cj"] = cjObj
+
+        if (ciStr.contains("pulse")) dataObj["pulse"] = pulseObj
+        if (ciStr.contains("vitalCapacity")) dataObj["vitalCapacity"] = vcObj
+        if (ciStr.contains("bust")) dataObj["bust"] = bustObj
+        if (ciStr.contains("waistline")) dataObj["waistline"] = waistlineObj
+        if (ciStr.contains("hips")) dataObj["hips"] = hipsObj
+        if (ciStr.contains("sittingHeight")) dataObj["sittingHeight"] = shObj
+        if (ciStr.contains("grip")) dataObj["grip"] = gripObj
+        if (ciStr.contains("nutrition")) dataObj["nutrition"] = nutritionObj
+
+        if (ciStr.contains("ear")) dataObj["ear"] = earObj
+        if (ciStr.contains("nose")) dataObj["nose"] = noseObj
+        if (ciStr.contains("tonsil")) dataObj["tonsil"] = tonsilObj
+        if (ciStr.contains("periodontium")) dataObj["periodontium"] = periodObj
+        if (ciStr.contains("hearing")) dataObj["hearing"] = hearingObj
+        if (ciStr.contains("heart")) dataObj["heart"] = heartObj
+        if (ciStr.contains("lung")) dataObj["lung"] = lungObj
+        if (ciStr.contains("liver")) dataObj["liver"] = liverObj
+        if (ciStr.contains("spleen")) dataObj["spleen"] = spleenObj
+
+        if (ciStr.contains("head")) dataObj["head"] = headObj
+        if (ciStr.contains("neck")) dataObj["neck"] = neckObj
+        if (ciStr.contains("chest")) dataObj["chest"] = chestObj
+        if (ciStr.contains("limb")) dataObj["limb"] = limbObj
+        if (ciStr.contains("skin")) dataObj["skin"] = skinObj
+        if (ciStr.contains("lymphaden")) dataObj["lymphaden"] = lymphadenObj
+        if (ciStr.contains("bcgScar")) dataObj["bcgScar"] = bcgScarObj
+        if (ciStr.contains("hemoglobin")) dataObj["hemoglobin"] = hemoglobinObj
+        if (ciStr.contains("worm")) dataObj["worm"] = wormObj
+        if (ciStr.contains("bloodType")) dataObj["bloodType"] = bloodTypeObj
+        if (ciStr.contains("pdd")) dataObj["pdd"] = pddObj
+        if (ciStr.contains("liverFunction")) dataObj["liverFunction"] = liverFunctionObj
 
         val upMap = mutableMapOf<Any?, Any?>()
         upMap["studentId"] = student?.id

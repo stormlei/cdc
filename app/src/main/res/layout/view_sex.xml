@@ -64,7 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="首次月经年龄(周岁)："/>
                 <EditText
                     android:id="@+id/edtWomenAge"
@@ -112,7 +113,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="首次遗精年龄(周岁)："/>
                 <EditText
                     android:id="@+id/edtMenAge"
@@ -170,7 +172,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textColor="@color/color_26"
+                        android:textSize="17sp"
                         android:text="大约："/>
                     <EditText
                         android:id="@+id/edtFrequency"
@@ -183,7 +186,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="18sp"
+                        android:textColor="@color/color_26"
+                        android:textSize="17sp"
                         android:text="天一次"/>
                 </LinearLayout>
                 <LinearLayout
@@ -194,7 +198,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textColor="@color/color_26"
+                        android:textSize="17sp"
                         android:text="每次平均："/>
                     <EditText
                         android:id="@+id/edtDuration"
@@ -207,7 +212,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="18sp"
+                        android:textColor="@color/color_26"
+                        android:textSize="17sp"
                         android:text="天"/>
                 </LinearLayout>
             </LinearLayout>
@@ -250,7 +256,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textColor="@color/color_26"
+                    android:textSize="17sp"
                     android:text="首次遗精年龄(周岁)："/>
                 <EditText
                     android:id="@+id/edtMenAgeDaXue"
