@@ -2,6 +2,7 @@ package com.qpsoft.cdc.ui.physical
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.text.TextUtils
 import android.view.View
 import android.widget.LinearLayout
@@ -10,8 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.king.zxing.CameraScan
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
@@ -22,10 +25,20 @@ import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.SchoolCategory
+import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
+import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.okgo.utils.Convert
+import com.qpsoft.cdc.thirddevice.diopter.RefractionData
+import com.qpsoft.cdc.thirddevice.heightweight.HWData
+import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
+import com.qpsoft.cdc.ui.entity.DataItem
+import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.entity.Student
+import com.qpsoft.cdc.utils.BleDeviceOpUtil
+import com.qpsoft.cdc.utils.EyeChartOpUtil
 import kotlinx.android.synthetic.main.activity_physical_test.*
 import kotlinx.android.synthetic.main.view_bcgscar.*
 import kotlinx.android.synthetic.main.view_bloodpressure.*
@@ -75,6 +88,9 @@ import kotlinx.android.synthetic.main.view_waistline.*
 import kotlinx.android.synthetic.main.view_worm.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -147,6 +163,15 @@ class PhysicalTestActivity : BaseActivity() {
             sbtnEyeAbnormalVision.setOnCheckedChangeListener { compoundButton, isChecked ->
                 eyeAbnormalVision = isChecked
             }
+
+            //vision conn
+            tvEyeChartDisconn.setOnClickListener {
+                if (EyeChartOpUtil.isConnected()) {
+                    EyeChartOpUtil.disConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("diopter")) {
             //val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
@@ -184,6 +209,15 @@ class PhysicalTestActivity : BaseActivity() {
 
             sbtnEyeAbnormalDiopter.setOnCheckedChangeListener { compoundButton, isChecked ->
                 eyeAbnormalDiopter = isChecked
+            }
+
+            //diopter conn
+            tvDiopterDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isDiopterConnected()) {
+                    BleDeviceOpUtil.diopterDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
             }
         }
         if (ciStr.contains("medicalHistory")) {
@@ -271,11 +305,29 @@ class PhysicalTestActivity : BaseActivity() {
             //val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
             //llContent.addView(heightWeightView)
             heightWeightView.visibility = View.VISIBLE
+
+            //height weight conn
+            tvHWDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isHWConnected()) {
+                    BleDeviceOpUtil.hwDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("bloodPressure")) {
             //val bloodPressureView = layoutInflater.inflate(R.layout.view_bloodpressure, null)
             //llContent.addView(bloodPressureView)
             bloodPressureView.visibility = View.VISIBLE
+
+            //bloodPressure conn
+            tvBPDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isBPConnected()) {
+                    BleDeviceOpUtil.bpDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("spine")) {
             //val spineView = layoutInflater.inflate(R.layout.view_spine, null)
@@ -355,6 +407,15 @@ class PhysicalTestActivity : BaseActivity() {
             //val eyePressureView = layoutInflater.inflate(R.layout.view_eyepressure, null)
             //llContent.addView(eyePressureView)
             eyePressureView.visibility = View.VISIBLE
+
+            //eyePressure conn
+            tvEPDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isEPConnected()) {
+                    BleDeviceOpUtil.epDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("cornealCurvature")) {
             //val ccView = layoutInflater.inflate(R.layout.view_cornealcurvature, null)
@@ -388,6 +449,15 @@ class PhysicalTestActivity : BaseActivity() {
             //val vcView = layoutInflater.inflate(R.layout.view_vitalcapacity, null)
             //llContent.addView(vcView)
             vcView.visibility = View.VISIBLE
+
+            //vitalCapacity conn
+            tvVCDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isVCConnected()) {
+                    BleDeviceOpUtil.vcDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("bust")) {
             //val bustView = layoutInflater.inflate(R.layout.view_bust, null)
@@ -734,7 +804,20 @@ class PhysicalTestActivity : BaseActivity() {
                         }
                     })
             }
+            if (requestCode == 100) {
+                var result = data?.getStringExtra("result")
+                if (result == null) {
+                    result = CameraScan.parseScanResult(data)
+                }
+                connBleDevice(result)
+            }
         }
+    }
+
+    private fun connBleDevice(result: String?) {
+        LogUtils.e("---------$result")
+        val qrCodeInfo = Convert.fromJson(result, QrCodeInfo::class.java)
+        BleDeviceOpUtil.connectDevice(qrCodeInfo)
     }
 
     private fun uploadImage(selectList: MutableList<LocalMedia>) {
@@ -2179,5 +2262,115 @@ class PhysicalTestActivity : BaseActivity() {
                 }
             })
 
+    }
+
+    private fun updateDeviceStatusUi() {
+        if (ciStr.contains("vision")) {
+            //是否连接
+            if(EyeChartOpUtil.isConnected()) {
+                val eyeChartName = EyeChartOpUtil.deviceInfo()?.name
+                tvEyeChartName.text = Html.fromHtml("电子视力表 已连接 <font color=\"#247CB7\">$eyeChartName</font>")
+                tvEyeChartDisconn.text = "断开连接"
+            } else {
+                tvEyeChartName.text = "电子视力表 未连接"
+                tvEyeChartDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("diopter")) {
+            //是否连接
+            if(BleDeviceOpUtil.isDiopterConnected()) {
+                val diopterName = BleDeviceOpUtil.diopterDeviceInfo()?.name
+                tvDiopterName.text = Html.fromHtml("电脑验光仪 已连接 <font color=\"#247CB7\">$diopterName</font>")
+                tvDiopterDisconn.text = "断开连接"
+
+                //notify data
+                BleDeviceOpUtil.notifyData("diopter")
+            } else {
+                tvDiopterName.text = "电脑验光仪 未连接"
+                tvDiopterDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("height") || ciStr.contains("weight")) {
+            //是否连接
+            if(BleDeviceOpUtil.isHWConnected()) {
+                val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
+                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWDisconn.text = "断开连接"
+            } else {
+                tvHWName.text = "身高体重仪 未连接"
+                tvHWDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("bloodPressure")) {
+            //是否连接
+            if(BleDeviceOpUtil.isBPConnected()) {
+                val bpName = BleDeviceOpUtil.bpDeviceInfo()?.name
+                tvBPName.text = Html.fromHtml("电子血压计 已连接 <font color=\"#247CB7\">$bpName</font>")
+                tvBPDisconn.text = "断开连接"
+            } else {
+                tvBPName.text = "电子血压计 未连接"
+                tvBPDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("eyePressure")) {
+            //是否连接
+            if(BleDeviceOpUtil.isEPConnected()) {
+                val epName = BleDeviceOpUtil.epDeviceInfo()?.name
+                tvEPName.text = Html.fromHtml("眼压计 已连接 <font color=\"#247CB7\">$epName</font>")
+                tvEPDisconn.text = "断开连接"
+            } else {
+                tvEPName.text = "眼压计 未连接"
+                tvEPDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("vitalCapacity")) {
+            //是否连接
+            if(BleDeviceOpUtil.isVCConnected()) {
+                val vcName = BleDeviceOpUtil.vcDeviceInfo()?.name
+                tvVCName.text = Html.fromHtml("肺活量 已连接 <font color=\"#247CB7\">$vcName</font>")
+                tvVCDisconn.text = "断开连接"
+            } else {
+                tvVCName.text = "肺活量 未连接"
+                tvVCDisconn.text = "扫码连接设备"
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+
+        refreshUI()
+    }
+
+    private fun refreshUI() {
+        updateDeviceStatusUi()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceStatusEvent(connStatusEvent: DeviceStatusEvent) {
+        updateDeviceStatusUi()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceNotifyDataEvent(deviceNotifyDataEvent: DeviceNotifyDataEvent) {
+        val deviceType = deviceNotifyDataEvent.deviceType
+        when(deviceType) {
+            "diopter" -> {
+                val any = deviceNotifyDataEvent.any
+                val refData = JSON.parseObject(any.toString(), RefractionData::class.java)
+                LogUtils.e("---------"+refData)
+            }
+            "heightWeight" -> {
+                val any = deviceNotifyDataEvent.any
+                val hwData = JSON.parseObject(any.toString(), HWData::class.java)
+                LogUtils.e("---------"+hwData)
+            }
+        }
     }
 }

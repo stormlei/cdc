@@ -185,9 +185,9 @@ class MainActivity : BaseActivity() {
 
     private fun updateDeviceStatusUi() {
         val checkItemList = App.instance.checkItemList
-        val ciStr = checkItemList.joinToString { checkItem -> checkItem.name }
+        val ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
 
-        if (ciStr.contains("视力")) {
+        if (ciStr.contains("vision")) {
             llEyeChart.visibility = View.VISIBLE
             //是否连接
             if(EyeChartOpUtil.isConnected()) {
@@ -202,7 +202,7 @@ class MainActivity : BaseActivity() {
             llEyeChart.visibility = View.GONE
             EyeChartOpUtil.disConnected()
         }
-        if (ciStr.contains("屈光")) {
+        if (ciStr.contains("diopter")) {
             llDiopter.visibility = View.VISIBLE
             //是否连接
             if(BleDeviceOpUtil.isDiopterConnected()) {
@@ -217,7 +217,7 @@ class MainActivity : BaseActivity() {
             llDiopter.visibility = View.GONE
             BleDeviceOpUtil.diopterDisConnected()
         }
-        if (ciStr.contains("身高") || ciStr.contains("体重")) {
+        if (ciStr.contains("height") || ciStr.contains("weight")) {
             llHeightWeight.visibility = View.VISIBLE
             //是否连接
             if(BleDeviceOpUtil.isHWConnected()) {
@@ -232,7 +232,7 @@ class MainActivity : BaseActivity() {
             llHeightWeight.visibility = View.GONE
             BleDeviceOpUtil.hwDisConnected()
         }
-        if (ciStr.contains("血压")) {
+        if (ciStr.contains("bloodPressure")) {
             llBloodPressure.visibility = View.VISIBLE
             //是否连接
             if(BleDeviceOpUtil.isBPConnected()) {
@@ -247,7 +247,7 @@ class MainActivity : BaseActivity() {
             llBloodPressure.visibility = View.GONE
             BleDeviceOpUtil.bpDisConnected()
         }
-        if (ciStr.contains("眼压")) {
+        if (ciStr.contains("eyePressure")) {
             llEyePressure.visibility = View.VISIBLE
             //是否连接
             if(BleDeviceOpUtil.isEPConnected()) {
@@ -262,7 +262,7 @@ class MainActivity : BaseActivity() {
             llEyePressure.visibility = View.GONE
             BleDeviceOpUtil.epDisConnected()
         }
-        if (ciStr.contains("肺活量")) {
+        if (ciStr.contains("vitalCapacity")) {
             llVitalCapacity.visibility = View.VISIBLE
             //是否连接
             if(BleDeviceOpUtil.isVCConnected()) {

@@ -269,6 +269,7 @@
         android:paddingEnd="12dp"
         android:background="@drawable/bg_cb7_stroke_shape">
         <TextView
+            android:id="@+id/tvDiopterName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -276,6 +277,7 @@
             android:textSize="17sp"
             android:text="电脑验光仪：未连接"/>
         <TextView
+            android:id="@+id/tvDiopterDisconn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"

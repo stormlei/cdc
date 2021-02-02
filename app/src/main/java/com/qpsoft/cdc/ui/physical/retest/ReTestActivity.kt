@@ -2,6 +2,7 @@ package com.qpsoft.cdc.ui.physical.retest
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
@@ -10,6 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.king.zxing.CameraScan
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
@@ -18,18 +20,30 @@ import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.okgo.utils.Convert
+import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
+import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.entity.Student
+import com.qpsoft.cdc.utils.BleDeviceOpUtil
+import com.qpsoft.cdc.utils.EyeChartOpUtil
 import kotlinx.android.synthetic.main.activity_retest.*
+import kotlinx.android.synthetic.main.view_bloodpressure.*
 import kotlinx.android.synthetic.main.view_caries.*
 import kotlinx.android.synthetic.main.view_diopter.*
+import kotlinx.android.synthetic.main.view_eyepressure.*
 import kotlinx.android.synthetic.main.view_heightweight.*
 import kotlinx.android.synthetic.main.view_trachoma.*
 import kotlinx.android.synthetic.main.view_vision.*
+import kotlinx.android.synthetic.main.view_vitalcapacity.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -110,6 +124,15 @@ class ReTestActivity : BaseActivity() {
             sbtnEyeAbnormalVision.setOnCheckedChangeListener { compoundButton, isChecked ->
                 eyeAbnormalVision = isChecked
             }
+
+            //vision conn
+            tvEyeChartDisconn.setOnClickListener {
+                if (EyeChartOpUtil.isConnected()) {
+                    EyeChartOpUtil.disConnected()
+                } else {
+                    startActivityForResult(Intent(this@ReTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("diopter")) {
             //val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
@@ -147,6 +170,15 @@ class ReTestActivity : BaseActivity() {
 
             sbtnEyeAbnormalDiopter.setOnCheckedChangeListener { compoundButton, isChecked ->
                 eyeAbnormalDiopter = isChecked
+            }
+
+            //diopter conn
+            tvDiopterDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isDiopterConnected()) {
+                    BleDeviceOpUtil.diopterDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@ReTestActivity, CustomCaptureActivity::class.java), 100)
+                }
             }
         }
         if (ciStr.contains("caries")) {
@@ -214,6 +246,15 @@ class ReTestActivity : BaseActivity() {
             //val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
             //llContent.addView(heightWeightView)
             heightWeightView.visibility = View.VISIBLE
+
+            //height weight conn
+            tvHWDisconn.setOnClickListener {
+                if (BleDeviceOpUtil.isHWConnected()) {
+                    BleDeviceOpUtil.hwDisConnected()
+                } else {
+                    startActivityForResult(Intent(this@ReTestActivity, CustomCaptureActivity::class.java), 100)
+                }
+            }
         }
         if (ciStr.contains("trachoma")) {
             //val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
@@ -255,7 +296,41 @@ class ReTestActivity : BaseActivity() {
                         }
                     })
             }
+            if (requestCode == 100) {
+                var result = data?.getStringExtra("result")
+                if (result == null) {
+                    result = CameraScan.parseScanResult(data)
+                }
+                connBleDevice(result)
+            }
         }
+    }
+
+    private fun connBleDevice(result: String?) {
+        LogUtils.e("---------$result")
+        val qrCodeInfo = Convert.fromJson(result, QrCodeInfo::class.java)
+        BleDeviceOpUtil.connectDevice(qrCodeInfo)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+
+        refreshUI()
+    }
+
+    private fun refreshUI() {
+        updateDeviceStatusUi()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceStatusEvent(connStatusEvent: DeviceStatusEvent) {
+        updateDeviceStatusUi()
     }
 
     private fun uploadImage(selectList: MutableList<LocalMedia>) {
@@ -1057,5 +1132,41 @@ class ReTestActivity : BaseActivity() {
                 }
             })
 
+    }
+
+    private fun updateDeviceStatusUi() {
+        if (ciStr.contains("vision")) {
+            //是否连接
+            if(EyeChartOpUtil.isConnected()) {
+                val eyeChartName = EyeChartOpUtil.deviceInfo()?.name
+                tvEyeChartName.text = Html.fromHtml("电子视力表 已连接 <font color=\"#247CB7\">$eyeChartName</font>")
+                tvEyeChartDisconn.text = "断开连接"
+            } else {
+                tvEyeChartName.text = "电子视力表 未连接"
+                tvEyeChartDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("diopter")) {
+            //是否连接
+            if(BleDeviceOpUtil.isDiopterConnected()) {
+                val diopterName = BleDeviceOpUtil.diopterDeviceInfo()?.name
+                tvDiopterName.text = Html.fromHtml("电脑验光仪 已连接 <font color=\"#247CB7\">$diopterName</font>")
+                tvDiopterDisconn.text = "断开连接"
+            } else {
+                tvDiopterName.text = "电脑验光仪 未连接"
+                tvDiopterDisconn.text = "扫码连接设备"
+            }
+        }
+        if (ciStr.contains("height") || ciStr.contains("weight")) {
+            //是否连接
+            if(BleDeviceOpUtil.isHWConnected()) {
+                val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
+                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWDisconn.text = "断开连接"
+            } else {
+                tvHWName.text = "身高体重仪 未连接"
+                tvHWDisconn.text = "扫码连接设备"
+            }
+        }
     }
 }
