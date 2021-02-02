@@ -41,6 +41,11 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
+                <include android:id="@+id/visionView" android:visibility="gone" layout="@layout/view_vision" />
+                <include android:id="@+id/diopterView" android:visibility="gone" layout="@layout/view_diopter" />
+                <include android:id="@+id/heightWeightView" android:visibility="gone" layout="@layout/view_heightweight" />
+                <include android:id="@+id/cariesView" android:visibility="gone" layout="@layout/view_caries" />
+                <include android:id="@+id/trachomaView" android:visibility="gone" layout="@layout/view_trachoma" />
 
             </LinearLayout>
 

@@ -114,6 +114,14 @@ class MainActivity : BaseActivity() {
             BleDeviceOpUtil.bpDisConnected()
             updateDeviceStatusUi()
         }
+        tvEPDisconn.setOnClickListener {
+            BleDeviceOpUtil.epDisConnected()
+            updateDeviceStatusUi()
+        }
+        tvVCDisconn.setOnClickListener {
+            BleDeviceOpUtil.vcDisConnected()
+            updateDeviceStatusUi()
+        }
 
 
         refreshLayout.setOnRefreshListener {
@@ -238,6 +246,36 @@ class MainActivity : BaseActivity() {
         } else {
             llBloodPressure.visibility = View.GONE
             BleDeviceOpUtil.bpDisConnected()
+        }
+        if (ciStr.contains("眼压")) {
+            llEyePressure.visibility = View.VISIBLE
+            //是否连接
+            if(BleDeviceOpUtil.isEPConnected()) {
+                val epName = BleDeviceOpUtil.epDeviceInfo()?.name
+                tvEPName.text = Html.fromHtml("眼压计 已连接 <font color=\"#247CB7\">$epName</font>")
+                tvEPDisconn.text = "断开连接"
+            } else {
+                tvEPName.text = "眼压计 未连接"
+                tvEPDisconn.text = ""
+            }
+        } else {
+            llEyePressure.visibility = View.GONE
+            BleDeviceOpUtil.epDisConnected()
+        }
+        if (ciStr.contains("肺活量")) {
+            llVitalCapacity.visibility = View.VISIBLE
+            //是否连接
+            if(BleDeviceOpUtil.isVCConnected()) {
+                val vcName = BleDeviceOpUtil.vcDeviceInfo()?.name
+                tvVCName.text = Html.fromHtml("肺活量 已连接 <font color=\"#247CB7\">$vcName</font>")
+                tvVCDisconn.text = "断开连接"
+            } else {
+                tvVCName.text = "肺活量 未连接"
+                tvVCDisconn.text = ""
+            }
+        } else {
+            llVitalCapacity.visibility = View.GONE
+            BleDeviceOpUtil.vcDisConnected()
         }
     }
 

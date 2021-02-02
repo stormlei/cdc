@@ -188,4 +188,39 @@ object BleDeviceOpUtil {
     fun bpDeviceInfo(): QrCodeInfo? {
         return CacheDiskStaticUtils.getSerializable("bpInfo") as QrCodeInfo?
     }
+
+
+    //ep
+    fun isEPConnected(): Boolean {
+        return BleManager.getInstance().isConnected(epBleDevice())
+    }
+
+    fun epDisConnected() {
+        return BleManager.getInstance().disconnect(epBleDevice())
+    }
+
+    private fun epBleDevice(): BleDevice? {
+        return CacheDiskStaticUtils.getParcelable("epBleDevice", BleDevice.CREATOR)
+    }
+
+    fun epDeviceInfo(): QrCodeInfo? {
+        return CacheDiskStaticUtils.getSerializable("epInfo") as QrCodeInfo?
+    }
+
+    //vc
+    fun isVCConnected(): Boolean {
+        return BleManager.getInstance().isConnected(vcBleDevice())
+    }
+
+    fun vcDisConnected() {
+        return BleManager.getInstance().disconnect(vcBleDevice())
+    }
+
+    private fun vcBleDevice(): BleDevice? {
+        return CacheDiskStaticUtils.getParcelable("vcBleDevice", BleDevice.CREATOR)
+    }
+
+    fun vcDeviceInfo(): QrCodeInfo? {
+        return CacheDiskStaticUtils.getSerializable("vcInfo") as QrCodeInfo?
+    }
 }

@@ -51,7 +51,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:textSize="17sp"
-                    android:hint="请选择"/>
+                    android:hint="请填写"/>
             </LinearLayout>
             <View
                 android:layout_width="1dp"
@@ -79,7 +79,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:textSize="17sp"
-                    android:hint="请选择"/>
+                    android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -112,7 +112,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:textSize="17sp"
-                    android:hint="请选择"/>
+                    android:hint="请填写"/>
             </LinearLayout>
             <View
                 android:layout_width="1dp"
@@ -140,7 +140,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:textSize="17sp"
-                    android:hint="请选择"/>
+                    android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
         <View

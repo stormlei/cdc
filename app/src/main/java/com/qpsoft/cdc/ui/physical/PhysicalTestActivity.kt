@@ -111,8 +111,9 @@ class PhysicalTestActivity : BaseActivity() {
         LogUtils.e("-----------$ciStr")
 
         if (ciStr.contains("vision")) {
-            val visionView = layoutInflater.inflate(R.layout.view_vision, null)
-            llContent.addView(visionView)
+            //val visionView = layoutInflater.inflate(R.layout.view_vision, null)
+            //llContent.addView(visionView)
+            visionView.visibility = View.VISIBLE
 
             rgGlassType.setOnCheckedChangeListener { radioGroup, checkId ->
                 when(checkId) {
@@ -148,9 +149,9 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("diopter")) {
-            val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
-            llContent.addView(diopterView)
-
+            //val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
+            //llContent.addView(diopterView)
+            diopterView.visibility = View.VISIBLE
 
             val mList: List<LocalMedia> = ArrayList<LocalMedia>()
             rvOriPic.layoutManager = GridLayoutManager(this, 5)
@@ -186,8 +187,9 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("medicalHistory")) {
-            val medicalHistoryView = layoutInflater.inflate(R.layout.view_medicalhistory, null)
-            llContent.addView(medicalHistoryView)
+            //val medicalHistoryView = layoutInflater.inflate(R.layout.view_medicalhistory, null)
+            //llContent.addView(medicalHistoryView)
+            medicalHistoryView.visibility = View.VISIBLE
 
             val myItems = mutableListOf("肝炎", "肾炎", "心脏病", "高血压", "贫血", "过敏性哮喘", "身体残疾", "均无")
             tvMedicalHistory.setOnClickListener {
@@ -205,8 +207,9 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("caries")) {
-            val cariesView = layoutInflater.inflate(R.layout.view_caries, null)
-            llContent.addView(cariesView)
+            //val cariesView = layoutInflater.inflate(R.layout.view_caries, null)
+            //llContent.addView(cariesView)
+            cariesView.visibility = View.VISIBLE
             //乳牙
             tvDeciTooth15.setOnClickListener {handleDeciTooth(15)}
             tvDeciTooth14.setOnClickListener {handleDeciTooth(14)}
@@ -265,16 +268,19 @@ class PhysicalTestActivity : BaseActivity() {
 
         }
         if (ciStr.contains("height") || ciStr.contains("weight")) {
-            val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
-            llContent.addView(heightWeightView)
+            //val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
+            //llContent.addView(heightWeightView)
+            heightWeightView.visibility = View.VISIBLE
         }
         if (ciStr.contains("bloodPressure")) {
-            val bloodPressureView = layoutInflater.inflate(R.layout.view_bloodpressure, null)
-            llContent.addView(bloodPressureView)
+            //val bloodPressureView = layoutInflater.inflate(R.layout.view_bloodpressure, null)
+            //llContent.addView(bloodPressureView)
+            bloodPressureView.visibility = View.VISIBLE
         }
         if (ciStr.contains("spine")) {
-            val spineView = layoutInflater.inflate(R.layout.view_spine, null)
-            llContent.addView(spineView)
+            //val spineView = layoutInflater.inflate(R.layout.view_spine, null)
+            //llContent.addView(spineView)
+            spineView.visibility = View.VISIBLE
 
             tvXiong.setOnClickListener { handleCeWan(tvXiong, llXiongDegree) }
             tvYaoXiong.setOnClickListener { handleCeWan(tvYaoXiong, llYaoXiongDegree) }
@@ -289,8 +295,9 @@ class PhysicalTestActivity : BaseActivity() {
             tvQianHouDegree.setOnClickListener { handleSingleChoice(tvQianHouDegree, myItems) }
         }
         if (ciStr.contains("sexuality") && student?.schoolCategory != SchoolCategory.Kindergarten.name) {
-            val sexView = layoutInflater.inflate(R.layout.view_sex, null)
-            llContent.addView(sexView)
+            //val sexView = layoutInflater.inflate(R.layout.view_sex, null)
+            //llContent.addView(sexView)
+            sexView.visibility = View.VISIBLE
 
             if (student?.schoolCategory != SchoolCategory.University.name) {
                 llZhongXiaoXue.visibility = View.VISIBLE
@@ -316,45 +323,53 @@ class PhysicalTestActivity : BaseActivity() {
         }
 
         if (ciStr.contains("trachoma")) {
-            val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
-            llContent.addView(trachomaView)
+            //val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
+            //llContent.addView(trachomaView)
+            trachomaView.visibility = View.VISIBLE
 
             val myItems = listOf("无", "可疑", "沙眼I", "沙眼II", "沙眼III")
             tvTrachoma.setOnClickListener { handleSingleChoice(tvTrachoma, myItems) }
         }
         if (ciStr.contains("conjunctivitis")) {
-            val conjuncView = layoutInflater.inflate(R.layout.view_conjunctivitis, null)
-            llContent.addView(conjuncView)
+            //val conjuncView = layoutInflater.inflate(R.layout.view_conjunctivitis, null)
+            //llContent.addView(conjuncView)
+            conjuncView.visibility = View.VISIBLE
 
             val myItems = listOf("无", "有")
             tvConjunc.setOnClickListener { handleSingleChoice(tvConjunc, myItems) }
         }
         if (ciStr.contains("redGreenBlind")) {
-            val rgbView = layoutInflater.inflate(R.layout.view_redgreenblind, null)
-            llContent.addView(rgbView)
+            //val rgbView = layoutInflater.inflate(R.layout.view_redgreenblind, null)
+            //llContent.addView(rgbView)
+            rgbView.visibility = View.VISIBLE
 
             val myItems = listOf("无", "有")
             tvRgb.setOnClickListener { handleSingleChoice(tvRgb, myItems) }
         }
         if (ciStr.contains("eyeAxis")) {
-            val eyeAxisView = layoutInflater.inflate(R.layout.view_eyeaxis, null)
-            llContent.addView(eyeAxisView)
+            //val eyeAxisView = layoutInflater.inflate(R.layout.view_eyeaxis, null)
+            //llContent.addView(eyeAxisView)
+            eyeAxisView.visibility = View.VISIBLE
         }
         if (ciStr.contains("eyePressure")) {
-            val eyePressureView = layoutInflater.inflate(R.layout.view_eyepressure, null)
-            llContent.addView(eyePressureView)
+            //val eyePressureView = layoutInflater.inflate(R.layout.view_eyepressure, null)
+            //llContent.addView(eyePressureView)
+            eyePressureView.visibility = View.VISIBLE
         }
         if (ciStr.contains("cornealCurvature")) {
-            val ccView = layoutInflater.inflate(R.layout.view_cornealcurvature, null)
-            llContent.addView(ccView)
+            //val ccView = layoutInflater.inflate(R.layout.view_cornealcurvature, null)
+            //llContent.addView(ccView)
+            ccView.visibility = View.VISIBLE
         }
         if (ciStr.contains("cornealRadius")) {
-            val crView = layoutInflater.inflate(R.layout.view_cornealradius, null)
-            llContent.addView(crView)
+            //val crView = layoutInflater.inflate(R.layout.view_cornealradius, null)
+            //llContent.addView(crView)
+            crView.visibility = View.VISIBLE
         }
         if (ciStr.contains("cj")) {
-            val cjView = layoutInflater.inflate(R.layout.view_cj, null)
-            llContent.addView(cjView)
+            //val cjView = layoutInflater.inflate(R.layout.view_cj, null)
+            //llContent.addView(cjView)
+            cjView.visibility = View.VISIBLE
 
             val myItems1 = listOf("正常", "近视", "远视", "其他")
             tvQuGuangRight.setOnClickListener { handleSingleChoice(tvQuGuangRight, myItems1) }
@@ -365,36 +380,44 @@ class PhysicalTestActivity : BaseActivity() {
         }
 
         if (ciStr.contains("pulse")) {
-            val pulseView = layoutInflater.inflate(R.layout.view_pulse, null)
-            llContent.addView(pulseView)
+            //val pulseView = layoutInflater.inflate(R.layout.view_pulse, null)
+            //llContent.addView(pulseView)
+            pulseView.visibility = View.VISIBLE
         }
         if (ciStr.contains("vitalCapacity")) {
-            val vcView = layoutInflater.inflate(R.layout.view_vitalcapacity, null)
-            llContent.addView(vcView)
+            //val vcView = layoutInflater.inflate(R.layout.view_vitalcapacity, null)
+            //llContent.addView(vcView)
+            vcView.visibility = View.VISIBLE
         }
         if (ciStr.contains("bust")) {
-            val bustView = layoutInflater.inflate(R.layout.view_bust, null)
-            llContent.addView(bustView)
+            //val bustView = layoutInflater.inflate(R.layout.view_bust, null)
+            //llContent.addView(bustView)
+            bustView.visibility = View.VISIBLE
         }
         if (ciStr.contains("waistline")) {
-            val waistlineView = layoutInflater.inflate(R.layout.view_waistline, null)
-            llContent.addView(waistlineView)
+            //val waistlineView = layoutInflater.inflate(R.layout.view_waistline, null)
+            //llContent.addView(waistlineView)
+            waistlineView.visibility = View.VISIBLE
         }
         if (ciStr.contains("hips")) {
-            val hipsView = layoutInflater.inflate(R.layout.view_hips, null)
-            llContent.addView(hipsView)
+            //val hipsView = layoutInflater.inflate(R.layout.view_hips, null)
+            //llContent.addView(hipsView)
+            hipsView.visibility = View.VISIBLE
         }
         if (ciStr.contains("sittingHeight")) {
-            val shView = layoutInflater.inflate(R.layout.view_sittingheight, null)
-            llContent.addView(shView)
+            //val shView = layoutInflater.inflate(R.layout.view_sittingheight, null)
+            //llContent.addView(shView)
+            shView.visibility = View.VISIBLE
         }
         if (ciStr.contains("grip")) {
-            val gripView = layoutInflater.inflate(R.layout.view_grip, null)
-            llContent.addView(gripView)
+            //val gripView = layoutInflater.inflate(R.layout.view_grip, null)
+            //llContent.addView(gripView)
+            gripView.visibility = View.VISIBLE
         }
         if (ciStr.contains("nutrition")) {
-            val nutritionView = layoutInflater.inflate(R.layout.view_nutrition, null)
-            llContent.addView(nutritionView)
+            //val nutritionView = layoutInflater.inflate(R.layout.view_nutrition, null)
+            //llContent.addView(nutritionView)
+            nutritionView.visibility = View.VISIBLE
 
             val myItems = listOf("正常", "生长迟缓", "营养不良", "超重", "肥胖")
             tvNutrition.setOnClickListener { handleSingleChoice(tvNutrition, myItems) }
@@ -402,8 +425,9 @@ class PhysicalTestActivity : BaseActivity() {
 
 
         if (ciStr.contains("ear")) {
-            val earView = layoutInflater.inflate(R.layout.view_ear, null)
-            llContent.addView(earView)
+            //val earView = layoutInflater.inflate(R.layout.view_ear, null)
+            //llContent.addView(earView)
+            earView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "其他异常", "耵聍", "附耳", "中耳炎", "耳前萎管")
             tvEar.setOnClickListener {
@@ -421,8 +445,9 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("nose")) {
-            val noseView = layoutInflater.inflate(R.layout.view_nose, null)
-            llContent.addView(noseView)
+            //val noseView = layoutInflater.inflate(R.layout.view_nose, null)
+            //llContent.addView(noseView)
+            noseView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "其他异常", "鼻炎", "鼻窦炎", "鼻中隔偏曲", "鼻息肉", "鼻衄", "鼻前庭炎")
             tvNose.setOnClickListener {
@@ -440,15 +465,17 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("tonsil")) {
-            val tonsilView = layoutInflater.inflate(R.layout.view_tonsil, null)
-            llContent.addView(tonsilView)
+            //val tonsilView = layoutInflater.inflate(R.layout.view_tonsil, null)
+            //llContent.addView(tonsilView)
+            tonsilView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "异常", "Ⅰ度肿大", "Ⅱ度肿大", "Ⅲ度肿大", "扁桃体切除术后")
             tvTonsil.setOnClickListener { handleSingleChoice(tvNose, myItems) }
         }
         if (ciStr.contains("periodontium")) {
-            val periodontiumView = layoutInflater.inflate(R.layout.view_periodontium, null)
-            llContent.addView(periodontiumView)
+            //val periodontiumView = layoutInflater.inflate(R.layout.view_periodontium, null)
+            //llContent.addView(periodontiumView)
+            periodontiumView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "牙结石", "牙龈炎", "牙周炎", "氟斑牙", "错颔", "牙釉质发育不全", "义齿", "其他牙病")
             tvPeriod.setOnClickListener {
@@ -466,16 +493,18 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("hearing")) {
-            val hearingView = layoutInflater.inflate(R.layout.view_hearing, null)
-            llContent.addView(hearingView)
+            //val hearingView = layoutInflater.inflate(R.layout.view_hearing, null)
+            //llContent.addView(hearingView)
+            hearingView.visibility = View.VISIBLE
 
             val myItems = listOf("正常", "异常")
             tvHearingRight.setOnClickListener { handleSingleChoice(tvHearingRight, myItems) }
             tvHearingLeft.setOnClickListener { handleSingleChoice(tvHearingLeft, myItems) }
         }
         if (ciStr.contains("heart")) {
-            val heartView = layoutInflater.inflate(R.layout.view_heart, null)
-            llContent.addView(heartView)
+            //val heartView = layoutInflater.inflate(R.layout.view_heart, null)
+            //llContent.addView(heartView)
+            heartView.visibility = View.VISIBLE
 
             val myItems = listOf("心律齐未及明显杂音", "心脏I级杂音", "心脏II级杂音", "心脏III级以上杂音", "心动过速", "心动过缓", "心律不齐", "频发早搏")
             tvHeart.setOnClickListener {
@@ -493,22 +522,30 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("lung")) {
-            val lungView = layoutInflater.inflate(R.layout.view_lung, null)
-            llContent.addView(lungView)
+            //val lungView = layoutInflater.inflate(R.layout.view_lung, null)
+            //llContent.addView(lungView)
+            lungView.visibility = View.VISIBLE
 
             val myItems = listOf("双肺呼吸音清未及明显干湿啰音", "异常", "哮鸣音(哮喘)", "干湿性啰音(肺炎)", "双肺呼吸音增粗")
             tvLung.setOnClickListener { handleSingleChoice(tvLung, myItems) }
         }
         if (ciStr.contains("liver")) {
-            val liverView = layoutInflater.inflate(R.layout.view_liver, null)
-            llContent.addView(liverView)
+            val keyList = ciStr.split(", ")
+            var flag = false
+            keyList.forEach { if(it == "liver") flag = true }
+            if (flag) {
+                //val liverView = layoutInflater.inflate(R.layout.view_liver, null)
+                //llContent.addView(liverView)
+                liverView.visibility = View.VISIBLE
 
-            val myItems = listOf("肋下未及", "肿大", "肝脏肿大轻度", "肝脏肿大中度以上")
-            tvLiver.setOnClickListener { handleSingleChoice(tvLiver, myItems) }
+                val myItems = listOf("肋下未及", "肿大", "肝脏肿大轻度", "肝脏肿大中度以上")
+                tvLiver.setOnClickListener { handleSingleChoice(tvLiver, myItems) }
+            }
         }
         if (ciStr.contains("spleen")) {
-            val spleenView = layoutInflater.inflate(R.layout.view_spleen, null)
-            llContent.addView(spleenView)
+            //val spleenView = layoutInflater.inflate(R.layout.view_spleen, null)
+            //llContent.addView(spleenView)
+            spleenView.visibility = View.VISIBLE
 
             val myItems = listOf("肋下未及", "肿大", "脾脏肿大轻度")
             tvSpleen.setOnClickListener { handleSingleChoice(tvSpleen, myItems) }
@@ -516,29 +553,33 @@ class PhysicalTestActivity : BaseActivity() {
 
 
         if (ciStr.contains("head")) {
-            val headView = layoutInflater.inflate(R.layout.view_head, null)
-            llContent.addView(headView)
+            //val headView = layoutInflater.inflate(R.layout.view_head, null)
+            //llContent.addView(headView)
+            headView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "异常")
             tvHead.setOnClickListener { handleSingleChoice(tvHead, myItems) }
         }
         if (ciStr.contains("neck")) {
-            val neckView = layoutInflater.inflate(R.layout.view_neck, null)
-            llContent.addView(neckView)
+            //val neckView = layoutInflater.inflate(R.layout.view_neck, null)
+            //llContent.addView(neckView)
+            neckView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "异常")
             tvNeck.setOnClickListener { handleSingleChoice(tvNeck, myItems) }
         }
         if (ciStr.contains("chest")) {
-            val chestView = layoutInflater.inflate(R.layout.view_chest, null)
-            llContent.addView(chestView)
+            //val chestView = layoutInflater.inflate(R.layout.view_chest, null)
+            //llContent.addView(chestView)
+            chestView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "异常", "鸡胸", "漏斗胸", "扁平胸", "纵膈肿瘤术后", "胸廓不对称")
             tvChest.setOnClickListener { handleSingleChoice(tvChest, myItems) }
         }
         if (ciStr.contains("limb")) {
-            val skinView = layoutInflater.inflate(R.layout.view_limb, null)
-            llContent.addView(skinView)
+            //val limbView = layoutInflater.inflate(R.layout.view_limb, null)
+            //llContent.addView(limbView)
+            limbView.visibility = View.VISIBLE
 
             val myItems = listOf("未见明显异常", "异常", "O型腿", "并指畸形", "内八字", "X型腿", "关节畸形", "关节功能受限", "外伤", "四肢残缺", "脑瘫", "小儿麻痹", "跛行")
             tvLeftTopLimb.setOnClickListener {
@@ -595,8 +636,9 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("skin")) {
-            val skinView = layoutInflater.inflate(R.layout.view_skin, null)
-            llContent.addView(skinView)
+            //val skinView = layoutInflater.inflate(R.layout.view_skin, null)
+            //llContent.addView(skinView)
+            skinView.visibility = View.VISIBLE
 
             val myItems = listOf("红润", "异常", "湿疹", "皮肤癣", "白癜风", "手术或外伤瘢痕", "血管瘤", "疥疮", "鱼鳞病", "皮炎")
             tvSkin.setOnClickListener {
@@ -614,47 +656,54 @@ class PhysicalTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("lymphaden")) {
-            val lymphadenView = layoutInflater.inflate(R.layout.view_lymphaden, null)
-            llContent.addView(lymphadenView)
+            //val lymphadenView = layoutInflater.inflate(R.layout.view_lymphaden, null)
+            //llContent.addView(lymphadenView)
+            lymphadenView.visibility = View.VISIBLE
 
             val myItems = listOf("未触及", "肿大")
             tvLymphaden.setOnClickListener { handleSingleChoice(tvLymphaden, myItems) }
         }
         if (ciStr.contains("bcgScar")) {
-            val lymphadenView = layoutInflater.inflate(R.layout.view_bcgscar, null)
-            llContent.addView(lymphadenView)
+            //val bcgScarView = layoutInflater.inflate(R.layout.view_bcgscar, null)
+            //llContent.addView(bcgScarView)
+            bcgScarView.visibility = View.VISIBLE
 
             val myItems = listOf("有", "无")
             tvBcgScar.setOnClickListener { handleSingleChoice(tvBcgScar, myItems) }
         }
         if (ciStr.contains("hemoglobin")) {
-            val hemoglobinView = layoutInflater.inflate(R.layout.view_hemoglobin, null)
-            llContent.addView(hemoglobinView)
+            //val hemoglobinView = layoutInflater.inflate(R.layout.view_hemoglobin, null)
+            //llContent.addView(hemoglobinView)
+            hemoglobinView.visibility = View.VISIBLE
         }
         if (ciStr.contains("worm")) {
-            val wormView = layoutInflater.inflate(R.layout.view_worm, null)
-            llContent.addView(wormView)
+            //val wormView = layoutInflater.inflate(R.layout.view_worm, null)
+            //llContent.addView(wormView)
+            wormView.visibility = View.VISIBLE
 
             val myItems = listOf("无", "有")
             tvWorm.setOnClickListener { handleSingleChoice(tvWorm, myItems) }
         }
         if (ciStr.contains("bloodType")) {
-            val bloodTypeView = layoutInflater.inflate(R.layout.view_bloodtype, null)
-            llContent.addView(bloodTypeView)
+            //val bloodTypeView = layoutInflater.inflate(R.layout.view_bloodtype, null)
+            //llContent.addView(bloodTypeView)
+            bloodTypeView.visibility = View.VISIBLE
 
             val myItems = listOf("A", "B", "AB", "O", "其他血型")
             tvBloodType.setOnClickListener { handleSingleChoice(tvBloodType, myItems) }
         }
         if (ciStr.contains("pdd")) {
-            val pddView = layoutInflater.inflate(R.layout.view_pdd, null)
-            llContent.addView(pddView)
+            //val pddView = layoutInflater.inflate(R.layout.view_pdd, null)
+            //llContent.addView(pddView)
+            pddView.visibility = View.VISIBLE
 
             val myItems = listOf("阴性", "阳性")
             tvPdd.setOnClickListener { handleSingleChoice(tvPdd, myItems) }
         }
         if (ciStr.contains("liverFunction")) {
-            val liverFunctionView = layoutInflater.inflate(R.layout.view_liverfunction, null)
-            llContent.addView(liverFunctionView)
+            //val liverFunctionView = layoutInflater.inflate(R.layout.view_liverfunction, null)
+            //llContent.addView(liverFunctionView)
+            liverFunctionView.visibility = View.VISIBLE
         }
     }
 
@@ -1766,8 +1815,8 @@ class PhysicalTestActivity : BaseActivity() {
         cylObj["od"] = edtCRight.text.toString().trim()
         cylObj["os"] = edtCLeft.text.toString().trim()
         val axleObj = com.alibaba.fastjson.JSONObject()
-        axleObj["od"] = edtARight.text.toString().trim().toInt()
-        axleObj["os"] = edtALeft.text.toString().trim().toInt()
+        axleObj["od"] = edtARight.text.toString().trim()
+        axleObj["os"] = edtALeft.text.toString().trim()
         val diopterObj = com.alibaba.fastjson.JSONObject()
         diopterObj["sph"] = sphObj
         diopterObj["cyl"] = cylObj
@@ -2095,7 +2144,12 @@ class PhysicalTestActivity : BaseActivity() {
         if (ciStr.contains("hearing")) dataObj["hearing"] = hearingObj
         if (ciStr.contains("heart")) dataObj["heart"] = heartObj
         if (ciStr.contains("lung")) dataObj["lung"] = lungObj
-        if (ciStr.contains("liver")) dataObj["liver"] = liverObj
+        if (ciStr.contains("liver")) {
+            val keyList = ciStr.split(", ")
+            var flag = false
+            keyList.forEach { if(it == "liver") flag = true }
+            if (flag) dataObj["liver"] = liverObj
+        }
         if (ciStr.contains("spleen")) dataObj["spleen"] = spleenObj
 
         if (ciStr.contains("head")) dataObj["head"] = headObj

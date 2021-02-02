@@ -272,6 +272,52 @@
                         android:text="" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/llEyePressure"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp">
+                    <TextView
+                        android:id="@+id/tvEPName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/color_26"
+                        android:text="眼压计 未连接" />
+                    <TextView
+                        android:id="@+id/tvEPDisconn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textSize="17sp"
+                        android:textColor="@color/color_cb7"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/llVitalCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp">
+                    <TextView
+                        android:id="@+id/tvVCName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@color/color_26"
+                        android:text="肺活量 未连接" />
+                    <TextView
+                        android:id="@+id/tvVCDisconn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textSize="17sp"
+                        android:textColor="@color/color_cb7"
+                        android:text="" />
+                </LinearLayout>
+
 
             </LinearLayout>
 

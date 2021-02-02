@@ -41,6 +41,55 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
+                <include android:id="@+id/visionView" android:visibility="gone" layout="@layout/view_vision" />
+                <include android:id="@+id/diopterView" android:visibility="gone" layout="@layout/view_diopter" />
+                <include android:id="@+id/medicalHistoryView" android:visibility="gone" layout="@layout/view_medicalhistory" />
+                <include android:id="@+id/cariesView" android:visibility="gone" layout="@layout/view_caries" />
+                <include android:id="@+id/heightWeightView" android:visibility="gone" layout="@layout/view_heightweight" />
+                <include android:id="@+id/bloodPressureView" android:visibility="gone" layout="@layout/view_bloodpressure" />
+                <include android:id="@+id/spineView" android:visibility="gone" layout="@layout/view_spine" />
+                <include android:id="@+id/sexView" android:visibility="gone" layout="@layout/view_sex" />
+
+                <include android:id="@+id/trachomaView" android:visibility="gone" layout="@layout/view_trachoma" />
+                <include android:id="@+id/conjuncView" android:visibility="gone" layout="@layout/view_conjunctivitis" />
+                <include android:id="@+id/rgbView" android:visibility="gone" layout="@layout/view_redgreenblind" />
+                <include android:id="@+id/eyeAxisView" android:visibility="gone" layout="@layout/view_eyeaxis" />
+                <include android:id="@+id/eyePressureView" android:visibility="gone" layout="@layout/view_eyepressure" />
+                <include android:id="@+id/ccView" android:visibility="gone" layout="@layout/view_cornealcurvature" />
+                <include android:id="@+id/crView" android:visibility="gone" layout="@layout/view_cornealradius" />
+                <include android:id="@+id/cjView" android:visibility="gone" layout="@layout/view_cj" />
+
+                <include android:id="@+id/pulseView" android:visibility="gone" layout="@layout/view_pulse" />
+                <include android:id="@+id/vcView" android:visibility="gone" layout="@layout/view_vitalcapacity" />
+                <include android:id="@+id/bustView" android:visibility="gone" layout="@layout/view_bust" />
+                <include android:id="@+id/waistlineView" android:visibility="gone" layout="@layout/view_waistline" />
+                <include android:id="@+id/hipsView" android:visibility="gone" layout="@layout/view_hips" />
+                <include android:id="@+id/shView" android:visibility="gone" layout="@layout/view_sittingheight" />
+                <include android:id="@+id/gripView" android:visibility="gone" layout="@layout/view_grip" />
+                <include android:id="@+id/nutritionView" android:visibility="gone" layout="@layout/view_nutrition" />
+
+                <include android:id="@+id/earView" android:visibility="gone" layout="@layout/view_ear" />
+                <include android:id="@+id/noseView" android:visibility="gone" layout="@layout/view_nose" />
+                <include android:id="@+id/tonsilView" android:visibility="gone" layout="@layout/view_tonsil" />
+                <include android:id="@+id/periodontiumView" android:visibility="gone" layout="@layout/view_periodontium" />
+                <include android:id="@+id/hearingView" android:visibility="gone" layout="@layout/view_hearing" />
+                <include android:id="@+id/heartView" android:visibility="gone" layout="@layout/view_heart" />
+                <include android:id="@+id/lungView" android:visibility="gone" layout="@layout/view_lung" />
+                <include android:id="@+id/liverView" android:visibility="gone" layout="@layout/view_liver" />
+                <include android:id="@+id/spleenView" android:visibility="gone" layout="@layout/view_spleen" />
+
+                <include android:id="@+id/headView" android:visibility="gone" layout="@layout/view_head" />
+                <include android:id="@+id/neckView" android:visibility="gone" layout="@layout/view_neck" />
+                <include android:id="@+id/chestView" android:visibility="gone" layout="@layout/view_chest" />
+                <include android:id="@+id/limbView" android:visibility="gone" layout="@layout/view_limb" />
+                <include android:id="@+id/skinView" android:visibility="gone" layout="@layout/view_skin" />
+                <include android:id="@+id/lymphadenView" android:visibility="gone" layout="@layout/view_lymphaden" />
+                <include android:id="@+id/bcgScarView" android:visibility="gone" layout="@layout/view_bcgscar" />
+                <include android:id="@+id/hemoglobinView" android:visibility="gone" layout="@layout/view_hemoglobin" />
+                <include android:id="@+id/wormView" android:visibility="gone" layout="@layout/view_worm" />
+                <include android:id="@+id/bloodTypeView" android:visibility="gone" layout="@layout/view_bloodtype" />
+                <include android:id="@+id/pddView" android:visibility="gone" layout="@layout/view_pdd" />
+                <include android:id="@+id/liverFunctionView" android:visibility="gone" layout="@layout/view_liverfunction" />
 
             </LinearLayout>
 

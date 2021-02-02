@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
-import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.luck.picture.lib.PictureSelector
@@ -18,24 +16,17 @@ import com.luck.picture.lib.entity.LocalMedia
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
-import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
-import com.qpsoft.cdc.constant.SchoolCategory
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
 import com.qpsoft.cdc.ui.entity.Student
-import kotlinx.android.synthetic.main.activity_physical_test.*
-import kotlinx.android.synthetic.main.activity_retest_list.*
-import kotlinx.android.synthetic.main.view_bloodpressure.*
+import kotlinx.android.synthetic.main.activity_retest.*
 import kotlinx.android.synthetic.main.view_caries.*
 import kotlinx.android.synthetic.main.view_diopter.*
 import kotlinx.android.synthetic.main.view_heightweight.*
-import kotlinx.android.synthetic.main.view_medicalhistory.*
-import kotlinx.android.synthetic.main.view_medicalhistory.view.*
-import kotlinx.android.synthetic.main.view_sex.*
-import kotlinx.android.synthetic.main.view_spine.*
+import kotlinx.android.synthetic.main.view_trachoma.*
 import kotlinx.android.synthetic.main.view_vision.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
@@ -83,8 +74,9 @@ class ReTestActivity : BaseActivity() {
         LogUtils.e("-----------$ciStr")
 
         if (ciStr.contains("vision")) {
-            val visionView = layoutInflater.inflate(R.layout.view_vision, null)
-            llContent.addView(visionView)
+            //val visionView = layoutInflater.inflate(R.layout.view_vision, null)
+            //llContent.addView(visionView)
+            visionView.visibility = View.VISIBLE
 
             rgGlassType.setOnCheckedChangeListener { radioGroup, checkId ->
                 when(checkId) {
@@ -120,9 +112,9 @@ class ReTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("diopter")) {
-            val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
-            llContent.addView(diopterView)
-
+            //val diopterView = layoutInflater.inflate(R.layout.view_diopter, null)
+            //llContent.addView(diopterView)
+            diopterView.visibility = View.VISIBLE
 
             val mList: List<LocalMedia> = ArrayList<LocalMedia>()
             rvOriPic.layoutManager = GridLayoutManager(this, 5)
@@ -158,8 +150,9 @@ class ReTestActivity : BaseActivity() {
             }
         }
         if (ciStr.contains("caries")) {
-            val cariesView = layoutInflater.inflate(R.layout.view_caries, null)
-            llContent.addView(cariesView)
+            //val cariesView = layoutInflater.inflate(R.layout.view_caries, null)
+            //llContent.addView(cariesView)
+            cariesView.visibility = View.VISIBLE
             //乳牙
             tvDeciTooth15.setOnClickListener {handleDeciTooth(15)}
             tvDeciTooth14.setOnClickListener {handleDeciTooth(14)}
@@ -218,8 +211,17 @@ class ReTestActivity : BaseActivity() {
 
         }
         if (ciStr.contains("height") || ciStr.contains("weight")) {
-            val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
-            llContent.addView(heightWeightView)
+            //val heightWeightView = layoutInflater.inflate(R.layout.view_heightweight, null)
+            //llContent.addView(heightWeightView)
+            heightWeightView.visibility = View.VISIBLE
+        }
+        if (ciStr.contains("trachoma")) {
+            //val trachomaView = layoutInflater.inflate(R.layout.view_trachoma, null)
+            //llContent.addView(trachomaView)
+            trachomaView.visibility = View.VISIBLE
+
+            val myItems = listOf("无", "可疑", "沙眼I", "沙眼II", "沙眼III")
+            tvTrachoma.setOnClickListener { handleSingleChoice(tvTrachoma, myItems) }
         }
     }
 
@@ -634,6 +636,16 @@ class ReTestActivity : BaseActivity() {
         }
     }
 
+
+    //沙眼，结膜炎，红绿色盲，串镜。。。
+    private fun handleSingleChoice(tv: TextView, items: List<String>) {
+        MaterialDialog(this).show {
+            listItems(items = items){ dialog, index, text ->
+                tv.text = text
+            }
+        }
+    }
+
     private fun getPhysical() {
         OkGo.get<LzyResponse<Student>>(Api.RETEST_VIEW_BY_STUDENT_ID)
             .params("studentId", student?.studentId)
@@ -887,6 +899,12 @@ class ReTestActivity : BaseActivity() {
                         edtHeight.setText(height?.data)
                         edtWeight.setText(weight?.data)
                     }
+
+                    //trachoma
+                    val trachoma = data?.trachoma
+                    if (ciStr.contains("trachoma") && trachoma != null) {
+                        tvTrachoma.text = trachoma.data
+                    }
                 }
             })
     }
@@ -954,8 +972,8 @@ class ReTestActivity : BaseActivity() {
         cylObj["od"] = edtCRight.text.toString().trim()
         cylObj["os"] = edtCLeft.text.toString().trim()
         val axleObj = com.alibaba.fastjson.JSONObject()
-        axleObj["od"] = edtARight.text.toString().trim().toInt()
-        axleObj["os"] = edtALeft.text.toString().trim().toInt()
+        axleObj["od"] = edtARight.text.toString().trim()
+        axleObj["os"] = edtALeft.text.toString().trim()
         val diopterObj = com.alibaba.fastjson.JSONObject()
         diopterObj["sph"] = sphObj
         diopterObj["cyl"] = cylObj
@@ -1010,6 +1028,11 @@ class ReTestActivity : BaseActivity() {
         weightObj["data"] = edtWeight.text.toString().trim()
         weightObj["context"] = contextObj
 
+        //trachoma
+        val trachomaObj = com.alibaba.fastjson.JSONObject()
+        trachomaObj["data"] = tvTrachoma.text.toString()
+        trachomaObj["context"] = contextObj
+
 
         val dataObj = com.alibaba.fastjson.JSONObject()
         if (ciStr.contains("vision")) dataObj["vision"] = visionObj
@@ -1017,6 +1040,7 @@ class ReTestActivity : BaseActivity() {
         if (ciStr.contains("caries")) dataObj["caries"] = cariesObj
         if (ciStr.contains("height")) dataObj["height"] = heightObj
         if (ciStr.contains("weight")) dataObj["weight"] = weightObj
+        if (ciStr.contains("trachoma")) dataObj["trachoma"] = trachomaObj
 
         val upMap = mutableMapOf<Any?, Any?>()
         upMap["studentId"] = student?.studentId
