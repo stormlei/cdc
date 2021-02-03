@@ -144,10 +144,12 @@ class MainActivity : BaseActivity() {
             }
             if (result?.contains("bluetooth_name")!!) {
                 connBleDevice(result)
-            } else if (RegexUtils.isMatch("^[0-9]*$", result)) {
-                handleStuId(result)
+            } else if (result?.contains("id=")) {
+                val startIndex = result.indexOf("=") + 1
+                val stuId = result.substring(startIndex)
+                handleStuId(stuId)
             } else {
-                ToastUtils.showShort("该二维码无法解析")
+                handleStuId(result)
             }
 
         }

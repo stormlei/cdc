@@ -15,8 +15,8 @@
  */
 package com.qpsoft.cdc.okgo.callback;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.CacheDiskStaticUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
@@ -101,7 +101,8 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public void onError(com.lzy.okgo.model.Response<T> response) {
         super.onError(response);
         if (response.code() == 404) {
-            ToastUtils.showShort("该资源不存在");
+            ToastUtils.showLong("该资源不存在");
+            ActivityUtils.getTopActivity().finish();
         }
     }
 }

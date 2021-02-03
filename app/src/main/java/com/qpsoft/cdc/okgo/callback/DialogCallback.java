@@ -18,10 +18,6 @@ package com.qpsoft.cdc.okgo.callback;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Window;
-
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
-import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 
 /**

@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -81,11 +83,16 @@ class RetestListActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 300 && resultCode == RESULT_OK) {
-            val result = data?.getStringExtra("result")
-            if (RegexUtils.isMatch("^[0-9]*$", result)) {
-                handleStuId(result!!)
+            var result = data?.getStringExtra("result")
+            if (result == null) {
+                result = CameraScan.parseScanResult(data)
+            }
+            if (result?.contains("id=") == true) {
+                val startIndex = result.indexOf("=") + 1
+                val stuId = result.substring(startIndex)
+                handleStuId(stuId)
             } else {
-                ToastUtils.showShort("该二维码无法解析")
+                handleStuId(result!!)
             }
 
         }
@@ -96,6 +103,7 @@ class RetestListActivity : BaseActivity() {
                 .execute(object : DialogCallback<LzyResponse<Student>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<Student>>) {
                         val student = response.body()?.data
+                        student?.studentId = student?.id
                         startActivity(Intent(this@RetestListActivity, ReTestActivity::class.java)
                                 .putExtra("student", student)
                                 .putExtra("retestTitle", retestTitle)
