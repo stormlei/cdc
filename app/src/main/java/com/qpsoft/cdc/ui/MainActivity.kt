@@ -311,7 +311,7 @@ class MainActivity : BaseActivity() {
                         refreshLayout.finishRefresh()
                         val currentPlan = response.body()?.data
 
-                        if (planId != currentPlan?.id) {
+                        if (planId != null && planId != currentPlan?.id) {
                             App.instance.checkItemList.clear()
                             App.instance.selectSchool = null
                             refreshUI()
