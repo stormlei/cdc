@@ -30,8 +30,11 @@ import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
+import com.qpsoft.cdc.thirddevice.bloodpressure.yuwell.BPData
 import com.qpsoft.cdc.thirddevice.diopter.RefractionData
 import com.qpsoft.cdc.thirddevice.heightweight.HWData
+import com.qpsoft.cdc.thirddevice.tonometer.IopData
+import com.qpsoft.cdc.thirddevice.vitalcapacity.breathhome.VCData
 import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
 import com.qpsoft.cdc.ui.entity.DataItem
@@ -1892,11 +1895,11 @@ class PhysicalTestActivity : BaseActivity() {
 
         //diopter
         val sphObj = com.alibaba.fastjson.JSONObject()
-        sphObj["od"] = edtSRight.text.toString().trim()
-        sphObj["os"] = edtSLeft.text.toString().trim()
+        sphObj["od"] = "-"+edtSRight.text.toString().trim()
+        sphObj["os"] = "-"+edtSLeft.text.toString().trim()
         val cylObj = com.alibaba.fastjson.JSONObject()
-        cylObj["od"] = edtCRight.text.toString().trim()
-        cylObj["os"] = edtCLeft.text.toString().trim()
+        cylObj["od"] = "-"+edtCRight.text.toString().trim()
+        cylObj["os"] = "-"+edtCLeft.text.toString().trim()
         val axleObj = com.alibaba.fastjson.JSONObject()
         axleObj["od"] = edtARight.text.toString().trim()
         axleObj["os"] = edtALeft.text.toString().trim()
@@ -2294,10 +2297,13 @@ class PhysicalTestActivity : BaseActivity() {
             //是否连接
             if(BleDeviceOpUtil.isHWConnected()) {
                 val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
-                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWName.text = Html.fromHtml("身高体重秤 已连接 <font color=\"#247CB7\">$hwName</font>")
                 tvHWDisconn.text = "断开连接"
+
+                //notify data
+                BleDeviceOpUtil.notifyData("heightWeight")
             } else {
-                tvHWName.text = "身高体重仪 未连接"
+                tvHWName.text = "身高体重秤 未连接"
                 tvHWDisconn.text = "扫码连接设备"
             }
         }
@@ -2307,6 +2313,9 @@ class PhysicalTestActivity : BaseActivity() {
                 val bpName = BleDeviceOpUtil.bpDeviceInfo()?.name
                 tvBPName.text = Html.fromHtml("电子血压计 已连接 <font color=\"#247CB7\">$bpName</font>")
                 tvBPDisconn.text = "断开连接"
+
+                //notify data
+                BleDeviceOpUtil.notifyData("bloodPressure")
             } else {
                 tvBPName.text = "电子血压计 未连接"
                 tvBPDisconn.text = "扫码连接设备"
@@ -2318,6 +2327,9 @@ class PhysicalTestActivity : BaseActivity() {
                 val epName = BleDeviceOpUtil.epDeviceInfo()?.name
                 tvEPName.text = Html.fromHtml("眼压计 已连接 <font color=\"#247CB7\">$epName</font>")
                 tvEPDisconn.text = "断开连接"
+
+                //notify data
+                BleDeviceOpUtil.notifyData("eyePressure")
             } else {
                 tvEPName.text = "眼压计 未连接"
                 tvEPDisconn.text = "扫码连接设备"
@@ -2329,6 +2341,9 @@ class PhysicalTestActivity : BaseActivity() {
                 val vcName = BleDeviceOpUtil.vcDeviceInfo()?.name
                 tvVCName.text = Html.fromHtml("肺活量 已连接 <font color=\"#247CB7\">$vcName</font>")
                 tvVCDisconn.text = "断开连接"
+
+                //notify data
+                BleDeviceOpUtil.notifyData("vitalCapacity")
             } else {
                 tvVCName.text = "肺活量 未连接"
                 tvVCDisconn.text = "扫码连接设备"
@@ -2359,17 +2374,39 @@ class PhysicalTestActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDeviceNotifyDataEvent(deviceNotifyDataEvent: DeviceNotifyDataEvent) {
-        val deviceType = deviceNotifyDataEvent.deviceType
-        when(deviceType) {
+        when(deviceNotifyDataEvent.deviceType) {
             "diopter" -> {
-                val any = deviceNotifyDataEvent.any
-                val refData = JSON.parseObject(any.toString(), RefractionData::class.java)
-                LogUtils.e("---------"+refData)
+                val refData = deviceNotifyDataEvent.any as RefractionData
+                LogUtils.e("---------$refData")
+                edtSRight.setText(if(refData.od.s.contains("-")) refData.od.s.replace("-", "") else refData.od.s)
+                edtCRight.setText(if(refData.od.c.contains("-")) refData.od.c.replace("-", "") else refData.od.c)
+                edtARight.setText(refData.od.a)
+                edtSLeft.setText(if(refData.os.s.contains("-")) refData.os.s.replace("-", "") else refData.os.s)
+                edtCLeft.setText(if(refData.os.c.contains("-")) refData.os.c.replace("-", "") else refData.os.c)
+                edtALeft.setText(refData.os.a)
             }
             "heightWeight" -> {
-                val any = deviceNotifyDataEvent.any
-                val hwData = JSON.parseObject(any.toString(), HWData::class.java)
-                LogUtils.e("---------"+hwData)
+                val hwData = deviceNotifyDataEvent.any as HWData
+                LogUtils.e("---------$hwData")
+                edtHeight.setText(hwData.h)
+                edtWeight.setText(hwData.w)
+            }
+            "bloodPressure" -> {
+                val bpData = deviceNotifyDataEvent.any as BPData
+                LogUtils.e("---------$bpData")
+                edtSystolic.setText(bpData.sys)
+                edtDiastolic.setText(bpData.dia)
+            }
+            "eyePressure" -> {
+                val lopData = deviceNotifyDataEvent.any as IopData
+                LogUtils.e("---------$lopData")
+                edtEyePressRight.setText(lopData.od.iop)
+                edtEyePressLeft.setText(lopData.os.iop)
+            }
+            "vitalCapacity" -> {
+                val vcData = deviceNotifyDataEvent.any as VCData
+                LogUtils.e("---------$vcData")
+                edtVC.setText(vcData.vc)
             }
         }
     }

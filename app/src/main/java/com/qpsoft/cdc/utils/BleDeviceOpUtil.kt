@@ -1,9 +1,11 @@
 package com.qpsoft.cdc.utils
 
 import android.bluetooth.BluetoothGatt
+import android.os.Handler
 import android.text.TextUtils
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleGattCallback
@@ -51,11 +53,9 @@ object BleDeviceOpUtil {
             }
         }
         val receiveByteList = mutableListOf<Byte>()
+        var flag = true
         BleManager.getInstance().notify(bleDevice, uuid_service, uuid_notify, object : BleNotifyCallback() {
             override fun onNotifySuccess() {
-                val oriData = EncodeUtils.base64Encode2String(receiveByteList.toByteArray())
-                parseData(deviceInfo!!, oriData, deviceType)
-                receiveByteList.clear()
             }
 
             override fun onNotifyFailure(exception: BleException?) {
@@ -63,7 +63,15 @@ object BleDeviceOpUtil {
 
             override fun onCharacteristicChanged(data: ByteArray?) {
                 if(data != null ) for (b in data) receiveByteList.add(b)
-
+                if (flag) {
+                    flag = false
+                    Handler().postDelayed({
+                        val oriData = EncodeUtils.base64Encode2String(receiveByteList.toByteArray())
+                        parseData(deviceInfo!!, oriData, deviceType)
+                        receiveByteList.clear()
+                        flag = true
+                    }, 2000)
+                }
             }
         })
     }
@@ -79,7 +87,7 @@ object BleDeviceOpUtil {
             //send receive data
             EventBus.getDefault().post(DeviceNotifyDataEvent(deviceType, result.third))
         } else {
-            ToastUtils.showShort(result.second)
+            ToastUtils.showLong(result.second)
         }
     }
 

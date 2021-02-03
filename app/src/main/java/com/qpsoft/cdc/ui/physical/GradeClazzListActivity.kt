@@ -53,7 +53,7 @@ class GradeClazzListActivity : BaseActivity() {
 
         rvGradeClazz.layoutManager = LinearLayoutManager(this)
         rvGradeClazz.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        mAdapter = GradeClazzListAdapter(android.R.layout.simple_list_item_1, R.layout.gradeclazz_section_head, null, isRetest)
+        mAdapter = GradeClazzListAdapter(R.layout.gradeclazz_item_content, R.layout.gradeclazz_section_head, null, isRetest)
         rvGradeClazz.adapter = mAdapter
 
         mAdapter.setOnItemClickListener { adapter, view, position ->

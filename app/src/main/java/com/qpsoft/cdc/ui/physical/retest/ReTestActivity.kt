@@ -20,10 +20,16 @@ import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
 import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
+import com.qpsoft.cdc.thirddevice.bloodpressure.yuwell.BPData
+import com.qpsoft.cdc.thirddevice.diopter.RefractionData
+import com.qpsoft.cdc.thirddevice.heightweight.HWData
+import com.qpsoft.cdc.thirddevice.tonometer.IopData
+import com.qpsoft.cdc.thirddevice.vitalcapacity.breathhome.VCData
 import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
@@ -31,14 +37,11 @@ import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import com.qpsoft.cdc.utils.EyeChartOpUtil
 import kotlinx.android.synthetic.main.activity_retest.*
-import kotlinx.android.synthetic.main.view_bloodpressure.*
 import kotlinx.android.synthetic.main.view_caries.*
 import kotlinx.android.synthetic.main.view_diopter.*
-import kotlinx.android.synthetic.main.view_eyepressure.*
 import kotlinx.android.synthetic.main.view_heightweight.*
 import kotlinx.android.synthetic.main.view_trachoma.*
 import kotlinx.android.synthetic.main.view_vision.*
-import kotlinx.android.synthetic.main.view_vitalcapacity.*
 import me.shaohui.advancedluban.Luban
 import me.shaohui.advancedluban.OnCompressListener
 import org.greenrobot.eventbus.EventBus
@@ -310,27 +313,6 @@ class ReTestActivity : BaseActivity() {
         LogUtils.e("---------$result")
         val qrCodeInfo = Convert.fromJson(result, QrCodeInfo::class.java)
         BleDeviceOpUtil.connectDevice(qrCodeInfo)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-
-        refreshUI()
-    }
-
-    private fun refreshUI() {
-        updateDeviceStatusUi()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDeviceStatusEvent(connStatusEvent: DeviceStatusEvent) {
-        updateDeviceStatusUi()
     }
 
     private fun uploadImage(selectList: MutableList<LocalMedia>) {
@@ -1041,11 +1023,11 @@ class ReTestActivity : BaseActivity() {
 
         //diopter
         val sphObj = com.alibaba.fastjson.JSONObject()
-        sphObj["od"] = edtSRight.text.toString().trim()
-        sphObj["os"] = edtSLeft.text.toString().trim()
+        sphObj["od"] = "-"+edtSRight.text.toString().trim()
+        sphObj["os"] = "-"+edtSLeft.text.toString().trim()
         val cylObj = com.alibaba.fastjson.JSONObject()
-        cylObj["od"] = edtCRight.text.toString().trim()
-        cylObj["os"] = edtCLeft.text.toString().trim()
+        cylObj["od"] = "-"+edtCRight.text.toString().trim()
+        cylObj["os"] = "-"+edtCLeft.text.toString().trim()
         val axleObj = com.alibaba.fastjson.JSONObject()
         axleObj["od"] = edtARight.text.toString().trim()
         axleObj["os"] = edtALeft.text.toString().trim()
@@ -1161,11 +1143,54 @@ class ReTestActivity : BaseActivity() {
             //是否连接
             if(BleDeviceOpUtil.isHWConnected()) {
                 val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
-                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWName.text = Html.fromHtml("身高体重秤 已连接 <font color=\"#247CB7\">$hwName</font>")
                 tvHWDisconn.text = "断开连接"
             } else {
-                tvHWName.text = "身高体重仪 未连接"
+                tvHWName.text = "身高体重秤 未连接"
                 tvHWDisconn.text = "扫码连接设备"
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+
+        refreshUI()
+    }
+
+    private fun refreshUI() {
+        updateDeviceStatusUi()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceStatusEvent(connStatusEvent: DeviceStatusEvent) {
+        updateDeviceStatusUi()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onDeviceNotifyDataEvent(deviceNotifyDataEvent: DeviceNotifyDataEvent) {
+        when(deviceNotifyDataEvent.deviceType) {
+            "diopter" -> {
+                val refData = deviceNotifyDataEvent.any as RefractionData
+                LogUtils.e("---------$refData")
+                edtSRight.setText(if(refData.od.s.contains("-")) refData.od.s.replace("-", "") else refData.od.s)
+                edtCRight.setText(if(refData.od.c.contains("-")) refData.od.c.replace("-", "") else refData.od.c)
+                edtARight.setText(refData.od.a)
+                edtSLeft.setText(if(refData.os.s.contains("-")) refData.os.s.replace("-", "") else refData.os.s)
+                edtCLeft.setText(if(refData.os.c.contains("-")) refData.os.c.replace("-", "") else refData.os.c)
+                edtALeft.setText(refData.os.a)
+            }
+            "heightWeight" -> {
+                val hwData = deviceNotifyDataEvent.any as HWData
+                LogUtils.e("---------$hwData")
+                edtHeight.setText(hwData.h)
+                edtWeight.setText(hwData.w)
             }
         }
     }

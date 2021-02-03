@@ -2,6 +2,7 @@ package com.qpsoft.cdc.utils
 
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.EncodeUtils
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.qpsoft.cdc.constant.Brand
 import com.qpsoft.cdc.constant.Model
@@ -41,7 +42,7 @@ object DeviceParseUtil {
         val oriDataByteArray = EncodeUtils.base64Decode(oriData)
         var result: Any? = null
         when(type) {
-            Type.OPTOMETRY.value -> {
+            Type.OPTOMETRY.value, "验光仪" -> {
                 when (brand) {
                     Brand.TIANLE.value -> {
                         when (model) {
@@ -105,7 +106,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.PYROMETER.value -> {
+            Type.PYROMETER.value, "焦度计"-> {
                 when (brand) {
                     Brand.FALIAO.value -> {
                         when (model) {
@@ -114,7 +115,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.HEIGHTWEIGHT.value -> {
+            Type.HEIGHTWEIGHT.value, "身高体重秤" -> {
                 when (brand) {
                     Brand.SHANGHE.value -> {
                         when (model) {
@@ -128,7 +129,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.BLOODPRESSURE.value -> {
+            Type.BLOODPRESSURE.value, "血压计" -> {
                 when (brand) {
                     Brand.YUWELL.value -> {
                         when (model) {
@@ -137,7 +138,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.BLOODSUGAR.value -> {
+            Type.BLOODSUGAR.value, "血糖仪" -> {
                 when (brand) {
                     Brand.YUWELL.value -> {
                         when (model) {
@@ -146,7 +147,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.VITALCAPACITY.value -> {
+            Type.VITALCAPACITY.value, "肺活量" -> {
                 when (brand) {
                     Brand.BREATHHOME.value -> {
                         when (model) {
@@ -164,7 +165,7 @@ object DeviceParseUtil {
                     }
                 }
             }
-            Type.TONOMETER.value -> {
+            Type.TONOMETER.value, "眼压计" -> {
                 when (brand) {
                     Brand.NIDEK.value -> {
                         when (model) {

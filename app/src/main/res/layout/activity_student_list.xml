@@ -121,6 +121,7 @@
         app:indexBar_textSpace="6dp" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/tvNext"
         android:layout_width="match_parent"
         android:layout_height="62dp"

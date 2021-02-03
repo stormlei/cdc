@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.RegexUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -11,6 +13,7 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
+import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.StudentAdapter
 import com.qpsoft.cdc.ui.entity.*
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
@@ -70,6 +73,35 @@ class RetestListActivity : BaseActivity() {
                 .putExtra("planType", planType)
             )
         }
+        tvRetestQrScan.setOnClickListener {
+            startActivityForResult(Intent(this@RetestListActivity, CustomCaptureActivity::class.java), 300)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 300 && resultCode == RESULT_OK) {
+            val result = data?.getStringExtra("result")
+            if (RegexUtils.isMatch("^[0-9]*$", result)) {
+                handleStuId(result!!)
+            } else {
+                ToastUtils.showShort("该二维码无法解析")
+            }
+
+        }
+    }
+
+    private fun handleStuId(stuId: String) {
+        OkGo.get<LzyResponse<Student>>(Api.STUDENT+"/"+stuId)
+                .execute(object : DialogCallback<LzyResponse<Student>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<Student>>) {
+                        val student = response.body()?.data
+                        startActivity(Intent(this@RetestListActivity, ReTestActivity::class.java)
+                                .putExtra("student", student)
+                                .putExtra("retestTitle", retestTitle)
+                                .putExtra("planType", planType))
+                    }
+                })
     }
 
     override fun onStart() {

@@ -21,7 +21,7 @@ class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutab
 
     override fun convert(holder: BaseViewHolder, item: MySection) {
         val clazz = item.any as String
-        holder.setText(android.R.id.text1, clazz)
+        holder.setText(R.id.tvName, clazz)
     }
 
 

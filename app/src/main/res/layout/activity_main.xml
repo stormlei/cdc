@@ -238,7 +238,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="17sp"
                         android:textColor="@color/color_26"
-                        android:text="身高体重仪 未连接" />
+                        android:text="身高体重秤 未连接" />
                     <TextView
                         android:id="@+id/tvHWDisconn"
                         android:layout_width="wrap_content"

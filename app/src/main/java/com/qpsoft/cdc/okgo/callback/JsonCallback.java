@@ -96,4 +96,12 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         JsonConvert<T> convert = new JsonConvert<>(type);
         return convert.convertResponse(response);
     }
+
+    @Override
+    public void onError(com.lzy.okgo.model.Response<T> response) {
+        super.onError(response);
+        if (response.code() == 404) {
+            ToastUtils.showShort("该资源不存在");
+        }
+    }
 }

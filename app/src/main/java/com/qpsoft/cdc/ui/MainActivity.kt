@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.RegexUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -20,14 +22,18 @@ import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
+import com.qpsoft.cdc.ui.entity.CompleteStatus
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
+import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
+import com.qpsoft.cdc.ui.physical.PhysicalTestActivity
 import com.qpsoft.cdc.ui.physical.retest.RetestTitleListActivity
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import com.qpsoft.cdc.utils.EyeChartOpUtil
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_student_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -136,8 +142,26 @@ class MainActivity : BaseActivity() {
             if (result == null) {
                 result = CameraScan.parseScanResult(data)
             }
-            connBleDevice(result)
+            if (result?.contains("bluetooth_name")!!) {
+                connBleDevice(result)
+            } else if (RegexUtils.isMatch("^[0-9]*$", result)) {
+                handleStuId(result)
+            } else {
+                ToastUtils.showShort("该二维码无法解析")
+            }
+
         }
+    }
+
+    private fun handleStuId(stuId: String) {
+        OkGo.get<LzyResponse<Student>>(Api.STUDENT+"/"+stuId)
+                .execute(object : DialogCallback<LzyResponse<Student>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<Student>>) {
+                        val student = response.body()?.data
+                        startActivity(Intent(this@MainActivity, PhysicalTestActivity::class.java)
+                                .putExtra("student", student))
+                    }
+                })
     }
 
     private fun connBleDevice(result: String?) {
@@ -222,10 +246,10 @@ class MainActivity : BaseActivity() {
             //是否连接
             if(BleDeviceOpUtil.isHWConnected()) {
                 val hwName = BleDeviceOpUtil.hwDeviceInfo()?.name
-                tvHWName.text = Html.fromHtml("身高体重仪 已连接 <font color=\"#247CB7\">$hwName</font>")
+                tvHWName.text = Html.fromHtml("身高体重秤 已连接 <font color=\"#247CB7\">$hwName</font>")
                 tvHWDisconn.text = "断开连接"
             } else {
-                tvHWName.text = "身高体重仪 未连接"
+                tvHWName.text = "身高体重秤 未连接"
                 tvHWDisconn.text = ""
             }
         } else {
