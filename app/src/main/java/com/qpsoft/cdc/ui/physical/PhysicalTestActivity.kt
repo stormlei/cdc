@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
-import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
@@ -27,6 +26,7 @@ import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.SchoolCategory
 import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
 import com.qpsoft.cdc.eventbus.DeviceStatusEvent
+import com.qpsoft.cdc.eyechart.VisionTestActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
@@ -37,7 +37,6 @@ import com.qpsoft.cdc.thirddevice.tonometer.IopData
 import com.qpsoft.cdc.thirddevice.vitalcapacity.breathhome.VCData
 import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
-import com.qpsoft.cdc.ui.entity.DataItem
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
@@ -161,6 +160,10 @@ class PhysicalTestActivity : BaseActivity() {
                         glassType = "OkGlass"
                     }
                 }
+                if (EyeChartOpUtil.isConnected()) {
+                    startActivityForResult(Intent(this@PhysicalTestActivity, VisionTestActivity::class.java)
+                            .putExtra("glassType", glassType).putExtra("schoolCategory", student?.schoolCategory), 200)
+                }
             }
 
             sbtnEyeAbnormalVision.setOnCheckedChangeListener { compoundButton, isChecked ->
@@ -170,7 +173,12 @@ class PhysicalTestActivity : BaseActivity() {
             //vision conn
             tvEyeChartDisconn.setOnClickListener {
                 if (EyeChartOpUtil.isConnected()) {
-                    EyeChartOpUtil.disConnected()
+                    if(glassType == "") {
+                        ToastUtils.showShort("请选择戴镜类型")
+                        return@setOnClickListener
+                    }
+                    startActivityForResult(Intent(this@PhysicalTestActivity, VisionTestActivity::class.java)
+                            .putExtra("glassType", glassType).putExtra("schoolCategory", student?.schoolCategory), 200)
                 } else {
                     startActivityForResult(Intent(this@PhysicalTestActivity, CustomCaptureActivity::class.java), 100)
                 }
@@ -813,6 +821,16 @@ class PhysicalTestActivity : BaseActivity() {
                     result = CameraScan.parseScanResult(data)
                 }
                 connBleDevice(result)
+            }
+            if (requestCode == 200) {
+                val right = data?.getFloatExtra("vision_right", -1f)
+                val left = data?.getFloatExtra("vision_left", -1f)
+                val glass_right = data?.getFloatExtra("vision_glass_right", -1f)
+                val glass_left = data?.getFloatExtra("vision_glass_left", -1f)
+                if (right != -1f) edtUnGlassRight.setText(""+right) else edtUnGlassRight.setText("")
+                if (left != -1f) edtUnGlassLeft.setText(""+left) else edtUnGlassLeft.setText("")
+                if (glass_right != -1f) edtGlassRight.setText(""+glass_right) else edtGlassRight.setText("")
+                if (glass_left != -1f) edtGlassLeft.setText(""+glass_left) else edtGlassLeft.setText("")
             }
         }
     }
@@ -1541,7 +1559,7 @@ class PhysicalTestActivity : BaseActivity() {
                         tvYaoXiong.text = waistChest?.category
                         tvYaoXiongDegree.text = waistChest?.degree
                         if ("无侧弯" == waistChest?.category) llYaoXiongDegree.visibility =
-                            View.INVISIBLE
+                                View.INVISIBLE
 
                         val waist = spine.sideBend?.waist
                         tvYao.text = waist?.category
@@ -1552,7 +1570,7 @@ class PhysicalTestActivity : BaseActivity() {
                         tvQianHou.text = baBend?.category
                         tvQianHouDegree.text = baBend?.degree
                         if ("无前后弯曲异常" == baBend?.category) llQianHouDegree.visibility =
-                            View.INVISIBLE
+                                View.INVISIBLE
                     }
                     //sexuality
                     val sexuality = data?.sexuality
@@ -1820,7 +1838,7 @@ class PhysicalTestActivity : BaseActivity() {
     }
 
     //vision
-    private var glassType = "Frame"
+    private var glassType = ""
     private var eyeAbnormalVision = false
 
     //diopter
@@ -2273,7 +2291,7 @@ class PhysicalTestActivity : BaseActivity() {
             if(EyeChartOpUtil.isConnected()) {
                 val eyeChartName = EyeChartOpUtil.deviceInfo()?.name
                 tvEyeChartName.text = Html.fromHtml("电子视力表 已连接 <font color=\"#247CB7\">$eyeChartName</font>")
-                tvEyeChartDisconn.text = "断开连接"
+                tvEyeChartDisconn.text = "打开遥控器"
             } else {
                 tvEyeChartName.text = "电子视力表 未连接"
                 tvEyeChartDisconn.text = "扫码连接设备"
@@ -2378,11 +2396,11 @@ class PhysicalTestActivity : BaseActivity() {
             "diopter" -> {
                 val refData = deviceNotifyDataEvent.any as RefractionData
                 LogUtils.e("---------$refData")
-                edtSRight.setText(if(refData.od.s.contains("-")) refData.od.s.replace("-", "") else refData.od.s)
-                edtCRight.setText(if(refData.od.c.contains("-")) refData.od.c.replace("-", "") else refData.od.c)
+                edtSRight.setText(if (refData.od.s.contains("-")) refData.od.s.replace("-", "") else refData.od.s)
+                edtCRight.setText(if (refData.od.c.contains("-")) refData.od.c.replace("-", "") else refData.od.c)
                 edtARight.setText(refData.od.a)
-                edtSLeft.setText(if(refData.os.s.contains("-")) refData.os.s.replace("-", "") else refData.os.s)
-                edtCLeft.setText(if(refData.os.c.contains("-")) refData.os.c.replace("-", "") else refData.os.c)
+                edtSLeft.setText(if (refData.os.s.contains("-")) refData.os.s.replace("-", "") else refData.os.s)
+                edtCLeft.setText(if (refData.os.c.contains("-")) refData.os.c.replace("-", "") else refData.os.c)
                 edtALeft.setText(refData.os.a)
             }
             "heightWeight" -> {

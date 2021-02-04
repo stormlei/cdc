@@ -67,7 +67,7 @@
                 android:background="@drawable/rb_bg_selector"
                 android:textSize="15sp"
                 android:button="@null"
-                android:text="框架眼睛"/>
+                android:text="框架眼镜"/>
             <RadioButton
                 android:id="@+id/rbLens"
                 android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                 android:background="@drawable/rb_bg_selector"
                 android:button="@null"
                 android:textSize="15sp"
-                android:text="隐形眼睛"/>
+                android:text="隐形眼镜"/>
             <RadioButton
                 android:id="@+id/rbOkGlass"
                 android:layout_width="wrap_content"

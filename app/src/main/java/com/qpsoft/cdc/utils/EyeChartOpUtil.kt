@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleMtuChangedCallback
+import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
@@ -15,22 +16,22 @@ object EyeChartOpUtil {
     const val uuid_notify = "0000C101-0000-1000-8000-00805F9B3402"
     const val uuid_write = "0000C101-0000-1000-8000-00805F9B3403"
 
-    private fun send(sendStr: String) {
+    fun send(sendStr: String) {
         if (!isConnected()) {
-            ToastUtils.showShort("视力表未连接")
+            ToastUtils.showShort("电子视力表未连接,请扫码连接")
             return
         }
         LogUtils.e("----------$sendStr")
         val bleDevice: BleDevice? = bleDevice()
         Handler().postDelayed({
-            BleManager.getInstance().write(
-                bleDevice,
-                uuid_service,
-                uuid_write,
-                sendStr.toByteArray(),
-                false,
-                null
-            )
+            BleManager.getInstance().write(bleDevice, uuid_service, uuid_write, sendStr.toByteArray(), false, object: BleWriteCallback() {
+                override fun onWriteSuccess(current: Int, total: Int, justWrite: ByteArray?) {
+                    //LogUtils.e("--------write success")
+                }
+                override fun onWriteFailure(exception: BleException?) {
+                    LogUtils.e("--------$exception")
+                }
+            })
         }, 300)
     }
 
@@ -42,7 +43,7 @@ object EyeChartOpUtil {
         BleManager.getInstance().disconnect(bleDevice())
     }
 
-    private fun bleDevice(): BleDevice? {
+    fun bleDevice(): BleDevice? {
         return CacheDiskStaticUtils.getParcelable("visionBleDevice", BleDevice.CREATOR)
     }
 

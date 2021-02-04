@@ -14,7 +14,7 @@ data class Student(
         val idcard: String,
         val gender: String?,
         val birthday: String,
-        val nation: String,
+        val nation: String?,
         val birthPlace: String?,
         val schoolId: String,
         val grade: String,
