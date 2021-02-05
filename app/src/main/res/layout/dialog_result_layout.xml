@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:textColor="@color/color_331"
+            android:textSize="20sp"
+            android:text="检查结果"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            android:background="@color/color_f4"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="207dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_331"
+                    android:textSize="20sp"
+                    android:text="右眼"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="233dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_331"
+                    android:textSize="20sp"
+                    android:text="左眼"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_331"
+                    android:textSize="20sp"
+                    android:text="裸眼："/>
+                <TextView
+                    android:id="@+id/tvRightEyeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="128dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_e89"
+                    android:textSize="17sp"
+                    android:text=""/>
+                <TextView
+                    android:id="@+id/tvLeftEyeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="236dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_e89"
+                    android:textSize="17sp"
+                    android:text=""/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginStart="36dp"
+                android:layout_marginEnd="36dp"
+                android:background="@color/color_e5"/>
+
+            <LinearLayout
+                android:id="@+id/llGlassValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="48dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_331"
+                    android:textSize="20sp"
+                    android:text="戴镜："/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="128dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_e89"
+                    android:textSize="17sp"
+                    android:text=""/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="236dp"
+                    android:gravity="center"
+                    android:textColor="@color/color_e89"
+                    android:textSize="17sp"
+                    android:text=""/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginEnd="86dp"
+            android:layout_marginTop="40dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/btn_r65_selector"
+            android:gravity="center"
+            android:textColor="@color/btn_flat_text_selector"
+            android:textSize="20sp"
+            android:text="按 OK 键确认"/>
+
+        <TextView
+            android:id="@+id/btnRetestLeft"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginEnd="86dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:textColor="@color/color_26"
+            android:textSize="20sp"
+            android:text="重测裸眼左"/>
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

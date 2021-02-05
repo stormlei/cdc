@@ -1,2 +1,3 @@
+include ':PromptDialog'
 include ':app'
 rootProject.name = "cdc"

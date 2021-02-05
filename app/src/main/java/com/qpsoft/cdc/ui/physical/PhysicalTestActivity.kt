@@ -26,7 +26,6 @@ import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.constant.SchoolCategory
 import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
 import com.qpsoft.cdc.eventbus.DeviceStatusEvent
-import com.qpsoft.cdc.eyechart.VisionTestActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert

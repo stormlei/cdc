@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:gravity="center"
+            android:textColor="@color/color_26"
+            android:textSize="20sp"
+            android:text="低视力检测"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:paddingTop="25dp"
+            android:background="@color/color_f4">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_e89"
+                android:textSize="20sp"
+                android:text="裸眼右"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/color_331"
+                android:textSize="17sp"
+                android:text="裸眼左"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/alert_low_vision"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="48dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_331"
+                android:textSize="17sp"
+                android:text="请站至"/>
+            <TextView
+                android:id="@+id/tvStationDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_e89"
+                android:textSize="20sp"
+                android:text=" 4.0 "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_331"
+                android:textSize="17sp"
+                android:text="米线"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_331"
+                android:textSize="17sp"
+                android:text="开始检查"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_e89"
+                android:textSize="20sp"
+                android:text=" 右 "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_331"
+                android:textSize="17sp"
+                android:text="眼，请遮住左眼"/>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginEnd="86dp"
+            android:layout_marginTop="24dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/btn_r65_selector"
+            android:gravity="center"
+            android:textColor="@color/btn_flat_text_selector"
+            android:textSize="20sp"
+            android:text="按 OK 键开始"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/color_8c"
+        android:textSize="15sp"
+        android:text="遥控器方向键控制视标方向"/>
+
+
+</RelativeLayout>
