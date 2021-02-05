@@ -39,6 +39,8 @@ class VisionTestActivity : BaseActivity() {
     private var type = ""
     private var item = ""
 
+    private var directionT = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vision_test)
@@ -111,11 +113,26 @@ class VisionTestActivity : BaseActivity() {
             sendLine(eyeValue.value.toFloat())
         }
 
-        ivOk.setOnClickListener { sendOk() }
-        ivUp.setOnClickListener { sendDirection("up") }
-        ivDown.setOnClickListener { sendDirection("down") }
-        ivLeft.setOnClickListener { sendDirection("left") }
-        ivRight.setOnClickListener { sendDirection("right") }
+        ivOk.setOnClickListener {
+            directionT = ""
+            sendOk()
+        }
+        ivUp.setOnClickListener {
+            directionT = "up"
+            sendDirection("up")
+        }
+        ivDown.setOnClickListener {
+            directionT = "down"
+            sendDirection("down")
+        }
+        ivLeft.setOnClickListener {
+            directionT = "left"
+            sendDirection("left")
+        }
+        ivRight.setOnClickListener {
+            directionT = "right"
+            sendDirection("right")
+        }
         llCommit.setOnClickListener { submit() }
 
         handNotifyData()
@@ -331,8 +348,52 @@ class VisionTestActivity : BaseActivity() {
                 } else if ("direction" == event) {
                     if (curDirectionCorrect == 1) {
                         playSound(R.raw.correct)
+                        when(directionT) {
+                            "up" -> {
+                                ivUp.setImageResource(R.drawable.up_s)
+                                Handler().postDelayed({ivUp.setImageResource(R.drawable.up_n)}, 100)
+                            }
+                            "down" -> {
+                                ivDown.setImageResource(R.drawable.down_s)
+                                Handler().postDelayed({ivDown.setImageResource(R.drawable.down_n)}, 100)
+                            }
+                            "left" -> {
+                                ivLeft.setImageResource(R.drawable.left_s)
+                                Handler().postDelayed({ivLeft.setImageResource(R.drawable.left_n)}, 100)
+                            }
+                            "right" -> {
+                                ivRight.setImageResource(R.drawable.right_s)
+                                Handler().postDelayed({ivRight.setImageResource(R.drawable.right_n)}, 100)
+                            }
+                            "" -> {
+                                ivOk.setImageResource(R.drawable.ok_s)
+                                Handler().postDelayed({ivOk.setImageResource(R.drawable.ok_n)}, 100)
+                            }
+                        }
                     } else {
                         playSound(R.raw.error)
+                        when(directionT) {
+                            "up" -> {
+                                ivUp.setImageResource(R.drawable.up_e)
+                                Handler().postDelayed({ivUp.setImageResource(R.drawable.up_n)}, 100)
+                            }
+                            "down" -> {
+                                ivDown.setImageResource(R.drawable.down_e)
+                                Handler().postDelayed({ivDown.setImageResource(R.drawable.down_n)}, 100)
+                            }
+                            "left" -> {
+                                ivLeft.setImageResource(R.drawable.left_e)
+                                Handler().postDelayed({ivLeft.setImageResource(R.drawable.left_n)}, 100)
+                            }
+                            "right" -> {
+                                ivRight.setImageResource(R.drawable.right_e)
+                                Handler().postDelayed({ivRight.setImageResource(R.drawable.right_n)}, 100)
+                            }
+                            "" -> {
+                                ivOk.setImageResource(R.drawable.ok_e)
+                                Handler().postDelayed({ivOk.setImageResource(R.drawable.ok_n)}, 100)
+                            }
+                        }
                     }
                     if (linePass == 1) {
                         //change green
