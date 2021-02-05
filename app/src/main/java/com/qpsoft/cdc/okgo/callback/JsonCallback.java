@@ -101,8 +101,10 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public void onError(com.lzy.okgo.model.Response<T> response) {
         super.onError(response);
         if (response.code() == 404) {
-            ToastUtils.showLong("该资源不存在");
-            ActivityUtils.getTopActivity().finish();
+            //ToastUtils.showLong("该资源不存在");
+            //ActivityUtils.getTopActivity().finish();
+        } else {
+            ToastUtils.showShort("网络未连接，请检查网络连接");
         }
     }
 }

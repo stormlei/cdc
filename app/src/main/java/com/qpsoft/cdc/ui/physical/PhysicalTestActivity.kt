@@ -1306,8 +1306,8 @@ class PhysicalTestActivity : BaseActivity() {
                         edtUnGlassLeft.setText(vision.nakedDegree?.os)
                         edtGlassRight.setText(vision.glassDegree?.od)
                         edtGlassLeft.setText(vision.glassDegree?.os)
-                        edtOkGlassRight.setText(vision.spectacles?.od)
-                        edtOkGlassLeft.setText(vision.spectacles?.os)
+                        edtOkGlassRight.setText(vision.spectacles?.od?.replace("-", ""))
+                        edtOkGlassLeft.setText(vision.spectacles?.os?.replace("-", ""))
 
                         sbtnEyeAbnormalVision.isChecked = vision.eyeAbnormal
 
@@ -1315,10 +1315,10 @@ class PhysicalTestActivity : BaseActivity() {
                     //diopter
                     val diopter = data?.diopter
                     if (ciStr.contains("diopter") && diopter != null) {
-                        edtSRight.setText(diopter.sph?.od)
-                        edtSLeft.setText(diopter.sph?.os)
-                        edtCRight.setText(diopter.cyl?.od)
-                        edtCLeft.setText(diopter.cyl?.os)
+                        edtSRight.setText(diopter.sph?.od?.replace("-", ""))
+                        edtSLeft.setText(diopter.sph?.os?.replace("-", ""))
+                        edtCRight.setText(diopter.cyl?.od?.replace("-", ""))
+                        edtCLeft.setText(diopter.cyl?.os?.replace("-", ""))
                         edtARight.setText(diopter.axle?.od)
                         edtALeft.setText(diopter.axle?.os)
 
@@ -1887,8 +1887,8 @@ class PhysicalTestActivity : BaseActivity() {
         gdObj["od"] = edtGlassRight.text.toString().trim()
         gdObj["os"] = edtGlassLeft.text.toString().trim()
         val stObj = com.alibaba.fastjson.JSONObject()
-        stObj["od"] = edtOkGlassRight.text.toString().trim()
-        stObj["os"] = edtOkGlassLeft.text.toString().trim()
+        stObj["od"] = "-"+edtOkGlassRight.text.toString().trim()
+        stObj["os"] = "-"+edtOkGlassLeft.text.toString().trim()
         val contextObj = com.alibaba.fastjson.JSONObject()
         contextObj["userId"] = ""
         contextObj["userName"] = ""

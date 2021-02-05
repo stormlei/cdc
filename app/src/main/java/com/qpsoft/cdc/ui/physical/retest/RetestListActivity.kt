@@ -107,7 +107,8 @@ class RetestListActivity : BaseActivity() {
                         startActivity(Intent(this@RetestListActivity, ReTestActivity::class.java)
                                 .putExtra("student", student)
                                 .putExtra("retestTitle", retestTitle)
-                                .putExtra("planType", planType))
+                                .putExtra("planType", planType)
+                                .putExtra("planId", planId))
                     }
                 })
     }
