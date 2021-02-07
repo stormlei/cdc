@@ -17,6 +17,7 @@ package com.qpsoft.cdc.okgo.callback;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.CacheDiskStaticUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
@@ -99,12 +100,17 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
 
     @Override
     public void onError(com.lzy.okgo.model.Response<T> response) {
+        LogUtils.e("-----------"+response.code());
+        LogUtils.e("-------"+response.getException());
         super.onError(response);
         if (response.code() == 404) {
             //ToastUtils.showLong("该资源不存在");
             //ActivityUtils.getTopActivity().finish();
-        } else {
+        }
+        if (response.getException() instanceof java.net.UnknownHostException) {
             ToastUtils.showShort("网络未连接，请检查网络连接");
+        } else if (response.getException() instanceof java.lang.IllegalStateException) {
+            ToastUtils.showShort(response.getException().getMessage());
         }
     }
 }
