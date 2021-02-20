@@ -17,6 +17,7 @@ class GradeClazzListAdapter(layoutResId: Int, sectionHeadResId: Int, data: Mutab
             helper.setText(R.id.tvHeader, item.any as String)
         }
         if (isRetest) helper.setVisible(R.id.tvTips, false)
+        helper.setText(R.id.tvTips, "已筛查有效人数"+item.header)
     }
 
     override fun convert(holder: BaseViewHolder, item: MySection) {

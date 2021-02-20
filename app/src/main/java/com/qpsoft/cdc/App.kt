@@ -27,6 +27,7 @@ class App: Application() {
 
     var checkItemList = mutableListOf<CheckItem>()
     var selectSchool: School? = null
+    var retestCheckItemList = mutableListOf<CheckItem>()
 
     companion object {
         lateinit var instance: App

@@ -41,8 +41,6 @@ class GradeClazzListActivity : BaseActivity() {
         setBackBtn()
         setTitle(school?.name)
 
-        getGradeClazzList()
-
         if (isRetest) {
             llTop.visibility = View.GONE
         } else {
@@ -91,20 +89,22 @@ class GradeClazzListActivity : BaseActivity() {
                         val stuCompleteStatus = response.body()?.data
                         tvComNum.text = stuCompleteStatus?.complateNum
                         tvUnComNum.text = stuCompleteStatus?.unComplateNum
+
+                        getGradeClazzList(stuCompleteStatus?.gradeComplateMap)
                     }
                 })
     }
 
 
     lateinit var list: MutableList<MySection>
-    private fun getGradeClazzList() {
+    private fun getGradeClazzList(gradeComplateMap: MutableMap<String, Int>?) {
         OkGo.get<LzyResponse<MutableMap<String, MutableList<String>>>>(Api.GRADE_CLAZZ_LIST)
                 .params("schoolId", school?.id)
                 .execute(object : DialogCallback<LzyResponse<MutableMap<String, MutableList<String>>>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<MutableMap<String, MutableList<String>>>>) {
                         val dataMap = response.body()?.data
 
-                        list = getItemData(dataMap!!)
+                        list = getItemData(dataMap!!, gradeComplateMap)
                         mAdapter.setNewInstance(list)
                     }
                 })
@@ -112,11 +112,11 @@ class GradeClazzListActivity : BaseActivity() {
 
 
 
-    fun getItemData(itemList: MutableMap<String, MutableList<String>>): MutableList<MySection> {
+    fun getItemData(itemList: MutableMap<String, MutableList<String>>, gradeComplateMap: MutableMap<String, Int>?): MutableList<MySection> {
         val ml = mutableListOf<MySection>()
 
         itemList.forEach { (key, list) ->
-            ml.add(MySection(true, key, ""))
+            ml.add(MySection(true, key, ""+gradeComplateMap?.get(key)))
             for (item in list) {
                 ml.add(MySection(false, item, key))
             }

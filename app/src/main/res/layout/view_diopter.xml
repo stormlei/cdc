@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="球镜右-"/>
+                android:text="球镜右"/>
             <EditText
                 android:id="@+id/edtSRight"
                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="球镜左-"/>
+                android:text="球镜左"/>
             <EditText
                 android:id="@+id/edtSLeft"
                 android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="柱镜右-"/>
+                android:text="柱镜右"/>
             <EditText
                 android:id="@+id/edtCRight"
                 android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="17sp"
-                android:text="柱镜左-"/>
+                android:text="柱镜左"/>
             <EditText
                 android:id="@+id/edtCLeft"
                 android:layout_width="match_parent"

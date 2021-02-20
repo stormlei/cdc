@@ -18,6 +18,7 @@ import com.luck.picture.lib.entity.LocalMedia
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
+import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
@@ -75,11 +76,13 @@ class ReTestActivity : BaseActivity() {
         tvGradeClazz.text = student?.grade + student?.clazz
 
         LogUtils.e("-----------$planType")
-        when(planType) {
-            "Vision" -> ciStr = "vision, diopter"
-            "CommonDisease" -> ciStr = "vision, diopter, height, weight"
-            "Checkup" -> ciStr = "height, weight, caries, trachoma"
-        }
+//        when(planType) {
+//            "Vision" -> ciStr = "vision, diopter"
+//            "CommonDisease" -> ciStr = "vision, diopter, height, weight"
+//            "Checkup" -> ciStr = "height, weight, caries, trachoma"
+//        }
+        val checkItemList = App.instance.retestCheckItemList
+        ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
         handleUI()
 
         getPhysical()
@@ -734,10 +737,10 @@ class ReTestActivity : BaseActivity() {
                     //diopter
                     val diopter = data?.diopter
                     if (ciStr.contains("diopter") && diopter != null) {
-                        edtSRight.setText(diopter.sph?.od?.replace("-", ""))
-                        edtSLeft.setText(diopter.sph?.os?.replace("-", ""))
-                        edtCRight.setText(diopter.cyl?.od?.replace("-", ""))
-                        edtCLeft.setText(diopter.cyl?.os?.replace("-", ""))
+                        edtSRight.setText(diopter.sph?.od)
+                        edtSLeft.setText(diopter.sph?.os)
+                        edtCRight.setText(diopter.cyl?.od)
+                        edtCLeft.setText(diopter.cyl?.os)
                         edtARight.setText(diopter.axle?.od)
                         edtALeft.setText(diopter.axle?.os)
 
@@ -1023,11 +1026,11 @@ class ReTestActivity : BaseActivity() {
 
         //diopter
         val sphObj = com.alibaba.fastjson.JSONObject()
-        sphObj["od"] = "-"+edtSRight.text.toString().trim()
-        sphObj["os"] = "-"+edtSLeft.text.toString().trim()
+        sphObj["od"] = edtSRight.text.toString().trim()
+        sphObj["os"] = edtSLeft.text.toString().trim()
         val cylObj = com.alibaba.fastjson.JSONObject()
-        cylObj["od"] = "-"+edtCRight.text.toString().trim()
-        cylObj["os"] = "-"+edtCLeft.text.toString().trim()
+        cylObj["od"] = edtCRight.text.toString().trim()
+        cylObj["os"] = edtCLeft.text.toString().trim()
         val axleObj = com.alibaba.fastjson.JSONObject()
         axleObj["od"] = edtARight.text.toString().trim()
         axleObj["os"] = edtALeft.text.toString().trim()
@@ -1179,11 +1182,11 @@ class ReTestActivity : BaseActivity() {
             "diopter" -> {
                 val refData = deviceNotifyDataEvent.any as RefractionData
                 LogUtils.e("---------$refData")
-                edtSRight.setText(if(refData.od.s.contains("-")) refData.od.s.replace("-", "") else refData.od.s)
-                edtCRight.setText(if(refData.od.c.contains("-")) refData.od.c.replace("-", "") else refData.od.c)
+                edtSRight.setText(refData.od.s)
+                edtCRight.setText(refData.od.c)
                 edtARight.setText(refData.od.a)
-                edtSLeft.setText(if(refData.os.s.contains("-")) refData.os.s.replace("-", "") else refData.os.s)
-                edtCLeft.setText(if(refData.os.c.contains("-")) refData.os.c.replace("-", "") else refData.os.c)
+                edtSLeft.setText(refData.os.s)
+                edtCLeft.setText(refData.os.c)
                 edtALeft.setText(refData.os.a)
             }
             "heightWeight" -> {

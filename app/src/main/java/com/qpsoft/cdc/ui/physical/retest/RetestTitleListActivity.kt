@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
+import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
@@ -20,10 +21,11 @@ import com.qpsoft.cdc.ui.entity.RetestTitle
 import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.utils.LevelConvert
 import kotlinx.android.synthetic.main.activity_retest_title_list.*
+import kotlinx.android.synthetic.main.activity_retest_title_list.tvLevel
+import kotlinx.android.synthetic.main.activity_retest_title_list.tvPlanName
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 
 class RetestTitleListActivity : BaseActivity() {
@@ -83,12 +85,21 @@ class RetestTitleListActivity : BaseActivity() {
             }
 
         }
+
+        llRetestPickCheckItem.setOnClickListener {
+            startActivity(
+                    Intent(this@RetestTitleListActivity, RetestPickCheckItemActivity::class.java)
+            )
+        }
     }
 
     override fun onStart() {
         super.onStart()
         getCurrentPlan()
         getRetestTitleList()
+
+        val checkItemList = App.instance.retestCheckItemList
+        tvRetestCheckItem.text = "我负责的项目："+checkItemList.joinToString { checkItem -> checkItem.name }
     }
 
 
@@ -133,7 +144,7 @@ class RetestTitleListActivity : BaseActivity() {
                             "Checkup" -> "身高、体重、龋齿、沙眼"
                             else -> ""
                         }
-                        tvRetestCheckItem.text = "复测必查项目：$retestItem"
+                        tvRetestMustCheckItem.text = "复测必查项目：$retestItem"
                     }
                 })
     }

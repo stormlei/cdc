@@ -29,10 +29,9 @@
             android:text="" />
     </RelativeLayout>
 
-
     <TextView
         android:layout_below="@+id/rlTop"
-        android:id="@+id/tvRetestCheckItem"
+        android:id="@+id/tvRetestMustCheckItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
@@ -42,8 +41,34 @@
         android:textColor="@color/color_66"
         android:text="复测必查项目：" />
 
+    <LinearLayout
+        android:layout_below="@+id/tvRetestMustCheckItem"
+        android:id="@+id/llRetestPickCheckItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="22dp">
+        <TextView
+            android:id="@+id/tvRetestCheckItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/color_66"
+            android:text="我负责的项目：" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="17sp"
+            android:textColor="@color/color_cb7"
+            android:text="重选" />
+    </LinearLayout>
+
+
     <TextView
-        android:layout_below="@+id/tvRetestCheckItem"
+        android:layout_below="@+id/llRetestPickCheckItem"
         android:id="@+id/tvTips"
         android:layout_width="match_parent"
         android:layout_height="36dp"

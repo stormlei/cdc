@@ -1,5 +1,6 @@
 package com.qpsoft.cdc.ui
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -8,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
@@ -22,7 +22,6 @@ import com.qpsoft.cdc.eventbus.DeviceStatusEvent
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
-import com.qpsoft.cdc.ui.entity.CompleteStatus
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.entity.Student
@@ -32,6 +31,7 @@ import com.qpsoft.cdc.ui.physical.retest.RetestTitleListActivity
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import com.qpsoft.cdc.utils.EyeChartOpUtil
 import com.qpsoft.cdc.utils.LevelConvert
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_student_list.*
 import org.greenrobot.eventbus.EventBus
@@ -51,15 +51,15 @@ class MainActivity : BaseActivity() {
 
         llRePickCheckItem.setOnClickListener {
             startActivity(
-                Intent(this@MainActivity, PickCheckItemActivity::class.java)
-                    .putExtra("isReSel", true)
+                    Intent(this@MainActivity, PickCheckItemActivity::class.java)
+                            .putExtra("isReSel", true)
             )
         }
 
         llReSelSchool.setOnClickListener {
             startActivity(
-                Intent(this@MainActivity, SelectSchoolActivity::class.java)
-                    .putExtra("isReSel", true)
+                    Intent(this@MainActivity, SelectSchoolActivity::class.java)
+                            .putExtra("isReSel", true)
             )
         }
 
@@ -67,13 +67,13 @@ class MainActivity : BaseActivity() {
             val selSchool = App.instance.selectSchool
             if (selSchool != null) {
                 startActivity(
-                    Intent(this@MainActivity, GradeClazzListActivity::class.java)
-                        .putExtra("school", selSchool)
+                        Intent(this@MainActivity, GradeClazzListActivity::class.java)
+                                .putExtra("school", selSchool)
                 )
             } else {
                 //ToastUtils.showShort("请先选择学校")
                 startActivity(Intent(this@MainActivity, SelectSchoolActivity::class.java)
-                                .putExtra("noSelSchool", true)
+                        .putExtra("noSelSchool", true)
                 )
             }
         }
@@ -82,8 +82,8 @@ class MainActivity : BaseActivity() {
             val selSchool = App.instance.selectSchool
             if (selSchool != null) {
                 startActivity(
-                    Intent(this@MainActivity, RetestTitleListActivity::class.java)
-                        .putExtra("school", selSchool).putExtra("planId", planId)
+                        Intent(this@MainActivity, RetestTitleListActivity::class.java)
+                                .putExtra("school", selSchool).putExtra("planId", planId)
                 )
             } else {
                 //ToastUtils.showShort("请先选择学校")
@@ -99,10 +99,22 @@ class MainActivity : BaseActivity() {
 
         ivScan.setOnClickListener {
             startActivityForResult(
-                Intent(this@MainActivity, CustomCaptureActivity::class.java),
-                300
+                    Intent(this@MainActivity, CustomCaptureActivity::class.java),
+                    300
             )
         }
+
+        //permissions
+        val rxPermissions = RxPermissions(this@MainActivity)
+        rxPermissions
+                .request(Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribe { granted ->
+                    if (granted) {
+
+                    } else {
+                        ToastUtils.showShort("相机权限或位置信息未打开")
+                    }
+                }
 
         tvEyeChartDisconn.setOnClickListener {
             EyeChartOpUtil.disConnected()
@@ -156,7 +168,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun handleStuId(stuId: String) {
-        OkGo.get<LzyResponse<Student>>(Api.STUDENT+"/"+stuId)
+        OkGo.get<LzyResponse<Student>>(Api.STUDENT + "/" + stuId)
                 .execute(object : DialogCallback<LzyResponse<Student>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<Student>>) {
                         val student = response.body()?.data
@@ -316,6 +328,7 @@ class MainActivity : BaseActivity() {
                         if (planId != null && planId != currentPlan?.id) {
                             App.instance.checkItemList.clear()
                             App.instance.selectSchool = null
+                            App.instance.retestCheckItemList.clear()
                             refreshUI()
                         }
                         planId = currentPlan?.id

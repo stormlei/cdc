@@ -156,6 +156,10 @@ class RetestListActivity : BaseActivity() {
                             val rate = (retestSummary?.errorCount!!) * 100f / (retestSummary.retestItemCount)
                             tvErrorRate.text = "" + rate.roundToInt() + "%"
                         }
+                        if (retestSummary?.retestCount != 0) {
+                            val retestRate = (retestSummary?.needRetestCount!!) * 100f / (retestSummary.retestCount)
+                            tvRetestRate.text = "" + retestRate.roundToInt() + "%"
+                        }
                     }
                 })
     }

@@ -36,6 +36,7 @@ class ManageActivity : BaseActivity() {
                         CacheDiskStaticUtils.remove(Keys.TOKEN)
                         App.instance.checkItemList.clear()
                         App.instance.selectSchool = null
+                        App.instance.retestCheckItemList.clear()
                         startActivity(Intent(this@ManageActivity, MainActivity::class.java))
                     }
                     .negativeButton {  }
