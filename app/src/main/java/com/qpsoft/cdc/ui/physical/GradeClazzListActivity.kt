@@ -116,7 +116,7 @@ class GradeClazzListActivity : BaseActivity() {
         val ml = mutableListOf<MySection>()
 
         itemList.forEach { (key, list) ->
-            ml.add(MySection(true, key, ""+gradeComplateMap?.get(key)))
+            ml.add(MySection(true, key, "${gradeComplateMap?.get(key)}"))
             for (item in list) {
                 ml.add(MySection(false, item, key))
             }

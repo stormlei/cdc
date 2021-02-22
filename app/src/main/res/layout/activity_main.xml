@@ -241,9 +241,9 @@
                         android:text="身高体重秤 未连接" />
                     <TextView
                         android:id="@+id/tvHWDisconn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:gravity="end"
                         android:textSize="17sp"
                         android:textColor="@color/color_cb7"
                         android:text="" />
@@ -264,9 +264,9 @@
                         android:text="电子血压计 未连接" />
                     <TextView
                         android:id="@+id/tvBPDisconn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:gravity="end"
                         android:textSize="17sp"
                         android:textColor="@color/color_cb7"
                         android:text="" />
@@ -287,9 +287,9 @@
                         android:text="眼压计 未连接" />
                     <TextView
                         android:id="@+id/tvEPDisconn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:gravity="end"
                         android:textSize="17sp"
                         android:textColor="@color/color_cb7"
                         android:text="" />
@@ -310,9 +310,9 @@
                         android:text="肺活量 未连接" />
                     <TextView
                         android:id="@+id/tvVCDisconn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:gravity="end"
                         android:textSize="17sp"
                         android:textColor="@color/color_cb7"
                         android:text="" />

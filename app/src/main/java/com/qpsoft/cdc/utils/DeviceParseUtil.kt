@@ -44,62 +44,62 @@ object DeviceParseUtil {
         when(type) {
             Type.OPTOMETRY.value, "验光仪" -> {
                 when (brand) {
-                    Brand.TIANLE.value -> {
+                    Brand.TIANLE.value, "天乐" -> {
                         when (model) {
                             Model.RM9000.value -> result = Rm9000DataParser().parse(oriDataByteArray)
                             Model.KR9800.value -> result = KR9800DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.FALIAO.value -> {
+                    Brand.FALIAO.value, "法里奥" -> {
                         when (model) {
                             Model.FR8900.value -> result = Fr8900DataParser().parse(oriDataByteArray)
                             Model.FR710.value -> result = Fr710DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.NIDEK.value -> {
+                    Brand.NIDEK.value, "尼德克" -> {
                         when (model) {
                             Model.ARK1.value -> result = NidekDataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.TOPCON.value -> {
+                    Brand.TOPCON.value, "拓普康" -> {
                         when (model) {
                             Model.RM8900.value,Model.RM800.value,Model.KR800.value -> result = TopConDataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.XINYUAN.value -> {
+                    Brand.XINYUAN.value, "新缘" -> {
                         when (model) {
                             Model.FA6500.value -> result = Fa6500DataParser().parse(oriDataByteArray)
                             Model.FA6500K.value -> result = Fa6500KDataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.DUOMEI.value -> {
+                    Brand.DUOMEI.value, "多美" -> {
                         when (model) {
                             Model.RC800.value -> result = RC800DataParser().parse(oriDataByteArray)
                             Model.RT6000.value -> result = RT6000DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.XIONGBO.value -> {
+                    Brand.XIONGBO.value, "雄博" -> {
                         when (model) {
                             Model.RMK150.value -> result = KR9800DataParser().parse(oriDataByteArray)
                             Model.RMK800.value -> result = RMK800DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.CHAROPS.value -> {
+                    Brand.CHAROPS.value, "佳乐普" -> {
                         when (model) {
                             Model.CRK8800.value -> result = CRK8800DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.UNICOS.value -> {
+                    Brand.UNICOS.value, "Unicos" -> {
                         when (model) {
                             Model.URK700.value -> result = URK700DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.SUOER.value -> {
+                    Brand.SUOER.value, "索维" -> {
                         when (model) {
                             Model.SW800.value -> result = SW800DataProcess().parse(oriDataByteArray)
                         }
                     }
-                    Brand.WELCH.value -> {
+                    Brand.WELCH.value, "维伦" -> {
                         when (model) {
                             Model.VS100.value -> result = VS100DataProcess().parse(oriDataByteArray)
                         }
@@ -108,7 +108,7 @@ object DeviceParseUtil {
             }
             Type.PYROMETER.value, "焦度计"-> {
                 when (brand) {
-                    Brand.FALIAO.value -> {
+                    Brand.FALIAO.value, "法里奥" -> {
                         when (model) {
                             Model.FL800.value -> result = FL800DataParser().parse(oriDataByteArray)
                         }
@@ -117,12 +117,12 @@ object DeviceParseUtil {
             }
             Type.HEIGHTWEIGHT.value, "身高体重秤" -> {
                 when (brand) {
-                    Brand.SHANGHE.value -> {
+                    Brand.SHANGHE.value, "上禾" -> {
                         when (model) {
                             Model.SH01.value -> result = SH01DataParser().parse(oriDataByteArray)
                         }
                     }
-                    Brand.LEJIA.value -> {
+                    Brand.LEJIA.value, "乐佳" -> {
                         when (model) {
                             Model.LJ700.value -> result = LJ700DataParser().parse(oriDataByteArray)
                         }
@@ -131,7 +131,7 @@ object DeviceParseUtil {
             }
             Type.BLOODPRESSURE.value, "血压计" -> {
                 when (brand) {
-                    Brand.YUWELL.value -> {
+                    Brand.YUWELL.value, "鱼跃" -> {
                         when (model) {
                             Model.YE900.value -> result = YE900DataParser().parse(oriDataByteArray)
                         }
@@ -140,7 +140,7 @@ object DeviceParseUtil {
             }
             Type.BLOODSUGAR.value, "血糖仪" -> {
                 when (brand) {
-                    Brand.YUWELL.value -> {
+                    Brand.YUWELL.value, "鱼跃" -> {
                         when (model) {
                             Model.B305.value -> result = B305DataParser().parse(oriDataByteArray)
                         }
@@ -149,7 +149,7 @@ object DeviceParseUtil {
             }
             Type.VITALCAPACITY.value, "肺活量" -> {
                 when (brand) {
-                    Brand.BREATHHOME.value -> {
+                    Brand.BREATHHOME.value, "呼吸家" -> {
                         when (model) {
                             Model.B1.value -> result = B1DataParser().parse(oriDataByteArray)
                         }
@@ -167,7 +167,7 @@ object DeviceParseUtil {
             }
             Type.TONOMETER.value, "眼压计" -> {
                 when (brand) {
-                    Brand.NIDEK.value -> {
+                    Brand.NIDEK.value, "尼德克" -> {
                         when (model) {
                             Model.NT510.value -> result = NT510DataParser().parse(oriDataByteArray)
                         }

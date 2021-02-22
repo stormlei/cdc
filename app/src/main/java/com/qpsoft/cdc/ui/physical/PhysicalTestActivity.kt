@@ -159,6 +159,11 @@ class PhysicalTestActivity : BaseActivity() {
                         glassType = "OkGlass"
                     }
                 }
+
+                val checkView = findViewById<View>(checkId)
+                if (!checkView.isPressed){
+                    return@setOnCheckedChangeListener
+                }
                 if (EyeChartOpUtil.isConnected()) {
                     startActivityForResult(Intent(this@PhysicalTestActivity, VisionTestActivity::class.java)
                             .putExtra("glassType", glassType).putExtra("schoolCategory", student?.schoolCategory), 200)
@@ -1281,7 +1286,6 @@ class PhysicalTestActivity : BaseActivity() {
             positiveButton()
         }
     }
-
 
 
 
@@ -2423,7 +2427,7 @@ class PhysicalTestActivity : BaseActivity() {
             "vitalCapacity" -> {
                 val vcData = deviceNotifyDataEvent.any as VCData
                 LogUtils.e("---------$vcData")
-                edtVC.setText(vcData.vc)
+                edtVC.setText("${(vcData.vc.toFloat() * 1000).toInt()}")
             }
         }
     }

@@ -11,6 +11,7 @@ import com.clj.fastble.BleManager
 import com.clj.fastble.callback.BleGattCallback
 import com.clj.fastble.callback.BleNotifyCallback
 import com.clj.fastble.callback.BleScanCallback
+import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.scan.BleScanRuleConfig
@@ -23,9 +24,12 @@ import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 object BleDeviceOpUtil {
-    const val uuid_service = "0000ffe0-0000-1000-8000-00805F9B34FB"
-    const val uuid_notify = "0000ffe1-0000-1000-8000-00805F9B34FB"
-    const val uuid_write = "0000ffe1-0000-1000-8000-00805F9B34FB"
+    var uuid_service = "0000ffe0-0000-1000-8000-00805F9B34FB"
+    var uuid_notify = "0000ffe1-0000-1000-8000-00805F9B34FB"
+    var uuid_write = "0000ffe1-0000-1000-8000-00805F9B34FB"
+
+    const val uuid_service_bp = "00001810-0000-1000-8000-00805f9b34fb"
+    const val uuid_notify_bp = "00002a35-0000-1000-8000-00805f9b34fb"
 
     fun notifyData(deviceType: String) {
         var bleDevice: BleDevice? = null
@@ -52,29 +56,100 @@ object BleDeviceOpUtil {
                 deviceInfo = vcDeviceInfo()
             }
         }
+        if (deviceType == "bloodPressure") {
+            uuid_service = uuid_service_bp
+            uuid_notify = uuid_notify_bp
+        } else {
+            uuid_service = "0000ffe0-0000-1000-8000-00805F9B34FB"
+            uuid_notify = "0000ffe1-0000-1000-8000-00805F9B34FB"
+        }
         val receiveByteList = mutableListOf<Byte>()
         var flag = true
         BleManager.getInstance().notify(bleDevice, uuid_service, uuid_notify, object : BleNotifyCallback() {
             override fun onNotifySuccess() {
+                //连接肺活量
+                if(deviceType == "vitalCapacity") sendData("#db_sk_b1_ip,0b1,B901090952,B11.00,1,20,1,234,1.23,1.24,0.01,-0.01,0.01,0,24,183,52,0,2016-09-02 16:30:33,0,da".toByteArray(), deviceType)
             }
 
             override fun onNotifyFailure(exception: BleException?) {
             }
 
             override fun onCharacteristicChanged(data: ByteArray?) {
-                if(data != null ) for (b in data) receiveByteList.add(b)
-                if (flag) {
-                    flag = false
-                    Handler().postDelayed({
-                        val oriData = EncodeUtils.base64Encode2String(receiveByteList.toByteArray())
-                        parseData(deviceInfo!!, oriData, deviceType)
-                        receiveByteList.clear()
-                        flag = true
-                    }, 2000)
+                if (deviceInfo?.model == "fr710") {
+                    handleFaliao710(data!!, deviceInfo, deviceType)
+                } else {
+                    if (data != null) for (b in data) receiveByteList.add(b)
+                    if (flag) {
+                        flag = false
+                        Handler().postDelayed({
+                            val oriData = EncodeUtils.base64Encode2String(receiveByteList.toByteArray())
+                            parseData(deviceInfo!!, oriData, deviceType)
+                            receiveByteList.clear()
+                            flag = true
+                        }, 1200)
+                    }
                 }
             }
         })
     }
+
+    private var tempList = mutableListOf<Byte>()
+    private fun handleFaliao710(originByteArray: ByteArray, deviceInfo: QrCodeInfo, deviceType: String) {
+        for (i in originByteArray.indices) {
+            tempList.add(originByteArray[i])
+        }
+        if (tempList.size >= 1 && tempList[tempList.size - 1].toInt() == 0x3E) {
+            val tempArray = ByteArray(tempList.size)
+            for (i in tempList.indices) {
+                tempArray[i] = tempList[i]
+            }
+            tempList.clear()
+            handleReturnData(tempArray, deviceInfo, deviceType)
+        }
+    }
+
+    private val allByteList = mutableListOf<Byte>()
+    private fun handleReturnData(data: ByteArray, deviceInfo: QrCodeInfo, deviceType: String) {
+        LogUtils.e("--------" + String(data))
+        val str = String(data)
+        if (str.contains("DATY")) {
+            //发送右眼数据
+            sendData("#!<REFR01#!>".toByteArray(), deviceType)
+        }
+        if (str.contains("REFR")) {
+            //handleR(str)
+            for (i in data.indices) {
+                allByteList.add(data[i])
+            }
+            //发送左眼数据
+            sendData("#!<REFL01#!>".toByteArray(), deviceType)
+        }
+        if (str.contains("REFL")) {
+            //handleL(str)
+            for (i in data.indices) {
+                allByteList.add(data[i])
+            }
+            val oriData = EncodeUtils.base64Encode2String(allByteList.toByteArray())
+            parseData(deviceInfo, oriData, deviceType)
+        }
+    }
+
+    private fun sendData(data: ByteArray, deviceType: String) {
+        var bleDevice: BleDevice? = null
+        when(deviceType) {
+            "diopter" -> {
+                bleDevice = diopterBleDevice()
+            }
+            "vitalCapacity" -> {
+                bleDevice = vcBleDevice()
+            }
+        }
+        BleManager.getInstance().write(bleDevice, uuid_service, uuid_write, data, object : BleWriteCallback() {
+            override fun onWriteSuccess(current: Int, total: Int, justWrite: ByteArray) {}
+            override fun onWriteFailure(exception: BleException) { LogUtils.e("--------$exception") }
+        })
+    }
+
 
     fun parseData(deviceInfo: QrCodeInfo, oriData: String, deviceType: String) {
         val deviceCreate = DeviceCreate()
@@ -111,7 +186,7 @@ object BleDeviceOpUtil {
 
             override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt, status: Int) {
                 ToastUtils.showShort("连接成功")
-                when(qrCodeInfo.type) {
+                when (qrCodeInfo.type) {
                     "视力表" -> {
                         CacheDiskStaticUtils.put("visionInfo", qrCodeInfo)
                         CacheDiskStaticUtils.put("visionBleDevice", bleDevice)
@@ -162,13 +237,13 @@ object BleDeviceOpUtil {
             .setScanTimeOut(10000) // 扫描超时时间，可选，默认10秒；小于等于0表示不限制扫描时间
             .build()
         BleManager.getInstance().initScanRule(scanRuleConfig)
-        BleManager.getInstance().scan(object: BleScanCallback() {
+        BleManager.getInstance().scan(object : BleScanCallback() {
             override fun onScanStarted(success: Boolean) {
             }
 
             override fun onScanning(bleDevice: BleDevice?) {
                 BleManager.getInstance().cancelScan()
-                BleManager.getInstance().connect(bleDevice, object: BleGattCallback() {
+                BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
                     override fun onStartConnect() {
                     }
 
@@ -178,7 +253,7 @@ object BleDeviceOpUtil {
 
                     override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
                         ToastUtils.showShort("连接成功")
-                        when(qrCodeInfo.type) {
+                        when (qrCodeInfo.type) {
                             "视力表" -> {
                                 CacheDiskStaticUtils.put("visionInfo", qrCodeInfo)
                                 CacheDiskStaticUtils.put("visionBleDevice", bleDevice)
