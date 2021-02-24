@@ -276,6 +276,7 @@
         android:id="@+id/rvRetest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="540dp"
         android:paddingBottom="62dp"
         app:indexBar_layout_width="24dp"
         app:indexBar_background="#08000000"

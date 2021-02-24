@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:gravity="center"
-        android:text="血压"
+        android:text="身高体重"
         android:textColor="@color/color_26"
         android:textSize="20sp" />
     <View
@@ -25,17 +25,17 @@
         android:background="@color/color_f5"/>
 
     <LinearLayout
-        android:id="@+id/llBloodPressureExam"
+        android:id="@+id/llWeightHeightExam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="52dp"
+            android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -45,22 +45,22 @@
                     android:gravity="center"
                     android:textColor="@color/color_26"
                     android:textSize="17sp"
-                    android:text="收缩压（毫米汞柱）："/>
+                    android:text="身高（厘米）："/>
                 <EditText
-                    android:id="@+id/edtSystolic"
+                    android:id="@+id/edtHeight"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberSigned"
+                    android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:hint="请填写"/>
             </LinearLayout>
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
                 android:background="@color/color_f0"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -70,49 +70,46 @@
                     android:gravity="center"
                     android:textColor="@color/color_26"
                     android:textSize="17sp"
-                    android:text="舒张压（毫米汞柱）："/>
+                    android:text="体重（千克）："/>
                 <EditText
-                    android:id="@+id/edtDiastolic"
+                    android:id="@+id/edtWeight"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="numberSigned"
+                    android:inputType="numberSigned|numberDecimal"
                     android:background="@null"
                     android:hint="请填写"/>
             </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/color_e5"/>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_margin="16dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:background="@drawable/bg_cb7_stroke_shape">
-        <TextView
-            android:id="@+id/tvBPName"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_26"
-            android:textSize="17sp"
-            android:text="电子血压计：未连接"/>
-        <TextView
-            android:id="@+id/tvBPDisconn"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:textColor="@color/color_cb7"
-            android:textSize="17sp"
-            android:text="扫码连接设备"/>
+            android:layout_height="1dp"
+            android:background="@color/color_e5"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_margin="16dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/bg_cb7_stroke_shape">
+            <TextView
+                android:id="@+id/tvHWName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_26"
+                android:textSize="17sp"
+                android:text="身高体重秤：未连接"/>
+            <TextView
+                android:id="@+id/tvHWDisconn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/color_cb7"
+                android:textSize="17sp"
+                android:text="扫码连接设备"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

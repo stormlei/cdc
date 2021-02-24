@@ -33,8 +33,8 @@ class LoginActivity : BaseActivity() {
         val passWord = edtPassWord.text.toString().trim()
 
         val upMap = mutableMapOf<Any?, Any?>()
-        upMap["username"] = userName
-        upMap["password"] = passWord
+        upMap["username"] = "余杭区站点"
+        upMap["password"] = "Aa@123456"
         //upMap["loginSerial"] = DeviceUtils.getUniqueDeviceId()
         upMap["client"] = "Android"
         upMap["deviceInfo"] = DeviceUtils.getModel()

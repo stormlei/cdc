@@ -8,10 +8,7 @@ import com.blankj.utilcode.util.EncodeUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.clj.fastble.BleManager
-import com.clj.fastble.callback.BleGattCallback
-import com.clj.fastble.callback.BleNotifyCallback
-import com.clj.fastble.callback.BleScanCallback
-import com.clj.fastble.callback.BleWriteCallback
+import com.clj.fastble.callback.*
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.scan.BleScanRuleConfig
@@ -203,6 +200,7 @@ object BleDeviceOpUtil {
                     "血压计" -> {
                         CacheDiskStaticUtils.put("bpInfo", qrCodeInfo)
                         CacheDiskStaticUtils.put("bpBleDevice", bleDevice)
+                        indicateBPData()
                     }
                     "眼压计" -> {
                         CacheDiskStaticUtils.put("epInfo", qrCodeInfo)
@@ -270,6 +268,7 @@ object BleDeviceOpUtil {
                             "血压计" -> {
                                 CacheDiskStaticUtils.put("bpInfo", qrCodeInfo)
                                 CacheDiskStaticUtils.put("bpBleDevice", bleDevice)
+                                indicateBPData()
                             }
                             "眼压计" -> {
                                 CacheDiskStaticUtils.put("epInfo", qrCodeInfo)
@@ -301,6 +300,17 @@ object BleDeviceOpUtil {
         })
     }
 
+    //解决点击开始按钮就断开的问题
+    fun indicateBPData() {
+        BleManager.getInstance().indicate(bpBleDevice(), uuid_service_bp, uuid_notify_bp, object : BleIndicateCallback() {
+            override fun onIndicateSuccess() {
+            }
+            override fun onIndicateFailure(exception: BleException?) {
+            }
+            override fun onCharacteristicChanged(data: ByteArray?) {
+            }
+        })
+    }
 
     //diopter
     fun isDiopterConnected(): Boolean {

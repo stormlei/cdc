@@ -2415,8 +2415,8 @@ class PhysicalTestActivity : BaseActivity() {
             "bloodPressure" -> {
                 val bpData = deviceNotifyDataEvent.any as BPData
                 LogUtils.e("---------$bpData")
-                edtSystolic.setText(bpData.sys)
-                edtDiastolic.setText(bpData.dia)
+                edtSystolic.setText("${(bpData.sys.toFloat()).toInt()}")
+                edtDiastolic.setText("${(bpData.dia.toFloat()).toInt()}")
             }
             "eyePressure" -> {
                 val lopData = deviceNotifyDataEvent.any as IopData

@@ -64,7 +64,8 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="16sp"
-                android:text="--->"
+                android:drawableEnd="@drawable/icon_arrow_r"
+                android:drawablePadding="6dp"
                 />
         </RelativeLayout>
         <View
@@ -93,7 +94,8 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="16sp"
-                android:text="--->"
+                android:drawableEnd="@drawable/icon_arrow_r"
+                android:drawablePadding="6dp"
                 />
         </RelativeLayout>
         <View
@@ -122,7 +124,8 @@
                 android:gravity="center"
                 android:textColor="@color/color_26"
                 android:textSize="16sp"
-                android:text="--->"
+                android:drawableEnd="@drawable/icon_arrow_r"
+                android:drawablePadding="6dp"
                 />
         </RelativeLayout>
         <View

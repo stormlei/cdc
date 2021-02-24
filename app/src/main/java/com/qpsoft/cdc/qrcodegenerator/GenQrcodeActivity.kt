@@ -77,6 +77,8 @@ class GenQrcodeActivity : BaseActivity() {
             if (!TextUtils.isEmpty(typeStr)) {
                 val brandList = brandMap[typeStr]!!
                 op(brandList, 1)
+            } else {
+                ToastUtils.showShort("请先选择设备类型")
             }
         }
 
@@ -88,6 +90,8 @@ class GenQrcodeActivity : BaseActivity() {
                 val modelList = modelMap[brandStr]!!
                 //val filterList = modelList.stream().filter { it== "" }.collect(Collectors.toList())
                 op(modelList, 2)
+            } else {
+                ToastUtils.showShort("请先选择设备品牌")
             }
         }
 

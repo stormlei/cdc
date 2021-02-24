@@ -142,6 +142,7 @@ class MainActivity : BaseActivity() {
         }
 
 
+        refreshLayout.setEnableLoadMore(false)
         refreshLayout.setOnRefreshListener {
             getCurrentPlan()
         }

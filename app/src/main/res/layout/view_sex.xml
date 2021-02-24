@@ -34,11 +34,11 @@
         <LinearLayout
             android:id="@+id/llWomen"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -51,12 +51,12 @@
                     android:text="是否来月经"/>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/color_f0"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -83,11 +83,11 @@
         <LinearLayout
             android:id="@+id/llMen"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -100,12 +100,12 @@
                     android:text="是否遗精"/>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/color_f0"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -137,8 +137,8 @@
         <LinearLayout
             android:id="@+id/llWomenDaXue"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -154,12 +154,12 @@
                     android:text="是否来月经"/>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/color_f0"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="96dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:layout_marginStart="24dp"
@@ -225,11 +225,11 @@
         <LinearLayout
             android:id="@+id/llMenDaXue"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
@@ -242,13 +242,13 @@
                     android:text="是否遗精"/>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/color_f0"/>
             <LinearLayout
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:orientation="horizontal">
