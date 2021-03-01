@@ -45,8 +45,8 @@ class GradeClazzListActivity : BaseActivity() {
             llTop.visibility = View.GONE
         } else {
             llTop.visibility = View.VISIBLE
-            getCompleteStatus()
         }
+        getCompleteStatus()
 
 
         rvGradeClazz.layoutManager = LinearLayoutManager(this)

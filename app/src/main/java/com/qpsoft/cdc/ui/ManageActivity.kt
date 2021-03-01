@@ -47,6 +47,11 @@ class ManageActivity : BaseActivity() {
         llBle.setOnClickListener {
             startActivity(Intent(this@ManageActivity, BleDeviceListActivity::class.java))
         }
+
+        llConnHelp.setOnClickListener {
+            startActivity(Intent(this@ManageActivity, WebViewActivity::class.java)
+                    .putExtra("url", "https://datagather.qingpai365.com"))
+        }
     }
 
     private fun getUser() {

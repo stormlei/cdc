@@ -93,11 +93,23 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        tvEnv.setOnClickListener {
+            startActivity(Intent(this@MainActivity, WebViewActivity::class.java)
+                    .putExtra("url", "https://schoolhealth.cdc.zj.cn"))
+        }
+
         tvManage.setOnClickListener {
             startActivity(Intent(this@MainActivity, ManageActivity::class.java))
         }
 
         ivScan.setOnClickListener {
+            startActivityForResult(
+                    Intent(this@MainActivity, CustomCaptureActivity::class.java),
+                    300
+            )
+        }
+
+        tvScan.setOnClickListener {
             startActivityForResult(
                     Intent(this@MainActivity, CustomCaptureActivity::class.java),
                     300

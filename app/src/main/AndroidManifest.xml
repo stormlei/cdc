@@ -58,6 +58,7 @@
             android:windowSoftInputMode="stateHidden"
             android:name=".ui.physical.retest.ReTestActivity" />
         <activity android:name=".ui.ManageActivity" />
+        <activity android:name=".ui.WebViewActivity" />
         <activity android:name=".qrcodegenerator.BleDeviceListActivity" />
         <activity
             android:windowSoftInputMode="stateHidden"
