@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.webkit.*
 import com.blankj.utilcode.util.LogUtils
+import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_webview.*
@@ -21,7 +22,7 @@ class WebViewActivity : BaseActivity() {
 
         url = intent.getStringExtra("url")
 
-        if (url?.contains("schoolhealth") == true) {
+        if (url?.contains("${Api.URL}") == true) {
             setTitle("学校教学环境监测调查")
         } else {
             setTitle("验光仪使用帮助")

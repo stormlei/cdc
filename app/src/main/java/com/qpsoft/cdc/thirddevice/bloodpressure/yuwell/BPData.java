@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class BPData implements Serializable {
     private String sys;
     private String dia;
+    private String pl;
 
     public String getSys() {
         return sys;
@@ -25,5 +26,13 @@ public class BPData implements Serializable {
 
     public void setDia(String dia) {
         this.dia = dia;
+    }
+
+    public String getPl() {
+        return pl;
+    }
+
+    public void setPl(String pl) {
+        this.pl = pl;
     }
 }

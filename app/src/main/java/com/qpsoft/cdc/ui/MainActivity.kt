@@ -94,8 +94,21 @@ class MainActivity : BaseActivity() {
         }
 
         tvEnv.setOnClickListener {
-            startActivity(Intent(this@MainActivity, WebViewActivity::class.java)
-                    .putExtra("url", "https://schoolhealth.cdc.zj.cn"))
+            val selSchool = App.instance.selectSchool
+            if (selSchool != null) {
+                var url = ""
+                if (planType == "CommonDisease") {
+                    url = "${Api.URL}/sc/school?planId=$planId&schoolId=${selSchool.id}&stationId=$stationId&wx=1"
+                }
+                if (planType == "Checkup") {
+                    url = "${Api.URL}/sc/teaching?type=41&planId=$planId&schoolId=${selSchool.id}&stationId=$stationId&wx=1"
+                }
+                startActivity(Intent(this@MainActivity, WebViewActivity::class.java)
+                    .putExtra("url", url))
+            } else {
+                ToastUtils.showShort("请先选择学校")
+            }
+
         }
 
         tvManage.setOnClickListener {
@@ -331,6 +344,8 @@ class MainActivity : BaseActivity() {
     }
 
     private var planId: String? = null
+    private var stationId: String? = null
+    private var planType: String? = null
     private fun getCurrentPlan() {
         OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
                 .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
@@ -345,6 +360,8 @@ class MainActivity : BaseActivity() {
                             refreshUI()
                         }
                         planId = currentPlan?.id
+                        stationId = currentPlan?.stationId
+                        planType = currentPlan?.planType
                         val planName = currentPlan?.name
                         val level = LevelConvert.toCh(currentPlan?.level)
                         tvPlanName.text = planName

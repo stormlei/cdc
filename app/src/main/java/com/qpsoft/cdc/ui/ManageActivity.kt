@@ -50,7 +50,7 @@ class ManageActivity : BaseActivity() {
 
         llConnHelp.setOnClickListener {
             startActivity(Intent(this@ManageActivity, WebViewActivity::class.java)
-                    .putExtra("url", "https://datagather.qingpai365.com"))
+                    .putExtra("url", "https://qpa.qingpai365.com/qpsc/help/index.html"))
         }
     }
 
