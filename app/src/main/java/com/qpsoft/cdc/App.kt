@@ -17,6 +17,8 @@ import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshFooterCreator
 import com.scwang.smart.refresh.layout.listener.DefaultRefreshHeaderCreator
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -28,6 +30,8 @@ class App: Application() {
     var checkItemList = mutableListOf<CheckItem>()
     var selectSchool: School? = null
     var retestCheckItemList = mutableListOf<CheckItem>()
+
+    lateinit var backgroundThreadRealm : Realm
 
     companion object {
         lateinit var instance: App
@@ -58,6 +62,16 @@ class App: Application() {
         initOkGo()
         //ble
         BleDeviceOpUtil.initBle(this)
+        //db
+        Realm.init(this)
+        val realmName = "student.realm"
+        val config = RealmConfiguration.Builder()
+            .name(realmName)
+            .allowQueriesOnUiThread(true)
+            .allowWritesOnUiThread(true)
+            .build()
+        backgroundThreadRealm = Realm.getInstance(config)
+        LogUtils.e("Successfully opened a realm at: ${backgroundThreadRealm.path}")
     }
 
     private fun initOkGo() {

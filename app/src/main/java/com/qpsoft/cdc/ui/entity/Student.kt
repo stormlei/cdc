@@ -1,26 +1,31 @@
 package com.qpsoft.cdc.ui.entity
 
 import android.os.Parcelable
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import me.yokeyword.indexablerv.IndexableEntity
 
 @Parcelize
-data class Student(
-        val id: String,
+open class Student(
+        @PrimaryKey var id: String,
         var studentId: String?,
         var name: String,
-        var py:String,
-        val mobile: String?,
-        val idcard: String,
-        val gender: String?,
-        val birthday: String,
-        val nation: String?,
-        val birthPlace: String?,
-        val schoolId: String,
-        val grade: String,
-        val clazz: String,
-        val schoolCategory: String
-        ): IndexableEntity, Parcelable {
+        var py: String,
+        var gender: String?,
+        var schoolId: String,
+        var school: School?,
+        var grade: String,
+        var clazz: String,
+        var schoolCategory: String
+) : IndexableEntity, Parcelable, RealmObject() {
+
+        @Ignore var record: Record? = null
+        @Ignore var data: DataItem? = null
+
+        constructor() : this("","","","","","",null,"","","")
+
         override fun getFieldIndexBy(): String {
                 return name
         }
@@ -32,7 +37,4 @@ data class Student(
         override fun setFieldPinyinIndexBy(pinyin: String) {
                 this.py = pinyin
         }
-
-        val record: Record? = null
-        val data: DataItem? = null
 }
