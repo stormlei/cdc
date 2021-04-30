@@ -62,8 +62,8 @@ class StudentListActivity : BaseActivity() {
                 //R.id.rbWaiting -> getStudentList()
                 //R.id.rbAll -> getStudentList(-1)
 
-                //R.id.rbWaiting -> getStudentListLocal()
-                //R.id.rbAll -> getStudentListLocal()
+                R.id.rbWaiting -> getStudentListLocal()
+                R.id.rbAll -> getStudentListLocal()
             }
         }
 

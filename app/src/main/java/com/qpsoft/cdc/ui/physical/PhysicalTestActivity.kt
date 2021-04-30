@@ -1310,7 +1310,7 @@ class PhysicalTestActivity : BaseActivity() {
         val student = realm.where(Student::class.java).equalTo("id", student?.id).findFirst()
         val localRecord = student?.localRecord
         LogUtils.e("--------"+localRecord)
-        val data = JSON.parseObject(localRecord, DataItem::class.java)
+        val data = Convert.fromJson(localRecord, DataItem::class.java)
         showData(data)
     }
 
