@@ -10,21 +10,25 @@ import me.yokeyword.indexablerv.IndexableEntity
 @Parcelize
 open class Student(
         @PrimaryKey var id: String,
-        var studentId: String?,
+        @Ignore var studentId: String?,
         var name: String,
         var py: String,
         var gender: String?,
-        var schoolId: String,
         var school: School?,
         var grade: String,
         var clazz: String,
         var schoolCategory: String
 ) : IndexableEntity, Parcelable, RealmObject() {
 
+        var localRecord: String? = null
+
+        var retestTitle: String? = null
+        var localRetest: String? = null
+
         @Ignore var record: Record? = null
         @Ignore var data: DataItem? = null
 
-        constructor() : this("","","","","","",null,"","","")
+        constructor() : this("","","","","",null,"","","")
 
         override fun getFieldIndexBy(): String {
                 return name

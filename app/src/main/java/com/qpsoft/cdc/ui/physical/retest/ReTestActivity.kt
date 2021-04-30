@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
@@ -33,6 +34,7 @@ import com.qpsoft.cdc.thirddevice.tonometer.IopData
 import com.qpsoft.cdc.thirddevice.vitalcapacity.breathhome.VCData
 import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.UploadImageAdapter
+import com.qpsoft.cdc.ui.entity.DataItem
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
 import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
@@ -85,7 +87,8 @@ class ReTestActivity : BaseActivity() {
         ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
         handleUI()
 
-        getPhysical()
+        //getPhysical()
+        getPhysicalLocal()
 
         tvSubmit.setOnClickListener { doSubmit() }
     }
@@ -715,258 +718,273 @@ class ReTestActivity : BaseActivity() {
                 override fun onSuccess(response: Response<LzyResponse<Student>>) {
                     val student = response.body()?.data!!
                     val data = student.data
-                    //vision
-                    val vision = data?.vision
-                    if (ciStr.contains("vision") && vision != null) {
-                        when (vision.glassType) {
-                            "No" -> rbUnGlass.isChecked = true
-                            "Frame" -> rbGlass.isChecked = true
-                            "ContactLens" -> rbLens.isChecked = true
-                            "OkGlass" -> rbOkGlass.isChecked = true
-                        }
-                        edtUnGlassRight.setText(vision.nakedDegree?.od)
-                        edtUnGlassLeft.setText(vision.nakedDegree?.os)
-                        edtGlassRight.setText(vision.glassDegree?.od)
-                        edtGlassLeft.setText(vision.glassDegree?.os)
-                        edtOkGlassRight.setText(vision.spectacles?.od?.replace("-", ""))
-                        edtOkGlassLeft.setText(vision.spectacles?.os?.replace("-", ""))
-
-                        sbtnEyeAbnormalVision.isChecked = vision.eyeAbnormal
-
-                    }
-                    //diopter
-                    val diopter = data?.diopter
-                    if (ciStr.contains("diopter") && diopter != null) {
-                        edtSRight.setText(diopter.sph?.od)
-                        edtSLeft.setText(diopter.sph?.os)
-                        edtCRight.setText(diopter.cyl?.od)
-                        edtCLeft.setText(diopter.cyl?.os)
-                        edtARight.setText(diopter.axle?.od)
-                        edtALeft.setText(diopter.axle?.os)
-
-                        downloadImage(diopter.optometryFile)
-
-                        sbtnEyeAbnormalDiopter.isChecked = diopter.eyeAbnormal
-
-                    }
-
-                    //caries
-                    val caries = data?.caries
-                    if (ciStr.contains("caries") && caries != null) {
-                        val babyTooth = caries?.babyTooth
-
-                        val bTDList = babyTooth?.caries?.list
-                        if (bTDList != null) {
-                            babyDList = bTDList
-                            for (i in bTDList) {
-                                if (i == 15) tvDeciTooth15.text = "d"
-                                if (i == 14) tvDeciTooth14.text = "d"
-                                if (i == 13) tvDeciTooth13.text = "d"
-                                if (i == 12) tvDeciTooth12.text = "d"
-                                if (i == 11) tvDeciTooth11.text = "d"
-                                if (i == 21) tvDeciTooth21.text = "d"
-                                if (i == 22) tvDeciTooth22.text = "d"
-                                if (i == 23) tvDeciTooth23.text = "d"
-                                if (i == 24) tvDeciTooth24.text = "d"
-                                if (i == 25) tvDeciTooth25.text = "d"
-                                if (i == 45) tvDeciTooth45.text = "d"
-                                if (i == 44) tvDeciTooth44.text = "d"
-                                if (i == 43) tvDeciTooth43.text = "d"
-                                if (i == 42) tvDeciTooth42.text = "d"
-                                if (i == 41) tvDeciTooth41.text = "d"
-                                if (i == 31) tvDeciTooth31.text = "d"
-                                if (i == 32) tvDeciTooth32.text = "d"
-                                if (i == 33) tvDeciTooth33.text = "d"
-                                if (i == 34) tvDeciTooth34.text = "d"
-                                if (i == 35) tvDeciTooth35.text = "d"
-                            }
-                        }
-                        val bTMList = babyTooth?.missing?.list
-                        if (bTMList != null) {
-                            babyMList = bTMList
-                            for (i in bTMList) {
-                                if (i == 15) tvDeciTooth15.text = "m"
-                                if (i == 14) tvDeciTooth14.text = "m"
-                                if (i == 13) tvDeciTooth13.text = "m"
-                                if (i == 12) tvDeciTooth12.text = "m"
-                                if (i == 11) tvDeciTooth11.text = "m"
-                                if (i == 21) tvDeciTooth21.text = "m"
-                                if (i == 22) tvDeciTooth22.text = "m"
-                                if (i == 23) tvDeciTooth23.text = "m"
-                                if (i == 24) tvDeciTooth24.text = "m"
-                                if (i == 25) tvDeciTooth25.text = "m"
-                                if (i == 45) tvDeciTooth45.text = "m"
-                                if (i == 44) tvDeciTooth44.text = "m"
-                                if (i == 43) tvDeciTooth43.text = "m"
-                                if (i == 42) tvDeciTooth42.text = "m"
-                                if (i == 41) tvDeciTooth41.text = "m"
-                                if (i == 31) tvDeciTooth31.text = "m"
-                                if (i == 32) tvDeciTooth32.text = "m"
-                                if (i == 33) tvDeciTooth33.text = "m"
-                                if (i == 34) tvDeciTooth34.text = "m"
-                                if (i == 35) tvDeciTooth35.text = "m"
-                            }
-                        }
-                        val bTFList = babyTooth?.fill?.list
-                        if (bTFList != null) {
-                            babyFList = bTFList
-                            for (i in bTFList) {
-                                if (i == 15) tvDeciTooth15.text = "f"
-                                if (i == 14) tvDeciTooth14.text = "f"
-                                if (i == 13) tvDeciTooth13.text = "f"
-                                if (i == 12) tvDeciTooth12.text = "f"
-                                if (i == 11) tvDeciTooth11.text = "f"
-                                if (i == 21) tvDeciTooth21.text = "f"
-                                if (i == 22) tvDeciTooth22.text = "f"
-                                if (i == 23) tvDeciTooth23.text = "f"
-                                if (i == 24) tvDeciTooth24.text = "f"
-                                if (i == 25) tvDeciTooth25.text = "f"
-                                if (i == 45) tvDeciTooth45.text = "f"
-                                if (i == 44) tvDeciTooth44.text = "f"
-                                if (i == 43) tvDeciTooth43.text = "f"
-                                if (i == 42) tvDeciTooth42.text = "f"
-                                if (i == 41) tvDeciTooth41.text = "f"
-                                if (i == 31) tvDeciTooth31.text = "f"
-                                if (i == 32) tvDeciTooth32.text = "f"
-                                if (i == 33) tvDeciTooth33.text = "f"
-                                if (i == 34) tvDeciTooth34.text = "f"
-                                if (i == 35) tvDeciTooth35.text = "f"
-                            }
-                        }
-
-
-                        val adultTooth = caries?.adultTooth
-                        val aTDList = adultTooth?.caries?.list
-                        if (aTDList != null) {
-                            adultDList = aTDList
-                            for (i in aTDList) {
-                                if (i == 18) tvPermTooth18.text = "D"
-                                if (i == 17) tvPermTooth17.text = "D"
-                                if (i == 16) tvPermTooth16.text = "D"
-                                if (i == 15) tvPermTooth15.text = "D"
-                                if (i == 14) tvPermTooth14.text = "D"
-                                if (i == 13) tvPermTooth13.text = "D"
-                                if (i == 12) tvPermTooth12.text = "D"
-                                if (i == 11) tvPermTooth11.text = "D"
-                                if (i == 21) tvPermTooth21.text = "D"
-                                if (i == 22) tvPermTooth22.text = "D"
-                                if (i == 23) tvPermTooth23.text = "D"
-                                if (i == 24) tvPermTooth24.text = "D"
-                                if (i == 25) tvPermTooth25.text = "D"
-                                if (i == 26) tvPermTooth26.text = "D"
-                                if (i == 27) tvPermTooth27.text = "D"
-                                if (i == 28) tvPermTooth28.text = "D"
-                                if (i == 48) tvPermTooth48.text = "D"
-                                if (i == 47) tvPermTooth47.text = "D"
-                                if (i == 46) tvPermTooth46.text = "D"
-                                if (i == 45) tvPermTooth45.text = "D"
-                                if (i == 44) tvPermTooth44.text = "D"
-                                if (i == 43) tvPermTooth43.text = "D"
-                                if (i == 42) tvPermTooth42.text = "D"
-                                if (i == 41) tvPermTooth41.text = "D"
-                                if (i == 31) tvPermTooth31.text = "D"
-                                if (i == 32) tvPermTooth32.text = "D"
-                                if (i == 33) tvPermTooth33.text = "D"
-                                if (i == 34) tvPermTooth34.text = "D"
-                                if (i == 35) tvPermTooth35.text = "D"
-                                if (i == 36) tvPermTooth36.text = "D"
-                                if (i == 37) tvPermTooth37.text = "D"
-                                if (i == 38) tvPermTooth38.text = "D"
-                            }
-                        }
-                        val aTMList = adultTooth?.missing?.list
-                        if (aTMList != null) {
-                            adultMList = aTMList
-                            for (i in aTMList) {
-                                if (i == 18) tvPermTooth18.text = "M"
-                                if (i == 17) tvPermTooth17.text = "M"
-                                if (i == 16) tvPermTooth16.text = "M"
-                                if (i == 15) tvPermTooth15.text = "M"
-                                if (i == 14) tvPermTooth14.text = "M"
-                                if (i == 13) tvPermTooth13.text = "M"
-                                if (i == 12) tvPermTooth12.text = "M"
-                                if (i == 11) tvPermTooth11.text = "M"
-                                if (i == 21) tvPermTooth21.text = "M"
-                                if (i == 22) tvPermTooth22.text = "M"
-                                if (i == 23) tvPermTooth23.text = "M"
-                                if (i == 24) tvPermTooth24.text = "M"
-                                if (i == 25) tvPermTooth25.text = "M"
-                                if (i == 26) tvPermTooth26.text = "M"
-                                if (i == 27) tvPermTooth27.text = "M"
-                                if (i == 28) tvPermTooth28.text = "M"
-                                if (i == 48) tvPermTooth48.text = "M"
-                                if (i == 47) tvPermTooth47.text = "M"
-                                if (i == 46) tvPermTooth46.text = "M"
-                                if (i == 45) tvPermTooth45.text = "M"
-                                if (i == 44) tvPermTooth44.text = "M"
-                                if (i == 43) tvPermTooth43.text = "M"
-                                if (i == 42) tvPermTooth42.text = "M"
-                                if (i == 41) tvPermTooth41.text = "M"
-                                if (i == 31) tvPermTooth31.text = "M"
-                                if (i == 32) tvPermTooth32.text = "M"
-                                if (i == 33) tvPermTooth33.text = "M"
-                                if (i == 34) tvPermTooth34.text = "M"
-                                if (i == 35) tvPermTooth35.text = "M"
-                                if (i == 36) tvPermTooth36.text = "M"
-                                if (i == 37) tvPermTooth37.text = "M"
-                                if (i == 38) tvPermTooth38.text = "M"
-                            }
-                        }
-                        val aTFList = adultTooth?.fill?.list
-                        if (aTFList != null) {
-                            adultFList = aTFList
-                            for (i in aTFList) {
-                                if (i == 18) tvPermTooth18.text = "F"
-                                if (i == 17) tvPermTooth17.text = "F"
-                                if (i == 16) tvPermTooth16.text = "F"
-                                if (i == 15) tvPermTooth15.text = "F"
-                                if (i == 14) tvPermTooth14.text = "F"
-                                if (i == 13) tvPermTooth13.text = "F"
-                                if (i == 12) tvPermTooth12.text = "F"
-                                if (i == 11) tvPermTooth11.text = "F"
-                                if (i == 21) tvPermTooth21.text = "F"
-                                if (i == 22) tvPermTooth22.text = "F"
-                                if (i == 23) tvPermTooth23.text = "F"
-                                if (i == 24) tvPermTooth24.text = "F"
-                                if (i == 25) tvPermTooth25.text = "F"
-                                if (i == 26) tvPermTooth26.text = "F"
-                                if (i == 27) tvPermTooth27.text = "F"
-                                if (i == 28) tvPermTooth28.text = "F"
-                                if (i == 48) tvPermTooth48.text = "F"
-                                if (i == 47) tvPermTooth47.text = "F"
-                                if (i == 46) tvPermTooth46.text = "F"
-                                if (i == 45) tvPermTooth45.text = "F"
-                                if (i == 44) tvPermTooth44.text = "F"
-                                if (i == 43) tvPermTooth43.text = "F"
-                                if (i == 42) tvPermTooth42.text = "F"
-                                if (i == 41) tvPermTooth41.text = "F"
-                                if (i == 31) tvPermTooth31.text = "F"
-                                if (i == 32) tvPermTooth32.text = "F"
-                                if (i == 33) tvPermTooth33.text = "F"
-                                if (i == 34) tvPermTooth34.text = "F"
-                                if (i == 35) tvPermTooth35.text = "F"
-                                if (i == 36) tvPermTooth36.text = "F"
-                                if (i == 37) tvPermTooth37.text = "F"
-                                if (i == 38) tvPermTooth38.text = "F"
-                            }
-                        }
-                    }
-
-                    //height weight
-                    val height = data?.height
-                    val weight = data?.weight
-                    if ((ciStr.contains("height") || ciStr.contains("weight")) && (height != null || weight != null)) {
-                        edtHeight.setText(height?.data)
-                        edtWeight.setText(weight?.data)
-                    }
-
-                    //trachoma
-                    val trachoma = data?.trachoma
-                    if (ciStr.contains("trachoma") && trachoma != null) {
-                        tvTrachoma.text = trachoma.data
-                    }
+                    showData(data)
                 }
             })
+    }
+
+    //<!------------------ local ----------------->
+    private fun getPhysicalLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val student = realm.where(Student::class.java).equalTo("id", student?.id)
+            .equalTo("retestTitle", retestTitle).findFirst()
+        val localRetest = student?.localRetest
+        LogUtils.e("--------"+localRetest)
+        val data = Convert.fromJson(localRetest, DataItem::class.java)
+        showData(data)
+    }
+
+    private fun showData(data: DataItem?) {
+        //vision
+        val vision = data?.vision
+        if (ciStr.contains("vision") && vision != null) {
+            when (vision.glassType) {
+                "No" -> rbUnGlass.isChecked = true
+                "Frame" -> rbGlass.isChecked = true
+                "ContactLens" -> rbLens.isChecked = true
+                "OkGlass" -> rbOkGlass.isChecked = true
+            }
+            edtUnGlassRight.setText(vision.nakedDegree?.od)
+            edtUnGlassLeft.setText(vision.nakedDegree?.os)
+            edtGlassRight.setText(vision.glassDegree?.od)
+            edtGlassLeft.setText(vision.glassDegree?.os)
+            edtOkGlassRight.setText(vision.spectacles?.od?.replace("-", ""))
+            edtOkGlassLeft.setText(vision.spectacles?.os?.replace("-", ""))
+
+            sbtnEyeAbnormalVision.isChecked = vision.eyeAbnormal
+
+        }
+        //diopter
+        val diopter = data?.diopter
+        if (ciStr.contains("diopter") && diopter != null) {
+            edtSRight.setText(diopter.sph?.od)
+            edtSLeft.setText(diopter.sph?.os)
+            edtCRight.setText(diopter.cyl?.od)
+            edtCLeft.setText(diopter.cyl?.os)
+            edtARight.setText(diopter.axle?.od)
+            edtALeft.setText(diopter.axle?.os)
+
+            downloadImage(diopter.optometryFile)
+
+            sbtnEyeAbnormalDiopter.isChecked = diopter.eyeAbnormal
+
+        }
+
+        //caries
+        val caries = data?.caries
+        if (ciStr.contains("caries") && caries != null) {
+            val babyTooth = caries?.babyTooth
+
+            val bTDList = babyTooth?.caries?.list
+            if (bTDList != null) {
+                babyDList = bTDList
+                for (i in bTDList) {
+                    if (i == 15) tvDeciTooth15.text = "d"
+                    if (i == 14) tvDeciTooth14.text = "d"
+                    if (i == 13) tvDeciTooth13.text = "d"
+                    if (i == 12) tvDeciTooth12.text = "d"
+                    if (i == 11) tvDeciTooth11.text = "d"
+                    if (i == 21) tvDeciTooth21.text = "d"
+                    if (i == 22) tvDeciTooth22.text = "d"
+                    if (i == 23) tvDeciTooth23.text = "d"
+                    if (i == 24) tvDeciTooth24.text = "d"
+                    if (i == 25) tvDeciTooth25.text = "d"
+                    if (i == 45) tvDeciTooth45.text = "d"
+                    if (i == 44) tvDeciTooth44.text = "d"
+                    if (i == 43) tvDeciTooth43.text = "d"
+                    if (i == 42) tvDeciTooth42.text = "d"
+                    if (i == 41) tvDeciTooth41.text = "d"
+                    if (i == 31) tvDeciTooth31.text = "d"
+                    if (i == 32) tvDeciTooth32.text = "d"
+                    if (i == 33) tvDeciTooth33.text = "d"
+                    if (i == 34) tvDeciTooth34.text = "d"
+                    if (i == 35) tvDeciTooth35.text = "d"
+                }
+            }
+            val bTMList = babyTooth?.missing?.list
+            if (bTMList != null) {
+                babyMList = bTMList
+                for (i in bTMList) {
+                    if (i == 15) tvDeciTooth15.text = "m"
+                    if (i == 14) tvDeciTooth14.text = "m"
+                    if (i == 13) tvDeciTooth13.text = "m"
+                    if (i == 12) tvDeciTooth12.text = "m"
+                    if (i == 11) tvDeciTooth11.text = "m"
+                    if (i == 21) tvDeciTooth21.text = "m"
+                    if (i == 22) tvDeciTooth22.text = "m"
+                    if (i == 23) tvDeciTooth23.text = "m"
+                    if (i == 24) tvDeciTooth24.text = "m"
+                    if (i == 25) tvDeciTooth25.text = "m"
+                    if (i == 45) tvDeciTooth45.text = "m"
+                    if (i == 44) tvDeciTooth44.text = "m"
+                    if (i == 43) tvDeciTooth43.text = "m"
+                    if (i == 42) tvDeciTooth42.text = "m"
+                    if (i == 41) tvDeciTooth41.text = "m"
+                    if (i == 31) tvDeciTooth31.text = "m"
+                    if (i == 32) tvDeciTooth32.text = "m"
+                    if (i == 33) tvDeciTooth33.text = "m"
+                    if (i == 34) tvDeciTooth34.text = "m"
+                    if (i == 35) tvDeciTooth35.text = "m"
+                }
+            }
+            val bTFList = babyTooth?.fill?.list
+            if (bTFList != null) {
+                babyFList = bTFList
+                for (i in bTFList) {
+                    if (i == 15) tvDeciTooth15.text = "f"
+                    if (i == 14) tvDeciTooth14.text = "f"
+                    if (i == 13) tvDeciTooth13.text = "f"
+                    if (i == 12) tvDeciTooth12.text = "f"
+                    if (i == 11) tvDeciTooth11.text = "f"
+                    if (i == 21) tvDeciTooth21.text = "f"
+                    if (i == 22) tvDeciTooth22.text = "f"
+                    if (i == 23) tvDeciTooth23.text = "f"
+                    if (i == 24) tvDeciTooth24.text = "f"
+                    if (i == 25) tvDeciTooth25.text = "f"
+                    if (i == 45) tvDeciTooth45.text = "f"
+                    if (i == 44) tvDeciTooth44.text = "f"
+                    if (i == 43) tvDeciTooth43.text = "f"
+                    if (i == 42) tvDeciTooth42.text = "f"
+                    if (i == 41) tvDeciTooth41.text = "f"
+                    if (i == 31) tvDeciTooth31.text = "f"
+                    if (i == 32) tvDeciTooth32.text = "f"
+                    if (i == 33) tvDeciTooth33.text = "f"
+                    if (i == 34) tvDeciTooth34.text = "f"
+                    if (i == 35) tvDeciTooth35.text = "f"
+                }
+            }
+
+
+            val adultTooth = caries?.adultTooth
+            val aTDList = adultTooth?.caries?.list
+            if (aTDList != null) {
+                adultDList = aTDList
+                for (i in aTDList) {
+                    if (i == 18) tvPermTooth18.text = "D"
+                    if (i == 17) tvPermTooth17.text = "D"
+                    if (i == 16) tvPermTooth16.text = "D"
+                    if (i == 15) tvPermTooth15.text = "D"
+                    if (i == 14) tvPermTooth14.text = "D"
+                    if (i == 13) tvPermTooth13.text = "D"
+                    if (i == 12) tvPermTooth12.text = "D"
+                    if (i == 11) tvPermTooth11.text = "D"
+                    if (i == 21) tvPermTooth21.text = "D"
+                    if (i == 22) tvPermTooth22.text = "D"
+                    if (i == 23) tvPermTooth23.text = "D"
+                    if (i == 24) tvPermTooth24.text = "D"
+                    if (i == 25) tvPermTooth25.text = "D"
+                    if (i == 26) tvPermTooth26.text = "D"
+                    if (i == 27) tvPermTooth27.text = "D"
+                    if (i == 28) tvPermTooth28.text = "D"
+                    if (i == 48) tvPermTooth48.text = "D"
+                    if (i == 47) tvPermTooth47.text = "D"
+                    if (i == 46) tvPermTooth46.text = "D"
+                    if (i == 45) tvPermTooth45.text = "D"
+                    if (i == 44) tvPermTooth44.text = "D"
+                    if (i == 43) tvPermTooth43.text = "D"
+                    if (i == 42) tvPermTooth42.text = "D"
+                    if (i == 41) tvPermTooth41.text = "D"
+                    if (i == 31) tvPermTooth31.text = "D"
+                    if (i == 32) tvPermTooth32.text = "D"
+                    if (i == 33) tvPermTooth33.text = "D"
+                    if (i == 34) tvPermTooth34.text = "D"
+                    if (i == 35) tvPermTooth35.text = "D"
+                    if (i == 36) tvPermTooth36.text = "D"
+                    if (i == 37) tvPermTooth37.text = "D"
+                    if (i == 38) tvPermTooth38.text = "D"
+                }
+            }
+            val aTMList = adultTooth?.missing?.list
+            if (aTMList != null) {
+                adultMList = aTMList
+                for (i in aTMList) {
+                    if (i == 18) tvPermTooth18.text = "M"
+                    if (i == 17) tvPermTooth17.text = "M"
+                    if (i == 16) tvPermTooth16.text = "M"
+                    if (i == 15) tvPermTooth15.text = "M"
+                    if (i == 14) tvPermTooth14.text = "M"
+                    if (i == 13) tvPermTooth13.text = "M"
+                    if (i == 12) tvPermTooth12.text = "M"
+                    if (i == 11) tvPermTooth11.text = "M"
+                    if (i == 21) tvPermTooth21.text = "M"
+                    if (i == 22) tvPermTooth22.text = "M"
+                    if (i == 23) tvPermTooth23.text = "M"
+                    if (i == 24) tvPermTooth24.text = "M"
+                    if (i == 25) tvPermTooth25.text = "M"
+                    if (i == 26) tvPermTooth26.text = "M"
+                    if (i == 27) tvPermTooth27.text = "M"
+                    if (i == 28) tvPermTooth28.text = "M"
+                    if (i == 48) tvPermTooth48.text = "M"
+                    if (i == 47) tvPermTooth47.text = "M"
+                    if (i == 46) tvPermTooth46.text = "M"
+                    if (i == 45) tvPermTooth45.text = "M"
+                    if (i == 44) tvPermTooth44.text = "M"
+                    if (i == 43) tvPermTooth43.text = "M"
+                    if (i == 42) tvPermTooth42.text = "M"
+                    if (i == 41) tvPermTooth41.text = "M"
+                    if (i == 31) tvPermTooth31.text = "M"
+                    if (i == 32) tvPermTooth32.text = "M"
+                    if (i == 33) tvPermTooth33.text = "M"
+                    if (i == 34) tvPermTooth34.text = "M"
+                    if (i == 35) tvPermTooth35.text = "M"
+                    if (i == 36) tvPermTooth36.text = "M"
+                    if (i == 37) tvPermTooth37.text = "M"
+                    if (i == 38) tvPermTooth38.text = "M"
+                }
+            }
+            val aTFList = adultTooth?.fill?.list
+            if (aTFList != null) {
+                adultFList = aTFList
+                for (i in aTFList) {
+                    if (i == 18) tvPermTooth18.text = "F"
+                    if (i == 17) tvPermTooth17.text = "F"
+                    if (i == 16) tvPermTooth16.text = "F"
+                    if (i == 15) tvPermTooth15.text = "F"
+                    if (i == 14) tvPermTooth14.text = "F"
+                    if (i == 13) tvPermTooth13.text = "F"
+                    if (i == 12) tvPermTooth12.text = "F"
+                    if (i == 11) tvPermTooth11.text = "F"
+                    if (i == 21) tvPermTooth21.text = "F"
+                    if (i == 22) tvPermTooth22.text = "F"
+                    if (i == 23) tvPermTooth23.text = "F"
+                    if (i == 24) tvPermTooth24.text = "F"
+                    if (i == 25) tvPermTooth25.text = "F"
+                    if (i == 26) tvPermTooth26.text = "F"
+                    if (i == 27) tvPermTooth27.text = "F"
+                    if (i == 28) tvPermTooth28.text = "F"
+                    if (i == 48) tvPermTooth48.text = "F"
+                    if (i == 47) tvPermTooth47.text = "F"
+                    if (i == 46) tvPermTooth46.text = "F"
+                    if (i == 45) tvPermTooth45.text = "F"
+                    if (i == 44) tvPermTooth44.text = "F"
+                    if (i == 43) tvPermTooth43.text = "F"
+                    if (i == 42) tvPermTooth42.text = "F"
+                    if (i == 41) tvPermTooth41.text = "F"
+                    if (i == 31) tvPermTooth31.text = "F"
+                    if (i == 32) tvPermTooth32.text = "F"
+                    if (i == 33) tvPermTooth33.text = "F"
+                    if (i == 34) tvPermTooth34.text = "F"
+                    if (i == 35) tvPermTooth35.text = "F"
+                    if (i == 36) tvPermTooth36.text = "F"
+                    if (i == 37) tvPermTooth37.text = "F"
+                    if (i == 38) tvPermTooth38.text = "F"
+                }
+            }
+        }
+
+        //height weight
+        val height = data?.height
+        val weight = data?.weight
+        if ((ciStr.contains("height") || ciStr.contains("weight")) && (height != null || weight != null)) {
+            edtHeight.setText(height?.data)
+            edtWeight.setText(weight?.data)
+        }
+
+        //trachoma
+        val trachoma = data?.trachoma
+        if (ciStr.contains("trachoma") && trachoma != null) {
+            tvTrachoma.text = trachoma.data
+        }
     }
 
     //vision
@@ -1102,20 +1120,30 @@ class ReTestActivity : BaseActivity() {
         if (ciStr.contains("weight")) dataObj["weight"] = weightObj
         if (ciStr.contains("trachoma")) dataObj["trachoma"] = trachomaObj
 
-        val upMap = mutableMapOf<Any?, Any?>()
-        upMap["studentId"] = student?.studentId
-        upMap["title"] = retestTitle
-        upMap["data"] = dataObj
-        val jsonObj = JSONObject(upMap)
-        OkGo.post<LzyResponse<Any>>(Api.RETEST_SUBMIT)
-            .upJson(jsonObj)
-            .execute(object : DialogCallback<LzyResponse<Any>>(this) {
-                override fun onSuccess(response: Response<LzyResponse<Any>>) {
-                    val any = response.body()?.data
-                    ToastUtils.showShort("提交成功")
-                    finish()
-                }
-            })
+//        val upMap = mutableMapOf<Any?, Any?>()
+//        upMap["studentId"] = student?.studentId
+//        upMap["title"] = retestTitle
+//        upMap["data"] = dataObj
+//        val jsonObj = JSONObject(upMap)
+//        OkGo.post<LzyResponse<Any>>(Api.RETEST_SUBMIT)
+//            .upJson(jsonObj)
+//            .execute(object : DialogCallback<LzyResponse<Any>>(this) {
+//                override fun onSuccess(response: Response<LzyResponse<Any>>) {
+//                    val any = response.body()?.data
+//                    ToastUtils.showShort("提交成功")
+//                    finish()
+//                }
+//            })
+
+        //<!------------------ local ----------------->
+        val realm = App.instance.backgroundThreadRealm
+        realm.executeTransaction {
+            val student = it.where(Student::class.java).equalTo("id", student?.id).findFirst()
+            student?.retestTitle = retestTitle
+            student?.localRetest = dataObj.toJSONString()
+            ToastUtils.showShort("提交成功")
+            finish()
+        }
 
     }
 

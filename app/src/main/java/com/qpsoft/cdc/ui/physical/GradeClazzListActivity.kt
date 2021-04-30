@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
+import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
@@ -15,7 +17,9 @@ import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.GradeClazzListAdapter
 import com.qpsoft.cdc.ui.entity.*
 import com.qpsoft.cdc.ui.physical.retest.RetestStudentListActivity
+import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_grade_clazz_list.*
+import java.util.Comparator
 
 
 class GradeClazzListActivity : BaseActivity() {
@@ -46,8 +50,6 @@ class GradeClazzListActivity : BaseActivity() {
         } else {
             llTop.visibility = View.VISIBLE
         }
-        getCompleteStatus()
-
 
         rvGradeClazz.layoutManager = LinearLayoutManager(this)
         rvGradeClazz.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
@@ -78,6 +80,9 @@ class GradeClazzListActivity : BaseActivity() {
             }
 
         }
+
+        //getCompleteStatus()
+        getGradeClazzListLocal()
     }
 
 
@@ -96,7 +101,6 @@ class GradeClazzListActivity : BaseActivity() {
     }
 
 
-    lateinit var list: MutableList<MySection>
     private fun getGradeClazzList(gradeComplateMap: MutableMap<String, Int>?) {
         OkGo.get<LzyResponse<MutableMap<String, MutableList<String>>>>(Api.GRADE_CLAZZ_LIST)
                 .params("schoolId", school?.id)
@@ -104,7 +108,7 @@ class GradeClazzListActivity : BaseActivity() {
                     override fun onSuccess(response: Response<LzyResponse<MutableMap<String, MutableList<String>>>>) {
                         val dataMap = response.body()?.data
 
-                        list = getItemData(dataMap!!, gradeComplateMap)
+                        val list = getItemData(dataMap!!, gradeComplateMap)
                         mAdapter.setNewInstance(list)
                     }
                 })
@@ -112,11 +116,38 @@ class GradeClazzListActivity : BaseActivity() {
 
 
 
-    fun getItemData(itemList: MutableMap<String, MutableList<String>>, gradeComplateMap: MutableMap<String, Int>?): MutableList<MySection> {
+    private fun getItemData(itemList: MutableMap<String, MutableList<String>>, gradeComplateMap: MutableMap<String, Int>?): MutableList<MySection> {
         val ml = mutableListOf<MySection>()
 
         itemList.forEach { (key, list) ->
             ml.add(MySection(true, key, "${gradeComplateMap?.get(key)}"))
+            for (item in list) {
+                ml.add(MySection(false, item, key))
+            }
+        }
+        return ml
+    }
+
+
+    //<!------------------ local ----------------->
+
+    private fun getGradeClazzListLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
+                .distinct("grade").findAll()
+        val dataMap = rr.groupBy(Student::grade, Student::clazz)
+        LogUtils.e("------"+dataMap)
+        val list = getItemData(dataMap as MutableMap<String, MutableList<String>>)
+        mAdapter.setNewInstance(list)
+    }
+
+
+
+    private fun getItemData(itemList: MutableMap<String, MutableList<String>>): MutableList<MySection> {
+        val ml = mutableListOf<MySection>()
+
+        itemList.forEach { (key, list) ->
+            ml.add(MySection(true, key, "0"))
             for (item in list) {
                 ml.add(MySection(false, item, key))
             }

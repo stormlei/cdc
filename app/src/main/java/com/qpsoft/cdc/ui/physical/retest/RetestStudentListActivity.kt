@@ -45,8 +45,6 @@ class RetestStudentListActivity : BaseActivity() {
         setBackBtn()
         setTitle(school?.name + " " +grade+ " " +clazz)
 
-        getRetestStudentList()
-
         rvRetestStudent.setLayoutManager(LinearLayoutManager(this))
         rvRetestStudent.setOverlayStyle_MaterialDesign(R.color.color_cb7)
         mAdapter = StudentAdapter(this)
@@ -62,6 +60,8 @@ class RetestStudentListActivity : BaseActivity() {
             )
         }
 
+        //getRetestStudentList()
+        getRetestStudentListLocal()
     }
 
 
@@ -86,5 +86,17 @@ class RetestStudentListActivity : BaseActivity() {
 
                 }
             })
+    }
+
+
+    //<!------------------ local ----------------->
+
+    private fun getRetestStudentListLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
+            .equalTo("grade", grade).equalTo("clazz", clazz)
+            .isNotNull("localRecord").findAll()
+        val studentList = realm.copyFromRealm(rr)
+        mAdapter.setDatas(studentList)
     }
 }

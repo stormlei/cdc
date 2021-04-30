@@ -11,6 +11,7 @@ import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
+import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
@@ -116,7 +117,8 @@ class RetestListActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         getRetestSummary()
-        getRetestList()
+        //getRetestList()
+        getRetestListLocal()
     }
 
 
@@ -132,6 +134,16 @@ class RetestListActivity : BaseActivity() {
                     mAdapter.setDatas(studentList)
                 }
             })
+    }
+
+    //<!------------------ local ----------------->
+
+    private fun getRetestListLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
+            .equalTo("retestTitle", retestTitle).findAll()
+        val studentList = realm.copyFromRealm(rr)
+        mAdapter.setDatas(studentList)
     }
 
     private fun getRetestSummary() {

@@ -44,9 +44,6 @@ class StudentListActivity : BaseActivity() {
         setBackBtn()
         setTitle(school?.name + " " +grade+ " " +clazz)
 
-        getStudentList()
-        getCompleteStatus()
-
         rvStudent.setLayoutManager(LinearLayoutManager(this))
         rvStudent.recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rvStudent.setOverlayStyle_MaterialDesign(R.color.color_cb7)
@@ -62,10 +59,17 @@ class StudentListActivity : BaseActivity() {
 
         sg.setOnCheckedChangeListener { radioGroup, checkedId ->
             when(checkedId) {
-                R.id.rbWaiting -> getStudentList()
-                R.id.rbAll -> getStudentList(-1)
+                //R.id.rbWaiting -> getStudentList()
+                //R.id.rbAll -> getStudentList(-1)
+
+                //R.id.rbWaiting -> getStudentListLocal()
+                //R.id.rbAll -> getStudentListLocal()
             }
         }
+
+        //getStudentList()
+        //getCompleteStatus()
+        getStudentListLocal()
     }
 
     private fun getCompleteStatus() {
@@ -105,5 +109,16 @@ class StudentListActivity : BaseActivity() {
                     }
                 }
             })
+    }
+
+
+    //<!------------------ local ----------------->
+
+    private fun getStudentListLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
+                .equalTo("grade", grade).equalTo("clazz", clazz).findAll()
+        val studentList = realm.copyFromRealm(rr)
+        mAdapter.setDatas(studentList)
     }
 }
