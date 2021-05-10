@@ -70,6 +70,32 @@
                 android:textColor="@color/color_26" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_f5"/>
+
+        <RelativeLayout
+            android:id="@+id/llOffLine"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="0dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="离线筛查模式>>"
+                android:textSize="17sp"
+                android:textColor="@color/color_26" />
+            <com.kyleduo.switchbutton.SwitchButton
+                android:id="@+id/sbtnOffLine"
+                style="@style/SwitchButtonStyle"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
     </LinearLayout>
 
 

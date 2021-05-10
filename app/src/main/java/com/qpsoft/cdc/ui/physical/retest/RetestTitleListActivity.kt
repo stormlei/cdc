@@ -43,7 +43,7 @@ class RetestTitleListActivity : BaseActivity() {
         planId = intent.getStringExtra("planId")
 
         setBackBtn()
-        setTitle(school?.name)
+        setTitle(school?.name+"")
 
         rvRetestTitle.layoutManager = LinearLayoutManager(this)
         rvRetestTitle.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))

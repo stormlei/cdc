@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
@@ -24,6 +25,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.constant.SchoolCategory
 import com.qpsoft.cdc.eventbus.DeviceNotifyDataEvent
 import com.qpsoft.cdc.eventbus.DeviceStatusEvent
@@ -2289,28 +2291,32 @@ class PhysicalTestActivity : BaseActivity() {
         if (ciStr.contains("pdd")) dataObj["pdd"] = pddObj
         if (ciStr.contains("liverFunction")) dataObj["liverFunction"] = liverFunctionObj
 
-//        val upMap = mutableMapOf<Any?, Any?>()
-//        upMap["studentId"] = student?.id
-//        upMap["data"] = dataObj
-//        val jsonObj = JSONObject(upMap)
-//        OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
-//            .upJson(jsonObj)
-//            .execute(object : DialogCallback<LzyResponse<Any>>(this) {
-//                override fun onSuccess(response: Response<LzyResponse<Any>>) {
-//                    val any = response.body()?.data
-//                    ToastUtils.showShort("提交成功")
-//                    finish()
-//                }
-//            })
 
-        //<!------------------ local ----------------->
-        val realm = App.instance.backgroundThreadRealm
-        realm.executeTransaction {
-            val student = it.where(Student::class.java).equalTo("id", student?.id).findFirst()
-            student?.localRecord = dataObj.toJSONString()
-            ToastUtils.showShort("提交成功")
-            finish()
-        }
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            //<!------------------ local ----------------->
+            val realm = App.instance.backgroundThreadRealm
+            realm.executeTransaction {
+                val student = it.where(Student::class.java).equalTo("id", student?.id).findFirst()
+                student?.localRecord = dataObj.toJSONString()
+                ToastUtils.showShort("提交成功")
+                finish()
+            }
+        } else {
+            val upMap = mutableMapOf<Any?, Any?>()
+            upMap["studentId"] = student?.id
+            upMap["data"] = dataObj
+            val jsonObj = JSONObject(upMap)
+            OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
+                .upJson(jsonObj)
+                .execute(object : DialogCallback<LzyResponse<Any>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<Any>>) {
+                        val any = response.body()?.data
+                        ToastUtils.showShort("提交成功")
+                        finish()
+                    }
+                })
+            }
     }
 
     private fun updateDeviceStatusUi() {

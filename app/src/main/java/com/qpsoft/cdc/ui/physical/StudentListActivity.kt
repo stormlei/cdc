@@ -2,9 +2,9 @@ package com.qpsoft.cdc.ui.physical
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.view.get
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -13,6 +13,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.StudentAdapter
@@ -57,19 +58,30 @@ class StudentListActivity : BaseActivity() {
             )
         }
 
-        sg.setOnCheckedChangeListener { radioGroup, checkedId ->
-            when(checkedId) {
-                //R.id.rbWaiting -> getStudentList()
-                //R.id.rbAll -> getStudentList(-1)
 
-                R.id.rbWaiting -> getStudentListLocal()
-                R.id.rbAll -> getStudentListLocal()
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+
+
+        sg.setOnCheckedChangeListener { radioGroup, checkedId ->
+            if ("1" == offline) {
+                when(checkedId) {
+                    R.id.rbWaiting -> getStudentListLocal()
+                    R.id.rbAll -> getStudentListLocal()
+                }
+            } else {
+                when(checkedId) {
+                    R.id.rbWaiting -> getStudentList()
+                    R.id.rbAll -> getStudentList(-1)
+                }
             }
         }
 
-        //getStudentList()
-        //getCompleteStatus()
-        getStudentListLocal()
+        if ("1" == offline) {
+            getStudentListLocal()
+        } else {
+            getStudentList()
+            getCompleteStatus()
+        }
     }
 
     private fun getCompleteStatus() {

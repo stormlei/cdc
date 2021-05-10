@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.qpsoft.cdc.R
+import com.qpsoft.cdc.constant.Keys
 import kotlinx.android.synthetic.main.activity_base.*
 
 
@@ -32,7 +34,8 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun setTitle(title: String) {
-        supportActionBar?.title = title
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        supportActionBar?.title = if("1" == offline) "$title--离线模式" else title
         //toolBar.title = title
     }
 

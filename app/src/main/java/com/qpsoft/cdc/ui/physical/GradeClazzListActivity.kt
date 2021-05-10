@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -12,14 +13,13 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.GradeClazzListAdapter
 import com.qpsoft.cdc.ui.entity.*
 import com.qpsoft.cdc.ui.physical.retest.RetestStudentListActivity
-import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_grade_clazz_list.*
-import java.util.Comparator
 
 
 class GradeClazzListActivity : BaseActivity() {
@@ -43,7 +43,7 @@ class GradeClazzListActivity : BaseActivity() {
         planType = intent.getStringExtra("planType")
 
         setBackBtn()
-        setTitle(school?.name)
+        setTitle(school?.name+"")
 
         if (isRetest) {
             llTop.visibility = View.GONE
@@ -81,8 +81,12 @@ class GradeClazzListActivity : BaseActivity() {
 
         }
 
-        //getCompleteStatus()
-        getGradeClazzListLocal()
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getGradeClazzListLocal()
+        } else {
+            getCompleteStatus()
+        }
     }
 
 

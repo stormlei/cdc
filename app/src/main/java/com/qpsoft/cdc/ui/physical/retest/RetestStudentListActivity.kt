@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui.physical.retest
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -11,6 +12,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.StudentAdapter
@@ -60,8 +62,13 @@ class RetestStudentListActivity : BaseActivity() {
             )
         }
 
-        //getRetestStudentList()
-        getRetestStudentListLocal()
+
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getRetestStudentListLocal()
+        } else {
+            getRetestStudentList()
+        }
     }
 
 

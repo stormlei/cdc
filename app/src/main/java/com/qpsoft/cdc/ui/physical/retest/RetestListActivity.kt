@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -14,6 +15,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.CustomCaptureActivity
@@ -44,7 +46,7 @@ class RetestListActivity : BaseActivity() {
         planType = intent.getStringExtra("planType")
 
         setBackBtn()
-        setTitle(school?.name)
+        setTitle(school?.name+"")
 
         tvRetestTitle.text = retestTitle
         when(planType) {
@@ -116,9 +118,14 @@ class RetestListActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        getRetestSummary()
-        //getRetestList()
-        getRetestListLocal()
+
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getRetestListLocal()
+        } else {
+            getRetestSummary()
+            getRetestList()
+        }
     }
 
 
@@ -134,16 +141,6 @@ class RetestListActivity : BaseActivity() {
                     mAdapter.setDatas(studentList)
                 }
             })
-    }
-
-    //<!------------------ local ----------------->
-
-    private fun getRetestListLocal() {
-        val realm = App.instance.backgroundThreadRealm
-        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
-            .equalTo("retestTitle", retestTitle).findAll()
-        val studentList = realm.copyFromRealm(rr)
-        mAdapter.setDatas(studentList)
     }
 
     private fun getRetestSummary() {
@@ -174,5 +171,16 @@ class RetestListActivity : BaseActivity() {
                         }
                     }
                 })
+    }
+
+
+    //<!------------------ local ----------------->
+
+    private fun getRetestListLocal() {
+        val realm = App.instance.backgroundThreadRealm
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
+            .equalTo("retestTitle", retestTitle).findAll()
+        val studentList = realm.copyFromRealm(rr)
+        mAdapter.setDatas(studentList)
     }
 }

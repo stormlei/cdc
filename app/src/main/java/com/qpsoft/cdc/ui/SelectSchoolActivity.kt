@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.lzy.okgo.OkGo
@@ -12,6 +13,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.SchoolAdapter
@@ -20,6 +22,7 @@ import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
 import com.qpsoft.cdc.ui.physical.retest.RetestTitleListActivity
+import kotlinx.android.synthetic.main.activity_manage.*
 import kotlinx.android.synthetic.main.activity_select_school.*
 import kotlinx.coroutines.flow.asFlow
 import org.json.JSONObject
@@ -80,93 +83,36 @@ class SelectSchoolActivity : BaseActivity() {
         }
     }
 
-    val realm = App.instance.backgroundThreadRealm
+
 
     override fun onStart() {
         super.onStart()
-        getSchool()
-
-        //getSchoolLocal("60580dfb5f3c820a4b3cca38")
-        //getSchoolLocal("60580e8e5f3c820a4b3cca55")
-        //submit("60580dfb5f3c820a4b3cca38")
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getSchoolLocal()
+        } else {
+            getSchool()
+        }
     }
 
 
     private fun getSchool() {
-//        OkGo.get<LzyResponse<MutableList<School>>>(Api.SCHOOL)
-//                .execute(object : DialogCallback<LzyResponse<MutableList<School>>>(this) {
-//                    override fun onSuccess(response: Response<LzyResponse<MutableList<School>>>) {
-//                        val schoolList = response.body()?.data
-//                        mAdapter.setDatas(schoolList)
-//                    }
-//                })
+        OkGo.get<LzyResponse<MutableList<School>>>(Api.SCHOOL)
+                .execute(object : DialogCallback<LzyResponse<MutableList<School>>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<MutableList<School>>>) {
+                        val schoolList = response.body()?.data
+                        mAdapter.setDatas(schoolList)
+                    }
+                })
+    }
 
+    //<!------------------ local ----------------->
+    val realm = App.instance.backgroundThreadRealm
+
+    private fun getSchoolLocal() {
         val rr = realm.where(School::class.java).findAll()
         val schoolList = realm.copyFromRealm(rr)
         LogUtils.e("------"+schoolList)
         mAdapter.setDatas(schoolList)
-    }
-
-    //<!------------------ local ----------------->
-
-    private fun getSchoolLocal(schoolId: String) {
-        OkGo.get<LzyResponse<Page<MutableList<Student>>>>(Api.STUDENT)
-                .params("schoolId", schoolId)
-                .params("expand", "school")
-                .params("size", 9999)
-                .execute(object : DialogCallback<LzyResponse<Page<MutableList<Student>>>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<Page<MutableList<Student>>>>) {
-                        val studentList = response.body()?.data?.items
-
-                        realm.executeTransaction {
-                            it.copyToRealmOrUpdate(studentList)
-                        }
-                    }
-                })
-    }
-
-    private fun submit(schoolId: String) {
-        val rr = realm.where(Student::class.java).equalTo("school.id", schoolId)
-            .isNotNull("localRecord").findAll()
-        val studentList = realm.copyFromRealm(rr)
-        LogUtils.e("------"+studentList)
-
-        for (stu in studentList) {
-            val upMap = mutableMapOf<Any?, Any?>()
-            upMap["studentId"] = stu.id
-            upMap["data"] = stu.localRecord
-            val jsonObj = JSONObject(upMap)
-            OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
-                .upJson(jsonObj)
-                .execute(object : DialogCallback<LzyResponse<Any>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<Any>>) {
-                        val any = response.body()?.data
-                        ToastUtils.showShort("上传成功")
-                    }
-                })
-        }
-    }
-
-    private fun submit2(schoolId: String) {
-        val rr = realm.where(Student::class.java).equalTo("school.id", schoolId)
-            .isNotNull("localRecord").isNotNull("localRetest").findAll()
-        val studentList = realm.copyFromRealm(rr)
-        LogUtils.e("------"+studentList)
-
-        for (stu in studentList) {
-            val upMap = mutableMapOf<Any?, Any?>()
-            upMap["studentId"] = stu.id
-            upMap["title"] = stu.retestTitle
-            upMap["data"] = stu.localRetest
-            val jsonObj = JSONObject(upMap)
-            OkGo.post<LzyResponse<Any>>(Api.RETEST_SUBMIT)
-                .upJson(jsonObj)
-                .execute(object : DialogCallback<LzyResponse<Any>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<Any>>) {
-                        val any = response.body()?.data
-                        ToastUtils.showShort("上传成功")
-                    }
-                })
-            }
     }
 }

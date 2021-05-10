@@ -15,7 +15,9 @@ import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.qrcodegenerator.BleDeviceListActivity
 import com.qpsoft.cdc.ui.entity.User
+import com.qpsoft.cdc.ui.offline.OffLineActivity
 import kotlinx.android.synthetic.main.activity_manage.*
+import kotlinx.android.synthetic.main.view_vision.*
 
 class ManageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,22 @@ class ManageActivity : BaseActivity() {
         llConnHelp.setOnClickListener {
             startActivity(Intent(this@ManageActivity, WebViewActivity::class.java)
                     .putExtra("url", "https://qpa.qingpai365.com/qpsc/help/index.html"))
+        }
+
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) sbtnOffLine.setCheckedNoEvent(true) else sbtnOffLine.setCheckedNoEvent(false)
+
+        llOffLine.setOnClickListener {
+            if ("1" == offline) startActivity(Intent(this@ManageActivity, OffLineActivity::class.java))
+        }
+
+        sbtnOffLine.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if (isChecked) {
+                CacheDiskStaticUtils.put(Keys.OFFLINE, "1")
+                startActivity(Intent(this@ManageActivity, OffLineActivity::class.java))
+            } else {
+                CacheDiskStaticUtils.put(Keys.OFFLINE, "0")
+            }
         }
     }
 

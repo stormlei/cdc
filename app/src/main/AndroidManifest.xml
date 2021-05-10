@@ -68,6 +68,12 @@
             android:name=".ui.CustomCaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CaptureTheme"/>
+
+
+        <activity android:name=".ui.offline.OffLineActivity" />
+        <activity android:name=".ui.offline.DownLoadSchoolActivity" />
+        <activity android:name=".ui.offline.UpLoadDataActivity" />
+        <activity android:name=".ui.offline.RetestUpLoadDataActivity" />
     </application>
 
 </manifest>

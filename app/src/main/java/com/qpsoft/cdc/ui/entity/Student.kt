@@ -17,7 +17,9 @@ open class Student(
         var school: School?,
         var grade: String,
         var clazz: String,
-        var schoolCategory: String
+        var schoolCategory: String,
+        var upload: Int = 0,
+        var retest: Int = 0
 ) : IndexableEntity, Parcelable, RealmObject() {
 
         var localRecord: String? = null
@@ -28,7 +30,7 @@ open class Student(
         @Ignore var record: Record? = null
         @Ignore var data: DataItem? = null
 
-        constructor() : this("","","","","",null,"","","")
+        constructor() : this("","","","","",null,"","","", 0, 0)
 
         override fun getFieldIndexBy(): String {
                 return name
