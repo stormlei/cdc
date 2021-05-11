@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
@@ -24,6 +25,7 @@ import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.okgo.utils.Convert
 import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.entity.QrCodeInfo
+import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.ui.entity.Student
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
 import com.qpsoft.cdc.ui.physical.PhysicalTestActivity
@@ -47,7 +49,11 @@ class MainActivity : BaseActivity() {
 
         if (!checkLogin()) return
 
-        getCurrentPlan()
+        if (NetworkUtils.isWifiConnected()) {
+            getCurrentPlan()
+        } else {
+            getCurrentPlanLocal()
+        }
 
         llRePickCheckItem.setOnClickListener {
             startActivity(
@@ -194,6 +200,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun handleStuId(stuId: String) {
+        if (!NetworkUtils.isWifiConnected()) {
+            val realm = App.instance.backgroundThreadRealm
+            val student = realm.where(Student::class.java).equalTo("id", stuId).findFirst()
+            startActivity(Intent(this@MainActivity, PhysicalTestActivity::class.java)
+                    .putExtra("student", student))
+            return
+        }
         OkGo.get<LzyResponse<Student>>(Api.STUDENT + "/" + stuId)
                 .execute(object : DialogCallback<LzyResponse<Student>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<Student>>) {
@@ -357,8 +370,12 @@ class MainActivity : BaseActivity() {
                             App.instance.checkItemList.clear()
                             App.instance.selectSchool = null
                             App.instance.retestCheckItemList.clear()
+                            App.instance.currentPlan = null
                             refreshUI()
                         }
+
+                        App.instance.currentPlan = currentPlan
+
                         planId = currentPlan?.id
                         stationId = currentPlan?.stationId
                         planType = currentPlan?.planType
@@ -370,6 +387,27 @@ class MainActivity : BaseActivity() {
                         if (currentPlan?.planType == "Vision") tvEnv.visibility = View.GONE else tvEnv.visibility = View.VISIBLE
                     }
                 })
+    }
+
+    private fun getCurrentPlanLocal() {
+        val currentPlan = App.instance.currentPlan
+        if (planId != null && planId != currentPlan?.id) {
+            App.instance.checkItemList.clear()
+            App.instance.selectSchool = null
+            App.instance.retestCheckItemList.clear()
+            App.instance.currentPlan = null
+            refreshUI()
+        }
+
+        planId = currentPlan?.id
+        stationId = currentPlan?.stationId
+        planType = currentPlan?.planType
+        val planName = currentPlan?.name
+        val level = LevelConvert.toCh(currentPlan?.level)
+        tvPlanName.text = planName
+        tvLevel.text = level
+
+        if (currentPlan?.planType == "Vision") tvEnv.visibility = View.GONE else tvEnv.visibility = View.VISIBLE
     }
 
 

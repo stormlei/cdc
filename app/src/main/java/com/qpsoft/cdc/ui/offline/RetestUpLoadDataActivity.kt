@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui.offline
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.lzy.okgo.OkGo
@@ -76,12 +77,18 @@ class RetestUpLoadDataActivity : BaseActivity() {
             val upMap = mutableMapOf<Any?, Any?>()
             upMap["studentId"] = stu.id
             upMap["title"] = stu.retestTitle
-            upMap["data"] = stu.localRetest
+            upMap["data"] = JSON.parseObject(stu.localRetest)
             val jsonObj = JSONObject(upMap)
             jsonArray.put(jsonObj)
         }
-        OkGo.post<LzyResponse<Any>>(Api.RETEST_SUBMIT)
-            .upJson(jsonArray)
+
+        val upMap = mutableMapOf<Any?, Any?>()
+        upMap["schoolId"] = schoolId
+        upMap["dataList"] = jsonArray
+        val jsonObj = JSONObject(upMap)
+
+        OkGo.post<LzyResponse<Any>>(Api.RETEST_BATCH_SUBMIT)
+            .upJson(jsonObj)
             .execute(object : DialogCallback<LzyResponse<Any>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<Any>>) {
                     val any = response.body()?.data

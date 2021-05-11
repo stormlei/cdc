@@ -89,8 +89,12 @@ class ReTestActivity : BaseActivity() {
         ciStr = checkItemList.joinToString { checkItem -> checkItem.key }
         handleUI()
 
-        //getPhysical()
-        getPhysicalLocal()
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getPhysicalLocal()
+        } else {
+            getPhysical()
+        }
 
         tvSubmit.setOnClickListener { doSubmit() }
     }

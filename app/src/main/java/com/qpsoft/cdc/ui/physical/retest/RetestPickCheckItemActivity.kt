@@ -29,36 +29,50 @@ class RetestPickCheckItemActivity : BaseActivity() {
         setBackBtn()
         setTitle("本次复测我负责的项目")
 
-        getCurrentPlan()
-
         rvRetestCheckItem.setHasFixedSize(true)
         rvRetestCheckItem.layoutManager = LinearLayoutManager(this)
         mAdapter = RetestPickCheckItemAdapter(R.layout.item_pick_checkitem, R.layout.pick_chekitem_section_head, null)
         rvRetestCheckItem.adapter = mAdapter
+
+        getCurrentPlan()
     }
 
 
 
     private fun getCurrentPlan() {
-        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
-                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
-                        val currentPlan = response.body()?.data
+//        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
+//                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
+//                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
+//                        val currentPlan = response.body()?.data
+//
+//                        var itemList = currentPlan?.itemList!!
+//
+//                        itemList = when (currentPlan.planType) {
+//                            "Vision" -> {
+//                                itemList.stream().filter { it.name=="视力"||it.name=="屈光"}.collect(Collectors.toList())
+//                            }
+//                            "CommonDisease" -> itemList.stream().filter { it.name=="视力"||it.name=="屈光"||it.name=="身高"||it.name=="体重"}.collect(Collectors.toList())
+//                            "Checkup" -> itemList.stream().filter { it.name=="身高"||it.name=="体重"||it.name=="龋齿"||it.name=="沙眼"}.collect(Collectors.toList())
+//                            else -> mutableListOf()
+//                        }
+//                        val list = getItemData(itemList)
+//                        mAdapter.setNewInstance(list)
+//                    }
+//                })
 
-                        var itemList = currentPlan?.itemList!!
+        val currentPlan = App.instance.currentPlan
+        var itemList = currentPlan?.itemList!!
 
-                        itemList = when (currentPlan.planType) {
-                            "Vision" -> {
-                                itemList.stream().filter { it.name=="视力"||it.name=="屈光"}.collect(Collectors.toList())
-                            }
-                            "CommonDisease" -> itemList.stream().filter { it.name=="视力"||it.name=="屈光"||it.name=="身高"||it.name=="体重"}.collect(Collectors.toList())
-                            "Checkup" -> itemList.stream().filter { it.name=="身高"||it.name=="体重"||it.name=="龋齿"||it.name=="沙眼"}.collect(Collectors.toList())
-                            else -> mutableListOf()
-                        }
-                        val list = getItemData(itemList)
-                        mAdapter.setNewInstance(list)
-                    }
-                })
+        itemList = when (currentPlan.planType) {
+            "Vision" -> {
+                itemList.stream().filter { it.name=="视力"||it.name=="屈光"}.collect(Collectors.toList())
+            }
+            "CommonDisease" -> itemList.stream().filter { it.name=="视力"||it.name=="屈光"||it.name=="身高"||it.name=="体重"}.collect(Collectors.toList())
+            "Checkup" -> itemList.stream().filter { it.name=="身高"||it.name=="体重"||it.name=="龋齿"||it.name=="沙眼"}.collect(Collectors.toList())
+            else -> mutableListOf()
+        }
+        val list = getItemData(itemList)
+        mAdapter.setNewInstance(list)
     }
 
 

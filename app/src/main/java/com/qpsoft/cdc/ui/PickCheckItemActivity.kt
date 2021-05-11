@@ -35,8 +35,6 @@ class PickCheckItemActivity : BaseActivity() {
         setBackBtn()
         setTitle("本次筛查我负责的项目")
 
-        getCurrentPlan()
-
         rvCheckItem.setHasFixedSize(true)
         rvCheckItem.layoutManager = LinearLayoutManager(this)
         mAdapter = PickCheckItemAdapter(R.layout.item_pick_checkitem, R.layout.pick_chekitem_section_head, null)
@@ -49,21 +47,29 @@ class PickCheckItemActivity : BaseActivity() {
         if (isReSel) {
             tvNext.visibility = View.GONE
         }
+
+        getCurrentPlan()
     }
 
 
 
     private fun getCurrentPlan() {
-        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
-                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
-                        val currentPlan = response.body()?.data
+//        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
+//                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
+//                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
+//                        val currentPlan = response.body()?.data
+//
+//                        val itemList = currentPlan?.itemList!!
+//                        val list = getItemData(itemList, currentPlan.planType)
+//                        mAdapter.setNewInstance(list)
+//                    }
+//                })
 
-                        val itemList = currentPlan?.itemList!!
-                        val list = getItemData(itemList, currentPlan.planType)
-                        mAdapter.setNewInstance(list)
-                    }
-                })
+
+        val currentPlan = App.instance.currentPlan
+        val itemList = currentPlan?.itemList!!
+        val list = getItemData(itemList, currentPlan.planType)
+        mAdapter.setNewInstance(list)
     }
 
 

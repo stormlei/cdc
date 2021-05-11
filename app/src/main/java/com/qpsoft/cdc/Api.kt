@@ -18,7 +18,9 @@ object Api {
     const val RETEST = "$HOST/client/v1/retest"
     const val RETEST_VIEW_BY_STUDENT_ID = "$HOST/client/v1/retest/view-by-student-id"
     const val RECORD_SUBMIT = "$HOST/client/v1/record/submit"
+    const val RECORD_BATCH_SUBMIT = "$HOST/client/v1/record/batch-submit"
     const val RETEST_SUBMIT = "$HOST/client/v1/retest/submit"
+    const val RETEST_BATCH_SUBMIT = "$HOST/client/v1/retest/batch-submit"
     const val OSS_UPLOAD = "$HOST/client/v1/oss/upload"
     const val OSS_DOWNLOAD = "$HOST/client/v1/oss/download"
 }

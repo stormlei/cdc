@@ -34,10 +34,8 @@ class UpLoadDataAdapter(private val context: Context): IndexableAdapter<School>(
 
     override fun onBindContentViewHolder(holder: RecyclerView.ViewHolder?, student: School) {
         val vh = holder as ContentVH
-        vh.tvName.text = student.name
         val realm = App.instance.backgroundThreadRealm
-        val s = realm.where(Student::class.java).equalTo("school.id", student.id)
-            .equalTo("upload", "0".toInt()).findFirst()
+        val s = realm.where(Student::class.java).equalTo("school.id", student.id).equalTo("upload", "0".toInt()).findFirst()
         if (s == null) {
             vh.tvDownLoad.setTextColor(context.resources.getColor(R.color.color_cb7))
             vh.tvDownLoad.setText("上传成功")
@@ -45,6 +43,10 @@ class UpLoadDataAdapter(private val context: Context): IndexableAdapter<School>(
             vh.tvDownLoad.setTextColor(context.resources.getColor(R.color.color_26))
             vh.tvDownLoad.setText("上传数据")
         }
+
+        val aa = realm.where(Student::class.java).equalTo("school.id", student.id).isNull("localRecord").findAll().size
+        val bb = realm.where(Student::class.java).equalTo("school.id", student.id).findAll().size
+        vh.tvName.text = student.name+" (未筛查：${aa}人/总共：${bb}人)"
     }
 
     private class IndexVH(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor
 import com.qpsoft.cdc.ui.entity.CheckItem
+import com.qpsoft.cdc.ui.entity.CurrentPlan
 import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.utils.BleDeviceOpUtil
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -30,6 +31,7 @@ class App: Application() {
     var checkItemList = mutableListOf<CheckItem>()
     var selectSchool: School? = null
     var retestCheckItemList = mutableListOf<CheckItem>()
+    var currentPlan: CurrentPlan? = null
 
     lateinit var backgroundThreadRealm : Realm
 

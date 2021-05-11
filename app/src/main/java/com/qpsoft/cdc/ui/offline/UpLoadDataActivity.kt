@@ -3,6 +3,7 @@ package com.qpsoft.cdc.ui.offline
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.lzy.okgo.OkGo
@@ -13,9 +14,7 @@ import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
-import com.qpsoft.cdc.ui.adapter.DownLoadSchoolAdapter
 import com.qpsoft.cdc.ui.adapter.UpLoadDataAdapter
-import com.qpsoft.cdc.ui.entity.Page
 import com.qpsoft.cdc.ui.entity.School
 import com.qpsoft.cdc.ui.entity.Student
 import kotlinx.android.synthetic.main.activity_select_school.*
@@ -74,12 +73,18 @@ class UpLoadDataActivity : BaseActivity() {
         for (stu in studentList) {
             val upMap = mutableMapOf<Any?, Any?>()
             upMap["studentId"] = stu.id
-            upMap["data"] = stu.localRecord
+            upMap["data"] = JSON.parseObject(stu.localRecord)
             val jsonObj = JSONObject(upMap)
             jsonArray.put(jsonObj)
         }
-        OkGo.post<LzyResponse<Any>>(Api.RECORD_SUBMIT)
-            .upJson(jsonArray)
+
+        val upMap = mutableMapOf<Any?, Any?>()
+        upMap["schoolId"] = schoolId
+        upMap["dataList"] = jsonArray
+        val jsonObj = JSONObject(upMap)
+
+        OkGo.post<LzyResponse<Any>>(Api.RECORD_BATCH_SUBMIT)
+            .upJson(jsonObj)
             .execute(object : DialogCallback<LzyResponse<Any>>(this) {
                 override fun onSuccess(response: Response<LzyResponse<Any>>) {
                     val any = response.body()?.data

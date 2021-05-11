@@ -4,10 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.CacheDiskStaticUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.RegexUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.king.zxing.CameraScan
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
@@ -22,6 +19,7 @@ import com.qpsoft.cdc.ui.CustomCaptureActivity
 import com.qpsoft.cdc.ui.adapter.StudentAdapter
 import com.qpsoft.cdc.ui.entity.*
 import com.qpsoft.cdc.ui.physical.GradeClazzListActivity
+import com.qpsoft.cdc.ui.physical.PhysicalTestActivity
 import kotlinx.android.synthetic.main.activity_retest_list.*
 import java.util.*
 import kotlin.math.roundToInt
@@ -102,6 +100,17 @@ class RetestListActivity : BaseActivity() {
     }
 
     private fun handleStuId(stuId: String) {
+        if (!NetworkUtils.isWifiConnected()) {
+            val realm = App.instance.backgroundThreadRealm
+            val student = realm.where(Student::class.java).equalTo("id", stuId).findFirst()
+            student?.studentId = student?.id
+            startActivity(Intent(this@RetestListActivity, ReTestActivity::class.java)
+                    .putExtra("student", student)
+                    .putExtra("retestTitle", retestTitle)
+                    .putExtra("planType", planType)
+                    .putExtra("planId", planId))
+            return
+        }
         OkGo.get<LzyResponse<Student>>(Api.STUDENT+"/"+stuId)
                 .execute(object : DialogCallback<LzyResponse<Student>>(this) {
                     override fun onSuccess(response: Response<LzyResponse<Student>>) {

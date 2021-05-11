@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
@@ -14,6 +15,7 @@ import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.entity.CurrentPlan
@@ -96,7 +98,13 @@ class RetestTitleListActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         getCurrentPlan()
-        getRetestTitleList()
+
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getRetestTitleListLocal()
+        } else {
+            getRetestTitleList()
+        }
 
         val checkItemList = App.instance.retestCheckItemList
         tvRetestCheckItem.text = "我负责的项目："+checkItemList.joinToString { checkItem -> checkItem.name }
@@ -128,24 +136,34 @@ class RetestTitleListActivity : BaseActivity() {
 
     private var planType: String? = null
     private fun getCurrentPlan() {
-        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
-                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
-                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
-                        val currentPlan = response.body()?.data
+        val currentPlan = App.instance.currentPlan
+        val planName = currentPlan?.name
+        val level = LevelConvert.toCh(currentPlan?.level)
+        tvPlanName.text = planName
+        tvLevel.text = level
+        planType = currentPlan?.planType
+        val retestItem = when (currentPlan?.planType) {
+            "Vision" -> "视力、屈光"
+            "CommonDisease" -> "视力、屈光、身高、体重"
+            "Checkup" -> "身高、体重、龋齿、沙眼"
+            else -> ""
+        }
+        tvRetestMustCheckItem.text = "复测必查项目：$retestItem"
+    }
 
-                        val planName = currentPlan?.name
-                        val level = LevelConvert.toCh(currentPlan?.level)
-                        tvPlanName.text = planName
-                        tvLevel.text = level
-                        planType = currentPlan?.planType
-                        val retestItem = when (currentPlan?.planType) {
-                            "Vision" -> "视力、屈光"
-                            "CommonDisease" -> "视力、屈光、身高、体重"
-                            "Checkup" -> "身高、体重、龋齿、沙眼"
-                            else -> ""
-                        }
-                        tvRetestMustCheckItem.text = "复测必查项目：$retestItem"
-                    }
-                })
+
+    //<!------------------ local ----------------->
+    private fun getRetestTitleListLocal() {
+        retestTitleList = mutableListOf()
+        val customTitle = SimpleDateFormat("yyyy年MM月dd日").format(Date())
+        if (retestTitleList?.size == 0) {
+            retestTitleList!!.add(RetestTitle(customTitle))
+        } else {
+            val titleList = retestTitleList?.map { it.title }
+            if (!titleList?.contains(customTitle)!!) {
+                retestTitleList!!.add(0, RetestTitle(customTitle))
+            }
+        }
+        mAdapter.setNewInstance(retestTitleList)
     }
 }
