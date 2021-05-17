@@ -7,6 +7,7 @@ import android.text.Html
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
@@ -370,11 +371,11 @@ class MainActivity : BaseActivity() {
                             App.instance.checkItemList.clear()
                             App.instance.selectSchool = null
                             App.instance.retestCheckItemList.clear()
-                            App.instance.currentPlan = null
+                            CacheDiskStaticUtils.remove(Keys.CURRENTPLAN)
                             refreshUI()
                         }
 
-                        App.instance.currentPlan = currentPlan
+                        CacheDiskStaticUtils.put(Keys.CURRENTPLAN, JSON.toJSONString(currentPlan))
 
                         planId = currentPlan?.id
                         stationId = currentPlan?.stationId
@@ -390,12 +391,12 @@ class MainActivity : BaseActivity() {
     }
 
     private fun getCurrentPlanLocal() {
-        val currentPlan = App.instance.currentPlan
+        val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
         if (planId != null && planId != currentPlan?.id) {
             App.instance.checkItemList.clear()
             App.instance.selectSchool = null
             App.instance.retestCheckItemList.clear()
-            App.instance.currentPlan = null
+            CacheDiskStaticUtils.remove(Keys.CURRENTPLAN)
             refreshUI()
         }
 

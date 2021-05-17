@@ -2,12 +2,15 @@ package com.qpsoft.cdc.ui.physical.retest
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.RetestPickCheckItemAdapter
@@ -60,7 +63,7 @@ class RetestPickCheckItemActivity : BaseActivity() {
 //                    }
 //                })
 
-        val currentPlan = App.instance.currentPlan
+        val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
         var itemList = currentPlan?.itemList!!
 
         itemList = when (currentPlan.planType) {

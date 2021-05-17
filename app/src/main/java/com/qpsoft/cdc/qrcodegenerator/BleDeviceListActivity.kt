@@ -39,6 +39,7 @@ class BleDeviceListActivity : BaseActivity() {
         rvBleDevice.adapter = mAdapter
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
+            BleManager.getInstance().cancelScan()
             val bleDevice = mAdapter.getItem(position)
             startActivity(Intent(this@BleDeviceListActivity, GenQrcodeActivity::class.java)
                     .putExtra("bleDevice", bleDevice)
@@ -47,6 +48,7 @@ class BleDeviceListActivity : BaseActivity() {
 
         tvRefresh.setOnClickListener {
             mAdapter.data.clear()
+            mAdapter.notifyDataSetChanged()
             getDeviceList()
         }
     }

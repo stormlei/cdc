@@ -31,7 +31,6 @@ class App: Application() {
     var checkItemList = mutableListOf<CheckItem>()
     var selectSchool: School? = null
     var retestCheckItemList = mutableListOf<CheckItem>()
-    var currentPlan: CurrentPlan? = null
 
     lateinit var backgroundThreadRealm : Realm
 

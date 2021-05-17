@@ -4,12 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.App
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import com.qpsoft.cdc.constant.Keys
 import com.qpsoft.cdc.okgo.callback.DialogCallback
 import com.qpsoft.cdc.okgo.model.LzyResponse
 import com.qpsoft.cdc.ui.adapter.PickCheckItemAdapter
@@ -66,7 +69,7 @@ class PickCheckItemActivity : BaseActivity() {
 //                })
 
 
-        val currentPlan = App.instance.currentPlan
+        val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
         val itemList = currentPlan?.itemList!!
         val list = getItemData(itemList, currentPlan.planType)
         mAdapter.setNewInstance(list)

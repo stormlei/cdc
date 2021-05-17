@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
+import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -136,7 +137,7 @@ class RetestTitleListActivity : BaseActivity() {
 
     private var planType: String? = null
     private fun getCurrentPlan() {
-        val currentPlan = App.instance.currentPlan
+        val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
         val planName = currentPlan?.name
         val level = LevelConvert.toCh(currentPlan?.level)
         tvPlanName.text = planName

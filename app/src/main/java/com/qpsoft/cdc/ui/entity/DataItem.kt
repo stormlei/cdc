@@ -124,13 +124,13 @@ data class DataItem(
     ) {
         data class Menstruation(
             val whether: Int?,
-            val startAge: Int?,
-            val frequency: Int?,
-            val duration: Int?
+            val startAge: String?,
+            val frequency: String?,
+            val duration: String?
         )
         data class NocturnalEmission(
             val whether: Int?,
-            val startAge: Int?,
+            val startAge: String?,
         )
 
     }
