@@ -137,9 +137,11 @@ class GradeClazzListActivity : BaseActivity() {
 
     private fun getGradeClazzListLocal() {
         val realm = App.instance.backgroundThreadRealm
-        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id)
-                .distinct("grade").findAll()
-        val dataMap = rr.groupBy(Student::grade, Student::clazz)
+        val rr = realm.where(Student::class.java).equalTo("school.id", school?.id).findAll()
+        val dataMap = rr.groupBy(Student::grade, Student::clazz).toMutableMap()
+        for (key in dataMap.keys) {
+            dataMap[key] = dataMap[key]!!.distinct()
+        }
         LogUtils.e("------"+dataMap)
         val list = getItemData(dataMap as MutableMap<String, MutableList<String>>)
         mAdapter.setNewInstance(list)

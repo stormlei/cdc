@@ -104,7 +104,7 @@ class MainActivity : BaseActivity() {
             val selSchool = App.instance.selectSchool
             if (selSchool != null) {
                 var url = ""
-                if (planType == "CommonDisease") {
+                if (planType == "CommonDisease" || planType == "Nation") {
                     url = "${Api.URL}/sc/school?planId=$planId&schoolId=${selSchool.id}&stationId=$stationId&wx=1"
                 }
                 if (planType == "Checkup") {
@@ -372,7 +372,13 @@ class MainActivity : BaseActivity() {
                             App.instance.selectSchool = null
                             App.instance.retestCheckItemList.clear()
                             CacheDiskStaticUtils.remove(Keys.CURRENTPLAN)
+                            CacheDiskStaticUtils.remove(Keys.OFFLINE)
                             refreshUI()
+
+                            val realm = App.instance.backgroundThreadRealm
+                            realm.executeTransaction {
+                                realm.deleteAll()
+                            }
                         }
 
                         CacheDiskStaticUtils.put(Keys.CURRENTPLAN, JSON.toJSONString(currentPlan))
@@ -397,7 +403,13 @@ class MainActivity : BaseActivity() {
             App.instance.selectSchool = null
             App.instance.retestCheckItemList.clear()
             CacheDiskStaticUtils.remove(Keys.CURRENTPLAN)
+            CacheDiskStaticUtils.remove(Keys.OFFLINE)
             refreshUI()
+
+            val realm = App.instance.backgroundThreadRealm
+            realm.executeTransaction {
+                realm.deleteAll()
+            }
         }
 
         planId = currentPlan?.id

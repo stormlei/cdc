@@ -1923,7 +1923,7 @@ class PhysicalTestActivity : BaseActivity() {
         contextObj["submitAt"] = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
         val visionObj = com.alibaba.fastjson.JSONObject()
         when(glassType) {
-            "No" -> visionObj["nakedDegree"] = ndObj
+            "No", "" -> visionObj["nakedDegree"] = ndObj
             "Frame", "ContactLens" -> {
                 visionObj["nakedDegree"] = ndObj
                 visionObj["glassDegree"] = gdObj
@@ -1933,7 +1933,7 @@ class PhysicalTestActivity : BaseActivity() {
                 visionObj["spectacles"] = stObj
             }
         }
-        visionObj["glassType"] = glassType
+        visionObj["glassType"] = if(glassType == "") "No" else glassType
         visionObj["eyeAbnormal"] = eyeAbnormalVision
         visionObj["context"] = contextObj
 

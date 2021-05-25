@@ -49,7 +49,7 @@ class RetestListActivity : BaseActivity() {
         tvRetestTitle.text = retestTitle
         when(planType) {
             "Vision" -> tvPlanType.text = "视力复测质控"
-            "CommonDisease" -> tvPlanType.text = "形态复测质控"
+            "CommonDisease","Nation" -> tvPlanType.text = "形态复测质控"
             "Checkup" -> tvPlanType.text = "体检复测质控"
         }
 
@@ -156,7 +156,7 @@ class RetestListActivity : BaseActivity() {
         var url = Api.RETEST_SUMMARY_VISION
         when(planType) {
             "Vision" -> url = Api.RETEST_SUMMARY_VISION
-            "CommonDisease" -> url = Api.RETEST_SUMMARY_HEIGHT_WEIGHT
+            "CommonDisease","Nation" -> url = Api.RETEST_SUMMARY_HEIGHT_WEIGHT
             "Checkup" -> url = Api.RETEST_SUMMARY_ALL
         }
         OkGo.get<LzyResponse<RetestSummary>>(url)

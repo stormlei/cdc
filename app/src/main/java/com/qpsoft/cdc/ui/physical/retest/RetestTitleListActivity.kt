@@ -8,6 +8,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lzy.okgo.OkGo
@@ -138,6 +139,7 @@ class RetestTitleListActivity : BaseActivity() {
     private var planType: String? = null
     private fun getCurrentPlan() {
         val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
+        LogUtils.e("-------"+currentPlan)
         val planName = currentPlan?.name
         val level = LevelConvert.toCh(currentPlan?.level)
         tvPlanName.text = planName
@@ -145,7 +147,7 @@ class RetestTitleListActivity : BaseActivity() {
         planType = currentPlan?.planType
         val retestItem = when (currentPlan?.planType) {
             "Vision" -> "视力、屈光"
-            "CommonDisease" -> "视力、屈光、身高、体重"
+            "CommonDisease","Nation" -> "视力、屈光、身高、体重"
             "Checkup" -> "身高、体重、龋齿、沙眼"
             else -> ""
         }

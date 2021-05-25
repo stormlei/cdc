@@ -38,7 +38,7 @@ class DownLoadSchoolAdapter(private val context: Context): IndexableAdapter<Scho
         val s = realm.where(School::class.java).equalTo("id", student.id).findFirst()
         if (s != null) {
             vh.tvDownLoad.setTextColor(context.resources.getColor(R.color.color_cb7))
-            vh.tvDownLoad.setText("已下载")
+            vh.tvDownLoad.setText("重新下载")
         } else {
             vh.tvDownLoad.setTextColor(context.resources.getColor(R.color.color_26))
             vh.tvDownLoad.setText("下载")

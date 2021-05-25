@@ -36,6 +36,8 @@ class ManageActivity : BaseActivity() {
                     .message(text="你确定要退出吗？")
                     .positiveButton {
                         CacheDiskStaticUtils.remove(Keys.TOKEN)
+                        CacheDiskStaticUtils.remove(Keys.OFFLINE)
+                        CacheDiskStaticUtils.remove(Keys.CURRENTPLAN)
                         App.instance.checkItemList.clear()
                         App.instance.selectSchool = null
                         App.instance.retestCheckItemList.clear()

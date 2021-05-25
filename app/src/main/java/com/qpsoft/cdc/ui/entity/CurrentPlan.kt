@@ -5,5 +5,5 @@ data class CurrentPlan(
         val name: String,
         val level: String,
         val planType: String,
-        val stationId: String,
+        val stationId: String?,
         val itemList: MutableList<CheckItem>)

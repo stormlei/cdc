@@ -70,7 +70,7 @@ class RetestPickCheckItemActivity : BaseActivity() {
             "Vision" -> {
                 itemList.stream().filter { it.name=="视力"||it.name=="屈光"}.collect(Collectors.toList())
             }
-            "CommonDisease" -> itemList.stream().filter { it.name=="视力"||it.name=="屈光"||it.name=="身高"||it.name=="体重"}.collect(Collectors.toList())
+            "CommonDisease","Nation" -> itemList.stream().filter { it.name=="视力"||it.name=="屈光"||it.name=="身高"||it.name=="体重"}.collect(Collectors.toList())
             "Checkup" -> itemList.stream().filter { it.name=="身高"||it.name=="体重"||it.name=="龋齿"||it.name=="沙眼"}.collect(Collectors.toList())
             else -> mutableListOf()
         }

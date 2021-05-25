@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity() {
         val passWord = edtPassWord.text.toString().trim()
 
         val upMap = mutableMapOf<Any?, Any?>()
-        //upMap["username"] = "余杭区站点"
+        //upMap["username"] = "蒋村"
         //upMap["password"] = "Aa@123456"
         upMap["username"] = userName
         upMap["password"] = passWord

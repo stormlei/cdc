@@ -6,6 +6,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.CacheDiskStaticUtils
+import com.blankj.utilcode.util.LogUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.model.Response
 import com.qpsoft.cdc.Api
@@ -51,24 +52,18 @@ class PickCheckItemActivity : BaseActivity() {
             tvNext.visibility = View.GONE
         }
 
-        getCurrentPlan()
+        val offline = CacheDiskStaticUtils.getString(Keys.OFFLINE)
+        if ("1" == offline) {
+            getCurrentPlanLocal()
+        } else {
+            getCurrentPlan()
+        }
     }
 
 
 
-    private fun getCurrentPlan() {
-//        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
-//                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
-//                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
-//                        val currentPlan = response.body()?.data
-//
-//                        val itemList = currentPlan?.itemList!!
-//                        val list = getItemData(itemList, currentPlan.planType)
-//                        mAdapter.setNewInstance(list)
-//                    }
-//                })
-
-
+    private fun getCurrentPlanLocal() {
+        LogUtils.e("----"+CacheDiskStaticUtils.getString(Keys.CURRENTPLAN))
         val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
         val itemList = currentPlan?.itemList!!
         val list = getItemData(itemList, currentPlan.planType)
@@ -76,11 +71,25 @@ class PickCheckItemActivity : BaseActivity() {
     }
 
 
+    private fun getCurrentPlan() {
+        OkGo.get<LzyResponse<CurrentPlan>>(Api.CURRENT_PLAN)
+                .execute(object : DialogCallback<LzyResponse<CurrentPlan>>(this) {
+                    override fun onSuccess(response: Response<LzyResponse<CurrentPlan>>) {
+                        val currentPlan = response.body()?.data
+
+                        val itemList = currentPlan?.itemList!!
+                        val list = getItemData(itemList, currentPlan.planType)
+                        mAdapter.setNewInstance(list)
+                    }
+                })
+    }
+
+
 
     fun getItemData(itemList: MutableList<CheckItem>, planType: String?): MutableList<MySection> {
         val ml = mutableListOf<MySection>()
 
-        if (planType == "Vision" || planType == "CommonDisease") {
+        if (planType == "Vision" || planType == "CommonDisease" || planType == "Nation") {
             ml.add(MySection(true, "", ""))
             for (checkItem in itemList) {
                 App.instance.checkItemList.forEach {
