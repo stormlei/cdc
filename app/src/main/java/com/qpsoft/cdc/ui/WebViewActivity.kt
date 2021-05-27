@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.qpsoft.cdc.Api
 import com.qpsoft.cdc.R
 import com.qpsoft.cdc.base.BaseActivity
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_webview.*
 
 class WebViewActivity : BaseActivity() {
@@ -18,7 +19,8 @@ class WebViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
 
-        setBackBtn()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolBar.setNavigationOnClickListener { onBackPressed() }
 
         url = intent.getStringExtra("url")
 

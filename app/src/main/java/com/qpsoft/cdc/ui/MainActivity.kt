@@ -105,7 +105,7 @@ class MainActivity : BaseActivity() {
             if (selSchool != null) {
                 var url = ""
                 if (planType == "CommonDisease" || planType == "Nation") {
-                    url = "${Api.URL}/sc/school?planId=$planId&schoolId=${selSchool.id}&stationId=$stationId&wx=1"
+                    url = "${Api.URL}/sc/school?planId=$planId&planType=$planType&schoolId=${selSchool.id}&stationId=$stationId&wx=1"
                 }
                 if (planType == "Checkup") {
                     url = "${Api.URL}/sc/teaching?type=41&planId=$planId&schoolId=${selSchool.id}&stationId=$stationId&wx=1"

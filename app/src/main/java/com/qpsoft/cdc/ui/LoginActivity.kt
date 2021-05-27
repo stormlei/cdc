@@ -22,7 +22,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        setTitle("学生健康采集")
+        setTitle(resources.getString(R.string.app_name))
 
         tvLogin.setOnClickListener { doLogin() }
 
@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity() {
         val passWord = edtPassWord.text.toString().trim()
 
         val upMap = mutableMapOf<Any?, Any?>()
-        //upMap["username"] = "蒋村"
+        //upMap["username"] = "李娟娟"
         //upMap["password"] = "Aa@123456"
         upMap["username"] = userName
         upMap["password"] = passWord

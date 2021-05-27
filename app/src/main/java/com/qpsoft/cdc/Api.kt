@@ -1,7 +1,7 @@
 package com.qpsoft.cdc
 
 object Api {
-    const val URL = "https://govdemo.qpsc365.com"
+    const val URL = "https://schoolhealth.cdc.zj.cn"
     private const val HOST = "$URL/api"
 
     const val LOGIN = "$HOST/auth/v1/client"

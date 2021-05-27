@@ -148,7 +148,7 @@ class RetestTitleListActivity : BaseActivity() {
         val retestItem = when (currentPlan?.planType) {
             "Vision" -> "视力、屈光"
             "CommonDisease","Nation" -> "视力、屈光、身高、体重"
-            "Checkup" -> "身高、体重、龋齿、沙眼"
+            "Checkup" -> "视力、屈光、身高、体重"
             else -> ""
         }
         tvRetestMustCheckItem.text = "复测必查项目：$retestItem"
