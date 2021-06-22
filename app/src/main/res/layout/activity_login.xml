@@ -22,14 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="浙江省疾病预防控制中心"
+            android:text="贵州省疾病预防控制中心"
             android:textSize="24sp"
             android:textColor="@color/color_26" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="浙江省学生健康状况综合监测评价系统"
+            android:text="贵州省学生近视防控与常见病检查系统"
             android:textSize="15sp"
             android:textColor="@color/color_66" />
     </LinearLayout>
