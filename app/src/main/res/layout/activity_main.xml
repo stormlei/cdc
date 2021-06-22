@@ -335,7 +335,7 @@
                 android:layout_centerHorizontal="true"
                 android:textSize="13sp"
                 android:textColor="@color/color_99"
-                android:text="©贵州省疾病预防控制中心"
+                android:text="©学生健康状况综合监测系统"
                 />
 
         </RelativeLayout>
