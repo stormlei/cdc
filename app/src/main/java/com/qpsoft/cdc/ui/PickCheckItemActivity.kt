@@ -64,7 +64,8 @@ class PickCheckItemActivity : BaseActivity() {
 
     private fun getCurrentPlanLocal() {
         LogUtils.e("----"+CacheDiskStaticUtils.getString(Keys.CURRENTPLAN))
-        val currentPlan = JSON.parseObject(CacheDiskStaticUtils.getString(Keys.CURRENTPLAN), CurrentPlan::class.java)
+        val text = CacheDiskStaticUtils.getString(Keys.CURRENTPLAN) ?: return
+        val currentPlan = JSON.parseObject(text, CurrentPlan::class.java)
         val itemList = currentPlan?.itemList!!
         val list = getItemData(itemList, currentPlan.planType)
         mAdapter.setNewInstance(list)

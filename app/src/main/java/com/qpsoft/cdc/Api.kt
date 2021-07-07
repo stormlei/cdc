@@ -1,7 +1,8 @@
 package com.qpsoft.cdc
 
 object Api {
-    const val URL = "https://schoolhealth.cdc.zj.cn"
+    //const val URL = "https://schoolhealth.cdc.zj.cn"
+    const val URL = "https://govdemo.qpsc365.com"
     private const val HOST = "$URL/api"
 
     const val LOGIN = "$HOST/auth/v1/client"
@@ -16,6 +17,7 @@ object Api {
     const val RETEST_SUMMARY_HEIGHT_WEIGHT = "$HOST/client/v1/retest/summary-height-weight"
     const val RETEST_SUMMARY_ALL = "$HOST/client/v1/retest/summary-all"
     const val RETEST = "$HOST/client/v1/retest"
+    const val RETEST_AUTH = "$HOST/client/v1/retest/auth"
     const val RETEST_VIEW_BY_STUDENT_ID = "$HOST/client/v1/retest/view-by-student-id"
     const val RECORD_SUBMIT = "$HOST/client/v1/record/submit"
     const val RECORD_BATCH_SUBMIT = "$HOST/client/v1/record/batch-submit"

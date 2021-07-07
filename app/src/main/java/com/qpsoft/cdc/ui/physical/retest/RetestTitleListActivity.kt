@@ -68,6 +68,28 @@ class RetestTitleListActivity : BaseActivity() {
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
             val retestTitle = mAdapter.getItem(position)
+            if(retestTitle.title == "省级质控抽检") {
+                MaterialDialog(this).show {
+                    input(hint = "请输入复测组密码") {dialog, text ->
+                        OkGo.get<LzyResponse<MutableList<RetestTitle>>>(Api.RETEST_AUTH)
+                            .params("password", text.toString())
+                            .params("planId", planId)
+                            .execute(object : DialogCallback<LzyResponse<MutableList<RetestTitle>>>(this@RetestTitleListActivity) {
+                                override fun onSuccess(response: Response<LzyResponse<MutableList<RetestTitle>>>) {
+                                    startActivity(Intent(this@RetestTitleListActivity, RetestListActivity::class.java)
+                                        .putExtra("school", school)
+                                        .putExtra("planId", planId)
+                                        .putExtra("retestTitle", retestTitle.title)
+                                        .putExtra("planType", planType)
+                                    )
+                                }
+                            })
+                    }
+                    positiveButton {  }
+                    negativeButton {  }
+                }
+                return@setOnItemClickListener
+            }
             startActivity(Intent(this@RetestTitleListActivity, RetestListActivity::class.java)
                 .putExtra("school", school)
                 .putExtra("planId", planId)
@@ -130,6 +152,9 @@ class RetestTitleListActivity : BaseActivity() {
                         if (!titleList?.contains(customTitle)!!) {
                             retestTitleList!!.add(0, RetestTitle(customTitle))
                         }
+                    }
+                    if(tvLevel.text.toString() == "省") {
+                        retestTitleList!!.add(RetestTitle("省级质控抽检"))
                     }
                     mAdapter.setNewInstance(retestTitleList)
                 }
